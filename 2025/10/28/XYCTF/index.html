@@ -1,0 +1,817 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fufu.png">
+  <link rel="icon" href="/img/fufu.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Meiyouqian">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="（回忆一些有想法的但是没做出来的题目）  找到复盘的地方了，有机会复盘一下，好歹是人生中第一个打的CTF MISC会飞的雷克萨斯题目：2025年1月30日W1ndys上网冲浪时，收到了舍友发来的聊天记录，聊天记录显示，一小孩放鞭炮引爆地面，请定位爆炸点的具体位置，该题解出需要通过正常的osint题目做题思路 是一题正常的osint题目 在csdn了解到OSINT代表开源网络情报，许多题目大致是给一">
+<meta property="og:type" content="article">
+<meta property="og:title" content="XYCTF">
+<meta property="og:url" content="https://mei-you-qian.github.io/2025/10/28/XYCTF/index.html">
+<meta property="og:site_name" content="玫幽倩的小博客">
+<meta property="og:description" content="（回忆一些有想法的但是没做出来的题目）  找到复盘的地方了，有机会复盘一下，好歹是人生中第一个打的CTF MISC会飞的雷克萨斯题目：2025年1月30日W1ndys上网冲浪时，收到了舍友发来的聊天记录，聊天记录显示，一小孩放鞭炮引爆地面，请定位爆炸点的具体位置，该题解出需要通过正常的osint题目做题思路 是一题正常的osint题目 在csdn了解到OSINT代表开源网络情报，许多题目大致是给一">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mei-you-qian.github.io/XYCTF/1756396107918-c2abaa79-e013-4efd-940e-a25f90eb30c1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/XYCTF/1744194985193-021f56a0-99e7-442b-83f7-b5e065adb1fb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/XYCTF/1744195226310-84a36e01-e62a-474f-a91f-e2660eeeb61e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/XYCTF/1744194441723-8cfbb12c-962d-43ca-9204-3debbfe75a8e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/XYCTF/1744196456828-d1530616-3b48-4576-aee1-7dff20cf86a7.png">
+<meta property="article:published_time" content="2025-10-27T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-10-28T08:48:27.862Z">
+<meta property="article:author" content="Meiyouqian">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mei-you-qian.github.io/XYCTF/1756396107918-c2abaa79-e013-4efd-940e-a25f90eb30c1.png">
+  
+  
+  
+  <title>XYCTF - 玫幽倩的小博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mei-you-qian.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>Fluid</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/beijing.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="XYCTF"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-10-28 00:00" pubdate>
+          2025年10月28日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.5k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          30 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">XYCTF</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>（回忆一些有想法的但是没做出来的题目）</p>
+<p><img src="/XYCTF/1756396107918-c2abaa79-e013-4efd-940e-a25f90eb30c1.png" srcset="/img/loading.gif" lazyload></p>
+<p>找到复盘的地方了，有机会复盘一下，好歹是人生中第一个打的CTF</p>
+<h1 id="MISC"><a href="#MISC" class="headerlink" title="MISC"></a>MISC</h1><h2 id="会飞的雷克萨斯"><a href="#会飞的雷克萨斯" class="headerlink" title="会飞的雷克萨斯"></a>会飞的雷克萨斯</h2><p>题目：<font style="color:rgb(118, 190, 255);">2025年1月30日W1ndys上网冲浪时，收到了舍友发来的聊天记录，聊天记录显示，一小孩放鞭炮引爆地面，请定位爆炸点的具体位置，该题解出需要通过正常的osint题目做题思路</font></p>
+<p>是一题正常的osint题目</p>
+<p>在csdn了解到OSINT代表开源网络情报，许多题目大致是给一张照片然后询问图片经纬值的类型，他的经纬度精确到小数点后五位就是这道题的flag。</p>
+<p>但是这道题显然给了flag格式，不需要太麻烦</p>
+<p>图片的事件很显然是130的爆竹事件，很新的新闻，一搜很容易跳出答案是在<font style="color:rgb(31,35,41);">四川内江市资中县⽔南镇春岚北路，但是说在****内，脑子抽了怎么写都不对，什么中铁停车场内，草地里莫名其妙试了半天</font><img src="/XYCTF/1744194985193-021f56a0-99e7-442b-83f7-b5e065adb1fb.png" srcset="/img/loading.gif" lazyload></p>
+<p>其实只需要根据下图中的小东十七店名一搜就知道了，搜一下号码，地址便跳出来了</p>
+<p><img src="/XYCTF/1744195226310-84a36e01-e62a-474f-a91f-e2660eeeb61e.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到地址写的是城市中心内</p>
+<p><img src="/XYCTF/1744194441723-8cfbb12c-962d-43ca-9204-3debbfe75a8e.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以flag出来了，就是<font style="color:rgb(31,35,41);">XYCTF{四川内江市资中县⽔南镇春岚北路城市中⼼内}，真的是最简单的一题了（）</font></p>
+<p><font style="color:rgb(31,35,41);"></font></p>
+<h2 id="sins"><a href="#sins" class="headerlink" title="sins"></a><font style="color:rgb(31,35,41);">sins</font></h2><p><font style="color:rgb(106, 115, 125);">“Come now, let us settle the matter,” says the LORD. “Though your sins are like scarlet, they shall be as white as snow; though they are red as crimson, they shall be like wool. - Isaiah 1:18</font></p>
+<p>题目怪中二的，附件是一个python文件，其实环境也就是运行了这个文件吧（大概？）</p>
+<p><img src="/XYCTF/1744196456828-d1530616-3b48-4576-aee1-7dff20cf86a7.png" srcset="/img/loading.gif" lazyload></p>
+<p>看这个python程序，大致是需要我输入一个只包含“i0123456789+-*%&#x2F;……&#x3D;《》~&amp;|：（）【】”的字符串，长度要在16以内</p>
+<p>别的看不懂了</p>
+<p>先看看lambda函数和eval函数：</p>
+<h5 id="lambda函数："><a href="#lambda函数：" class="headerlink" title="lambda函数："></a>lambda函数：</h5><p><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">Python 使用 </font><strong><font style="color:rgb(51, 51, 51);background-color:rgb(236, 234, 230);">lambda</font></strong><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);"> 来创建匿名函数。</font></p>
+<p><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">lambda 函数是一种小型、匿名的、内联函数，它可以具有任意数量的参数，但只能有一个表达式。</font></p>
+<p><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">匿名函数不需要使用</font><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);"> </font><strong><font style="color:rgb(51, 51, 51);background-color:rgb(236, 234, 230);">def</font></strong><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);"> </font><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">关键字定义完整函数。</font></p>
+<p><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">lambda 函数通常用于编写简单的、单行的函数，通常在需要函数作为参数传递的情况下使用，例如在 map()、filter()、reduce() 等函数中。</font></p>
+<p><strong><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">lambda 语法格式：</font></strong></p>
+<p><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">lambda arguments: expression</font></p>
+<ul>
+<li><code>&lt;font style=&quot;color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);&quot;&gt;lambda&lt;/font&gt;</code><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">是 Python 的关键字，用于定义 lambda 函数。</font></li>
+<li><code>&lt;font style=&quot;color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);&quot;&gt;arguments&lt;/font&gt;</code><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);"> </font><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">是参数列表，可以包含零个或多个参数，但必须在冒号(</font><code>&lt;font style=&quot;color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);&quot;&gt;:&lt;/font&gt;</code><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">)前指定。</font></li>
+<li><code>&lt;font style=&quot;color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);&quot;&gt;expression&lt;/font&gt;</code><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);"> 是一个表达式，用于计算并返回函数的结果。</font></li>
+</ul>
+<h5 id="eval函数"><a href="#eval函数" class="headerlink" title="eval函数"></a>eval函数</h5><p><strong><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">eval()</font></strong><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);"> </font><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">函数用来执行一个字符串表达式，并返回表达式的值。</font></p>
+<p><strong><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">字符串表达式</font></strong><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">可以包含变量、函数调用、运算符和其他 Python 语法元素。</font></p>
+<h6 id="语法"><a href="#语法" class="headerlink" title="语法"></a><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">语法</font></h6><p><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">以下是 eval() 方法的语法:</font></p>
+<p>eval(expression[, globals[, locals]])</p>
+<h6 id="参数"><a href="#参数" class="headerlink" title="参数"></a><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">参数</font></h6><ul>
+<li><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">expression – 表达式。</font></li>
+<li><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">globals – 变量作用域，全局命名空间，如果被提供，则必须是一个字典对象。</font></li>
+<li><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">locals – 变量作用域，局部命名空间，如果被提供，可以是任何映射对象。</font></li>
+</ul>
+<p><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);">eval() 函数将字符串 expression 解析为 Python 表达式，并在指定的命名空间中</font></p>
+<p><font style="color:rgb(51, 51, 51);background-color:rgb(250, 252, 253);"></font></p>
+<p>因此很显然啊，这题其实eval就是在执行lambda这个函数，用空字典作为 globals 和 locals，而这个lambda函数还是个带参数i的，命名了一个{inp}的函数</p>
+<p><del>好了后边看不懂了，我放弃了（答案是~~~~<font style="color:rgb(43,47,54);">f &#x3D; </font>~~~~<font style="color:rgb(166,38,164);">lambda </font>~~~~<font style="color:rgb(43,47,54);">i:</font>~~~~<font style="color:rgb(80,161,79);">‘1i–’</font>~~~~<font style="color:rgb(43,47,54);">[i%</font>~~~~<font style="color:rgb(152,104,1);">4</font>~~~~<font style="color:rgb(43,47,54);">::-</font>~~~~<font style="color:rgb(152,104,1);">2</font>~~~~<font style="color:rgb(43,47,54);">] </font>~~~~<em><font style="color:rgb(160,161,167);"># 15）</font></em></del></p>
+<figure class="highlight subunit"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br></pre></td><td class="code"><pre><code class="hljs subunit"><br>## &lt;font style=&quot;color:rgb(0, 0, 0);&quot;&gt;签个到吧&lt;/font&gt;<br>&lt;font style=&quot;color:rgb(118, 190, 255);&quot;&gt;题目：最小的，具有图灵完备性的语言是？&lt;/font&gt;<br><br>由提示易得这是个brainfuck语句，打开来一看也确实，但是喂给ai屁用没有（我现在发现文件名bf也在暗示就是这种语言）<br><br>![](XYCTF/1744198872999-a0213f84-a39f<span class="hljs-string">-46</span>d7-a2dc-eff2d6af6466.png)<br><br>对于brainfuck而言，字符含义如下![](XYCTF/1744198938045-baff40fa<span class="hljs-string">-3</span>dff<span class="hljs-string">-48</span>a4<span class="hljs-string">-898</span>c<span class="hljs-string">-878521958</span>f12.png)<br><br>### 思路一<br>可以发现，所有的brainfuck都没有输出符，所以肯定是解不出来的，很多在线的brainfuck解密网址也都无法解密，跟其格式不对有关，只需在所有[-]前边加上输出符号.即可<br><br>“[-]”结构实际上是Brainfuck中的一个常见惯用语法。因为“[-]”的作用是将当前指针所在的单元清零。具体来说，循环会一直执行，直到当前单元的值为零。在循环内部，每次都会将当前单元减1，所以只要当前单元不为零，就会一直减到零为止。因此，无论当前单元的值是多少，执行“[-]”后都会变成0。<br><br>在每个“[-]”前面加上输出符号“.”，也就是变成“.[-]”。这里的“.”在Brainfuck中是输出命令，作用是将当前单元的值作为ASCII字符输出。所以，每次执行“.[-]”的时候，会先输出当前单元的值，然后将该单元清零。<br><br>因此这样子之后放入brainfuck解密网址即可解出flag（当然也能用脚本）<br><br>![](XYCTF/1744199618870<span class="hljs-string">-26496674</span><span class="hljs-string">-8616</span><span class="hljs-string">-4541</span>-b77c<span class="hljs-string">-219378529</span>f26.png)<br><br>### 思路二<br>在发现无法解开后用在线网站[&lt;font style=&quot;color:rgb(230, 116, 116);&quot;&gt;https://copy.sh/brainfuck/&lt;/font&gt;](https://copy.sh/brainfuck/) 看一下它的一个生成代码<br><br>把代码丢给ds可以直接分析出flag<br><br>![](XYCTF/1744199780421<span class="hljs-string">-1</span>bd73c99-ea1a<span class="hljs-string">-4</span>b91-a0f1<span class="hljs-string">-84</span>b7ba881e0c.png)<br><br>（为什么我的ds不能，我不理解，算了）（你的ds我的ds好像不一样）<br><br>flag&#123;W3lC0me_t0_XYCTF_2025_Enj07_1t!&#125;<br><br><br><br>## XGCTF<br>&lt;font style=&quot;color:rgb(118, 190, 255);&quot;&gt;题目：2024年CTFshow举办了一场名为“西瓜杯”的比赛（XGCTF）。其中LamentXU在出题的时候，从某场比赛拉了道原题下来改了改，结果传文件的时候传错了传成原题了。因为这件事LamentXU的损友dragonkeep在他之前的博客上的原题wp上加了一段flag来嘲笑LamentXU。请你找到XGCTF中唯一由LamentXU出的题，并找出这题对应的原题，接着找到dragonkeep师傅的博客，并从博客上讲解该题的博文中找到flag。（hint：dragonkeep师傅因为比较穷买不起域名，因此他博客的域名在dragonkeep的基础上多了个字母）&lt;/font&gt;<br><br>直接一步步走就好，这题也不难，先找原题（题目不多，一翻马上就翻到了）<br><br>![](XYCTF/1744199922631<span class="hljs-string">-378</span>b65cc-ddc6<span class="hljs-string">-4</span>caf-b2be<span class="hljs-string">-360</span>c400aadca.png)<br><br>然后我再去了csdn搜了一下wp<br><br>![](XYCTF/1744200037226<span class="hljs-string">-84438760</span>-f420<span class="hljs-string">-40</span>e9<span class="hljs-string">-9</span>a36-aa851b6e284a.png)<br><br>就看到了这样子的一段话，这题是CISCN华东南里边的，然后就去搜了搜CISCN的题目，很容易就找到了原题名为“pollute”<br><br>直接搜索，如下图<br><br>![](XYCTF/1744200312562-a54e20d3-a292<span class="hljs-string">-4</span>d5b<span class="hljs-string">-9496</span><span class="hljs-string">-28364</span>b913f38.png)<br><br>一下子就找到Dragonkeep师傅的老巢了，域名多个字母，对上了<br><br>（然后我在这篇文章里读了半个小时什么都没看出来，浪费时间来的）<br><br>还是谢晨师傅教的<br><br>按住Ctrl+U，查看网页源代码，就能找到这个flag了<br><br>![](XYCTF/1744200413375<span class="hljs-string">-11</span>f6125f-a931<span class="hljs-string">-499</span>b<span class="hljs-string">-9554</span>-dde572a150ce.png)<br><br>一看就是base64解密，扔进去就有了<br><br>![](XYCTF/1744200468623<span class="hljs-string">-478</span>a1af6<span class="hljs-string">-66</span>f6<span class="hljs-string">-4584</span><span class="hljs-string">-92</span>b0-cfede4a8120b.png)<br><br>flag&#123;1t_I3_t3E_s@Me_ChAl1eNge_aT_a1L_P1e@se_fOrg1ve_Me&#125;<br><br><br><br>## &lt;font style=&quot;color:rgb(0, 0, 0);&quot;&gt;MADer也要当CTFer&lt;/font&gt;<br>![](XYCTF/1757056361277-f6336a97<span class="hljs-string">-99</span>fc<span class="hljs-string">-4</span>d71<span class="hljs-string">-9</span>f6c<span class="hljs-string">-811</span>ab86604a2.png)<br><br>打开文件是个视频（挺好看还）<br><br>当初用的媒体播放器看不出来啥，一头雾水，只发现了视频时长不对劲，五六个小时的东西那么快就结束了<br><br>![](XYCTF/1744201395993<span class="hljs-string">-297</span>e49cd<span class="hljs-string">-3</span>fb5<span class="hljs-string">-47</span>f9<span class="hljs-string">-85</span>bd<span class="hljs-string">-47</span>de0d996d05.png)<br><br>利用potplayer后直接就能跳出这些字幕<br><br>可以看得出来这些字幕是十六进制的，于是考虑应该先提取字幕<br><br>这边利用的是提示的小丸工具箱我们直接导出（用ffmpeg应该也行，但小丸方便一些）<br><br>![](XYCTF/1757056398892<span class="hljs-string">-05</span>ad2158<span class="hljs-string">-850</span>d<span class="hljs-string">-49</span>dd-b867<span class="hljs-string">-5</span>e5cd8a757e8.png)<br><br>在抽取界面直接用第三方工具抽取<br><br>![](XYCTF/1757056620290<span class="hljs-string">-453</span>f6e13<span class="hljs-string">-557</span>e<span class="hljs-string">-4748</span><span class="hljs-string">-8</span>f4f-db9e186febb1.png)<br><br>这边直接提取字幕<br><br>![](XYCTF/1757056641378<span class="hljs-string">-2</span>e3f7252<span class="hljs-string">-3033</span><span class="hljs-string">-44</span>e1<span class="hljs-string">-9</span>dfb-d39188c374f4.png)<br><br>是一个这样子的内容，是一个ass文件，我们编写脚本提取十六进制<br><br>![](XYCTF/1757056671272<span class="hljs-string">-27139045</span><span class="hljs-string">-7</span>ab6<span class="hljs-string">-4257</span>-bb76-b5bb71fe6b89.png)<br><br>![](XYCTF/1757056687991<span class="hljs-string">-19</span>e1125f<span class="hljs-string">-223</span>a<span class="hljs-string">-4</span>ad1<span class="hljs-string">-8</span>e18-bbdc03515013.png)<br><br>这边直接输出到txt文件（因为太多了，控制台复制粘贴看不全）<br><br>![](XYCTF/1757056742259-fa663adb<span class="hljs-string">-9</span>f32<span class="hljs-string">-4745</span>-bc88<span class="hljs-string">-27</span>cd0e6d62b8.png)<br><br>可以看到完整的十六进制内容，我们直接把十六进制转ASCII一下<br><br>![](XYCTF/1757056888048<span class="hljs-string">-00</span>d02dd7<span class="hljs-string">-3</span>b40<span class="hljs-string">-4</span>d92-b3e4-b7757d1da232.png)<br><br>RIFX不太认识是什么文件，ai阅读后得出为ae的文件<br><br>![](XYCTF/1757072884372<span class="hljs-string">-261</span>defce<span class="hljs-string">-3</span>bb0<span class="hljs-string">-428</span>e-a311<span class="hljs-string">-94524</span>e521616.png)<br><br>我们下载AE扔进去<br><br>把后缀改为.aep后用AE打开<br><br>显示缺插件，AE真的是玩不来<br><br>其实在notepad里直接打开找有意义的leet编码内容就能找到了（我照着别人的复盘的，大都是这样子做的，可是我真的找不到，我也不知道为什么）<br><br>![](XYCTF/1757074539144<span class="hljs-string">-9</span>d449234-cf49<span class="hljs-string">-4</span>c95<span class="hljs-string">-88</span>f6<span class="hljs-string">-18</span>e4c0ae193c.png)<br><br> flag&#123;l_re@IIy_w@nn@_2_Ie@rn_AE&#125;<br><br><br><br><br><br><br><br><br><br>## &lt;font style=&quot;color:rgb(0, 0, 0);&quot;&gt;喜欢就说出来&lt;/font&gt;<br>![](XYCTF/1747743947651<span class="hljs-string">-9</span>afa71e4-efe1<span class="hljs-string">-4</span>b65-aec2<span class="hljs-string">-0</span>b1d388f519e.png)<br><br>题目附件给的是一个流量包，因此直接扔给wireshark先看看<br><br>说是通过浏览器传递的，因此导出http看看<br><br>![](XYCTF/1747744083719<span class="hljs-string">-15</span>b8f20d<span class="hljs-string">-1141</span><span class="hljs-string">-4</span>eea-bf65-c3e80a62bbd7.png)<br><br>![](XYCTF/1747744099453<span class="hljs-string">-82</span>cc451a-d937<span class="hljs-string">-4</span>c42<span class="hljs-string">-9</span>ce4<span class="hljs-string">-4</span>b85857722fe.png)<br><br>发现有一个php文件<br><br>![](XYCTF/1747744228360<span class="hljs-string">-47899053</span><span class="hljs-string">-7</span>e2d<span class="hljs-string">-4737</span><span class="hljs-string">-9330</span><span class="hljs-string">-72</span>cad8e312c6.png)<br><br>利用winhex打开后这个php文件里竟然有png的文件头<br><br>先利用16进制编译器把png文件头&lt;font style=&quot;color:rgb(255, 20, 147);&quot;&gt;89 50 4E 47 0D 0A 1A 0A&lt;/font&gt;之前的给删掉<br><br>![](XYCTF/1747830077530<span class="hljs-string">-4</span>f672739-c0e3<span class="hljs-string">-4</span>d10-acc4-afad7c1d9b9f.png)<br><br>![](XYCTF/1747830055163-e54236f9-d07d<span class="hljs-string">-4900</span><span class="hljs-string">-9</span>bc0<span class="hljs-string">-3909</span>ffd7a580.png)<br><br>得到png文件，用TweakPNG打开后观察其格式<br><br>![](XYCTF/1747830046632<span class="hljs-string">-56</span>bafe7f<span class="hljs-string">-2996</span><span class="hljs-string">-4</span>fa3<span class="hljs-string">-8682</span><span class="hljs-string">-4363</span>edec1cab.png)<br><br>发现这玩意两个文件头，是两张png文件合二为一的产物  <br> 可以看到两个文件头，肯定是要分开来处理的<br><br>:::info<br>~~（这里就是我最不能理解的一个点了，我尝试了去研究IDAT的顺序规律，没找到有规律可言，我又查了CRC，也就是一个检验png是否被篡改的罢了，只能用于检测数据传输中的错误。别人的wp说是不难的，一个一个摆正位置直到图片显示完整，难不成只能靠人力一个个试？？？问题是我试过了顺序不对也是变不成这个照片的，这就很麻烦，又要有删减，又要有位置的固定，必须试到这一个顺序和数目都对的可能性，是不是有什么我漏掉的线索？？？）~~<br><br>~~（如果是这个短的其实倒还好，这个只要把长度为65536的IDAT都拉出来然后加一个53749的即可，顺序也不用改，但这是第二个头）~~<br><br></code></pre></td></tr></table></figure>
+
+<pre><code class="hljs">
+解决了，感谢何神，我怎么没想到
+
+![](XYCTF/1747962560894-d463816c-19cc-433d-91c6-acfe2055c1a6.png)
+
+只要留个头留个尾，然后一个个块看就好了，然后很快就能像拼拼图一样拼好了
+
+![](XYCTF/1747962816950-43b4351c-dfae-473d-9b2d-aa93a769b029.png)
+
+就像这样子，但是这个图片不修完没法放到stegsolve里，所以还是得一个个试然后拼成好的一张
+
+![](XYCTF/1747962896643-d23b2d45-8c6a-4cd3-8610-6e218ccba6e9.png)
+
+当然了，选错文件头的话就什么都没有了，是一段乱码
+
+:::
+
+
+
+![](XYCTF/1747915843921-e3c907e0-8dee-4823-95e7-787e3bfa7ef1.png)
+
+![](XYCTF/1747916425085-64d8ff43-af2e-44a4-9d86-0c86d00a52e7.png)
+
+这样先处理好第一张
+
+![](XYCTF/1747915007518-dff46548-efe6-4e51-98ee-117307e3f4b7.png)
+
+![](XYCTF/1747916432361-7915d99b-d5df-4192-af74-7404fe4cf5eb.png)
+
+然后是第二张
+
+可以发现第二张上边存在着一串flag，但是只有前半部分，不难猜到后半部分应该在另一张照片上
+
+![](XYCTF/1747916717203-c02a2989-3438-4950-855e-967c4501a077.png)
+
+积累：这边可以根据ps调参看一下是不是有什么奇怪的地方，如此处的像素点（其实我刚刚试了图片预览也可看见，就是直接拉大，可以看到，就看能不能想到了）
+
+![](XYCTF/1747916910357-a9f2dcb4-0d13-4093-b578-b1242ad2cfe0.png)
+
+最后根据原本的题目提示，520恰好出现在stegslove的extract preview里，尝试勾选plans后出现flag后半段，即ta_G@_t0kubetsu_Suki!!!}
+
+![](XYCTF/1747916885608-935bda21-395e-4a33-9fa6-dd6e81928c71.png)
+
+得解
+
+flag{WatAshl_W@_anAta_G@_t0kubetsu_Suki!!!}
+
+
+
+###### 
+## 曼波曼波曼波
+![](XYCTF/1757074738422-dc17d330-fe2d-4bc3-8c4f-8ce99ad89d05.png)
+
+我已经不记得当时有没有做这道题了，肯定是没做出来，但是也不记得有没有做了（）
+
+![](XYCTF/1757074904652-d2b26a4b-d7fd-4fc1-b88d-196199db2ebb.png)
+
+拿到是俩文件，一个txt一个png
+
+先看png
+
+![](XYCTF/1757075611407-a3079da4-79f8-414b-bef2-43388f79a5c2.png)
+
+是个假flag，按我出题经验就是故意搞了个这样子的二维码，但是绝对藏东西了，否则毫无意义（真特么什么都没藏，打我脸来了，没东西放附件来干啥，就恶心一小下吗）
+
+binwalk没东西，lsb也没东西，那我们先略过
+
+![](XYCTF/1757074992343-14b3ca1e-deee-403f-b3e9-f8f4deac8f76.png)
+
+txt打开很像很像base64，而且像反过来的
+
+我们直接编写脚本反着走一遍
+
+![](XYCTF/1757075475214-b64a8cc3-196c-4ced-803d-3283c2286e22.png)
+
+放入cyberchef，果然有文件产出，看起来是jpg
+
+![](XYCTF/1757075466469-7336d70d-64b5-4d54-bcfb-47b7d089a260.png)
+
+![](XYCTF/1757075520073-62bf9b73-484d-4da1-999d-63d24a796168.png)
+
+那我们直接改后缀
+
+![](XYCTF/1757075560351-5e2bcb7e-ebf5-44cf-aee8-b9abcb8918cc.jpeg)
+
+是我们曼波，那题目的提示也是用完了
+
+![](XYCTF/1757075837252-a66e54a6-8908-47d7-a7d6-34ede6878297.png)
+
+这jpg藏的东西有点多啊（）
+
+我们foremost一下
+
+![](XYCTF/1757075870475-d51f9dd1-731c-41d3-bf8a-2eed37b86dee.png)
+
+是一个有仨文件的压缩包
+
+![](XYCTF/1757075922362-8e97d227-4033-4392-afad-84a76e07d837.png)
+
+![](XYCTF/1757075940706-ed7aca53-bc9b-44a4-a922-d832ac63b3cf.png)
+
+![](XYCTF/1757075954308-7028ee9d-7218-4dc8-92cb-f80ffe421f96.png)
+
+一个png，一个加密的压缩包，一个提示词
+
+那我们直接用XYCTF2025试试看解密
+
+解开来还是这样子一张png，绝对是跟双图有关
+
+![](XYCTF/1757076018330-80a04cee-3fbe-407d-83e1-884b3ee3abd9.png)
+
+![](XYCTF/1757076320476-62f552b4-986b-4800-b2c9-602cd1b8e65d.png)
+
+这边是双图盲水印，其实我还是第一次遇到
+
+XYCTF{easy_yin_xie_dfbfuj877}(光是看着这水印输眼睛都要瞎掉了)
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</code></pre>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>XYCTF</div>
+      <div>https://mei-you-qian.github.io/2025/10/28/XYCTF/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Meiyouqian</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年10月28日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2025/10/28/2025fic%E5%88%9D%E8%B5%9B%E5%A4%8D%E7%9B%98/" title="2025fic初赛复盘">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">2025fic初赛复盘</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
