@@ -1,0 +1,949 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fufu.png">
+  <link rel="icon" href="/img/fufu.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Meiyouqian">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="手机取证整个手机取证像一个巨大的apk仿真和misc工厂，大老虎小老虎我会记一辈子的（） 请根据Image.zip检材，回答以下问题： 21、分析手机检材，手机的序列号是？（答案格式：字母大写） 上来是道送分题，火眼打开直接就能看见序列号 当然了，我们也可以去看配置文件  直接看zip里的Adlockdown.json文件即可  有json的插件看起来更方便了，当然直接搜MtpNo也是一样的，可以">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2025数证杯决赛-团体赛（手机部分）">
+<meta property="og:url" content="https://mei-you-qian.github.io/2025/12/01/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/index.html">
+<meta property="og:site_name" content="玫幽倩的小博客">
+<meta property="og:description" content="手机取证整个手机取证像一个巨大的apk仿真和misc工厂，大老虎小老虎我会记一辈子的（） 请根据Image.zip检材，回答以下问题： 21、分析手机检材，手机的序列号是？（答案格式：字母大写） 上来是道送分题，火眼打开直接就能看见序列号 当然了，我们也可以去看配置文件  直接看zip里的Adlockdown.json文件即可  有json的插件看起来更方便了，当然直接搜MtpNo也是一样的，可以">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764214672697-ff3f1f88-9302-41e3-9168-99dba7291283.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764214744549-a622ec4d-ac94-41d5-9950-91e1f0fd95bf_1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764214806946-c8b5969a-dbee-47af-9beb-ff737f1a3ae5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764426571271-fbdf48ae-1f41-4ba7-8380-f01e94ebedf4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764426593634-ba587419-4e4e-4fd6-9c2e-12045d8c44e8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764427134723-8934b992-5ca6-46c9-b187-23eee0afb4e8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764427236985-756eb2f6-debd-45e7-b52a-f0685e59393b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764427420775-9a82faff-77a6-49a2-ad0e-e906725d7742.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764427496544-ae6bf75c-5ef3-4d6d-9548-e0a3b51ff401.png">
+<meta property="og:image" content="https://cdn.nlark.com/yuque/0/2025/png/54209285/1764463842164-5856f15b-82b1-45d9-950f-427b4d75a6fb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764470560213-e94becdb-90bd-489d-84ab-7d994cfc0472.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764470868151-11cb95a3-181a-4e6c-979d-e3d7dc1d4a90.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764470788742-d35e1424-77c6-4f4a-b36c-2ab4d54f43f8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764470917002-0f43fabc-3d29-4d7a-bd2f-54d712e26e00.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764470947061-06e2fbac-f4f6-4599-a87f-c8eec23c37af_1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764470991791-340d1ca7-ed3f-4aba-803c-3dcbf2f06ce1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471308345-df8421a6-7c6e-4c02-ad99-512ec38435cc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471347782-e19385ac-7221-4833-9d67-2674bd49f1af_1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471675054-897bdc7e-12d5-40ed-a274-18d0aa9cf6df.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471666538-e4475e18-a9c1-4c64-8a74-4db7df8efbae.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471744586-e10f74a3-1e84-42a7-9831-d6e3e32cedcd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471765877-d24676f6-116a-479d-a445-996860d99a6b_1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471800731-9809e41d-c83e-48bd-8e9c-cf59cb676909_1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471870807-877f2f37-41e5-4f9a-918a-df65ad8478d7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471911524-8ce360d3-b4bd-4d00-9fb3-545b0b84d511.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471953462-b45ec77a-8178-4274-8182-ce8f16f8089c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471972252-4ba3a38c-0574-4174-b527-ca99c109adc1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472007257-07b71ca0-f845-4c92-a98c-1074f7ab9131.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472034256-95e9754d-f02b-4ba6-90df-179a7ef4bdba.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472114222-c16b23c6-05f9-4461-8c21-95ff546922e6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472173058-adf48195-b7b3-4eb8-958d-901aa48bd4aa.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472196867-9e640893-95bd-47c8-81be-6933aef47a47.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472216437-2bd01f40-c1ac-46cc-91e1-e076e7edc56c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472249529-3f2be71d-b9c5-4d74-8f4a-88a1f5b5348b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472380079-f01ddf3c-97e8-43e2-a07d-cd07a4d7ff2f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472396898-bf889d1d-3282-48ec-a84d-50b4d75fd9ae.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472443903-bfe53991-230f-4014-bbb9-985a8329b671.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472471497-f007ff3f-b07d-487b-9f56-60359119f409.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472483108-4ea8e980-898e-4152-85a6-d3c84cba1d42.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472542490-b9b7b4a6-2728-46f7-b9af-7d73f63aec81.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472587925-3c91791c-39de-487a-a7cf-a91e8d4d1c26.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472643546-e8c9f106-a5eb-454a-8150-dface3c59555.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472728132-85f429da-a99d-4bff-ab29-b5f25cd1a94d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472927470-94a43a51-eb09-4a19-b501-2a2dbe1c544d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472956028-b784381e-e10b-4501-9c3e-631ee47805a0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472970741-f20a2217-f73c-460c-a34f-2e8065110a0a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473004513-5b6aaf1a-3b73-4d7b-b3c7-0ba9d7b3b6ad.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473051474-27bce034-2cd5-48ca-b19f-c456d18b3037.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473065879-786c91b4-23d9-45f9-9c9d-f9d65c02dc59.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473196323-06d8de11-aa61-448c-8a8a-7065308dab90.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473238309-aada921c-cf7f-44af-b91c-2e606f05c50b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473381302-6a5d37ee-17df-4655-8bc8-884dcff7fe1c_1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473475208-c29e28b0-c64c-45c9-ab8f-725fa0e81831_1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473601801-ffcd267b-d230-466b-91d4-ccde921f957b_1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473628179-310cc460-aa82-4531-b0b3-4bc8f194a8e0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473687331-cfa00a45-7cd1-406d-a49c-f085403a0213.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473721765-9d5692cf-33b3-40e4-93af-2e04e1e7a41b.png">
+<meta property="article:published_time" content="2025-11-30T16:00:00.000Z">
+<meta property="article:modified_time" content="2025-12-01T13:24:39.457Z">
+<meta property="article:author" content="Meiyouqian">
+<meta property="article:tag" content="Misc">
+<meta property="article:tag" content="Mobile">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mei-you-qian.github.io/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764214672697-ff3f1f88-9302-41e3-9168-99dba7291283.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>2025数证杯决赛-团体赛（手机部分） - 玫幽倩的小博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css">
+<link rel="stylesheet" href="/css/scrollAnimation.css">
+<link rel="stylesheet" href="/css/mk.css">
+<link rel="stylesheet" href="/css/selection.css">
+<link rel="stylesheet" href="/css/glassBg.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mei-you-qian.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.0"></head>
+
+
+<body><!-- hexo injector body_begin start --><div id="web_bg"></div><!-- hexo injector body_begin end -->
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>玫幽倩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/beijing.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="2025数证杯决赛-团体赛（手机部分）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2025-12-01 00:00" pubdate>
+          2025年12月1日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          20 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">2025数证杯决赛-团体赛（手机部分）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="手机取证"><a href="#手机取证" class="headerlink" title="手机取证"></a>手机取证</h2><p>整个手机取证像一个巨大的apk仿真和misc工厂，大老虎小老虎我会记一辈子的（）</p>
+<p><font style="color:rgba(0, 0, 0, 0.9);">请根据</font><font style="color:rgba(0, 0, 0, 0.9);">Image.zip检材，回答以下问题：</font></p>
+<h3 id="21、分析手机检材，手机的序列号是？（答案格式：字母大写）"><a href="#21、分析手机检材，手机的序列号是？（答案格式：字母大写）" class="headerlink" title="21、分析手机检材，手机的序列号是？（答案格式：字母大写）"></a><font style="color:rgba(0, 0, 0, 0.9);">21、分析手机检材，手机的序列号是？（答案格式：字母大写）</font></h3><p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764214672697-ff3f1f88-9302-41e3-9168-99dba7291283.png" srcset="/img/loading.gif" lazyload></p>
+<p>上来是道送分题，火眼打开直接就能看见序列号</p>
+<p>当然了，我们也可以去看配置文件</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764214744549-a622ec4d-ac94-41d5-9950-91e1f0fd95bf_1.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接看zip里的Adlockdown.json文件即可</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764214806946-c8b5969a-dbee-47af-9beb-ff737f1a3ae5.png" srcset="/img/loading.gif" lazyload></p>
+<p>有json的插件看起来更方便了，当然直接搜MtpNo也是一样的，可以直接看到是HT7BG1A05334</p>
+<h3 id="22、分析“Android-E01”检材，机主23年4月15日使用的手机型号为？（答案格式：与线索大小写一致）"><a href="#22、分析“Android-E01”检材，机主23年4月15日使用的手机型号为？（答案格式：与线索大小写一致）" class="headerlink" title="22、分析“Android.E01”检材，机主23年4月15日使用的手机型号为？（答案格式：与线索大小写一致）"></a><font style="color:rgba(0, 0, 0, 0.9);">22、分析“Android.E01”检材，机主23年4月15日使用的手机型号为？（答案格式：与线索大小写一致）</font></h3><p>这一题说真的蛮搞的，一开始下意识觉得会不会是什么聊天记录里提到的，但是一看几乎所有文件都是25年的消息，明显不是这样子</p>
+<p>我们可以利用索引搜索来对时间进行检索，从而先确定出有什么文件是在23.04.15的</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764426571271-fbdf48ae-1f41-4ba7-8380-f01e94ebedf4.png" srcset="/img/loading.gif" lazyload></p>
+<p>在索引搜索部分根据时间范围进行搜索</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764426593634-ba587419-4e4e-4fd6-9c2e-12045d8c44e8.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现只有一张照片是符合这个时间段的</p>
+<p>怀疑是照片里存在着手机型号</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764427134723-8934b992-5ca6-46c9-b187-23eee0afb4e8.png" srcset="/img/loading.gif" lazyload></p>
+<p>在属性中发现了照相机型号，确定就是手机型号，答案为vivo X Fold3 Pro</p>
+<h3 id="23、分析手机检材，通话记录中，机主拨打号码频次最多的手机号是？（答案格式：11位数字）"><a href="#23、分析手机检材，通话记录中，机主拨打号码频次最多的手机号是？（答案格式：11位数字）" class="headerlink" title="23、分析手机检材，通话记录中，机主拨打号码频次最多的手机号是？（答案格式：11位数字）"></a><font style="color:rgba(0, 0, 0, 0.9);">23、分析手机检材，通话记录中，机主拨打号码频次最多的手机号是？（答案格式：11位数字）</font></h3><p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764427236985-756eb2f6-debd-45e7-b52a-f0685e59393b.png" srcset="/img/loading.gif" lazyload></p>
+<p>确定一下数据库位置，数据太多在火眼不好做</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764427420775-9a82faff-77a6-49a2-ad0e-e906725d7742.png" srcset="/img/loading.gif" lazyload></p>
+<p>表不多，很明显是这个calls的库，执行SQL一下就</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs plain">SELECT c.number ,COUNT(1) <br>FROM calls c<br>WHERE c.type = 2<br>    AND c.deleted = 0<br>    AND c.number &gt; &#x27;&#x27;<br>GROUP BY c.number<br>ORDER BY COUNT(1) DESC;<br></code></pre></td></tr></table></figure>
+
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764427496544-ae6bf75c-5ef3-4d6d-9548-e0a3b51ff401.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以最多的是这个15185491986，一共打了65次</p>
+<h3 id="24、分析手机检材，机主使用火狐浏览器搜索了“在线ai语音转换”，请问浏览器返回的结果中，第一条记录显示的应用版本号是？（答案格式：1-2-3）"><a href="#24、分析手机检材，机主使用火狐浏览器搜索了“在线ai语音转换”，请问浏览器返回的结果中，第一条记录显示的应用版本号是？（答案格式：1-2-3）" class="headerlink" title="24、分析手机检材，机主使用火狐浏览器搜索了“在线ai语音转换”，请问浏览器返回的结果中，第一条记录显示的应用版本号是？（答案格式：1.2.3）"></a><font style="color:rgba(0, 0, 0, 0.9);">24、分析手机检材，机主使用火狐浏览器搜索了“在线ai语音转换”，请问浏览器返回的结果中，第一条记录显示的应用版本号是？（答案格式：1.2.3）</font></h3><p>拿到这道题我的第一想法是去火狐浏览器的历史记录里进行搜索，但是发现数据库并未存储每次搜索的返回结果</p>
+<p>之后就怀疑是不是在图片里，但是图片翻遍了都没能找到</p>
+<p>没想到在火狐的缓存里边</p>
+<p>在&#x2F;data&#x2F;data&#x2F;org.mozilla.firefox&#x2F;cache路径下</p>
+<p>根据英文单词thumbnails，发现了有个路径可能放着缩略图</p>
+<p>&#x2F;mozac_browser_thumbnails&#x2F;thumbnails里边存放着</p>
+<p><img src="https://cdn.nlark.com/yuque/0/2025/png/54209285/1764463842164-5856f15b-82b1-45d9-950f-427b4d75a6fb.png" srcset="/img/loading.gif" lazyload></p>
+<p>里边东西不多，很容易定位到，所以版本号是5.2.8</p>
+<h3 id="25、分析手机检材，分析机主历史使用过telegram应用中，曾保存文件记录的后台密码为？（答案格式：与线索保持一致）"><a href="#25、分析手机检材，分析机主历史使用过telegram应用中，曾保存文件记录的后台密码为？（答案格式：与线索保持一致）" class="headerlink" title="25、分析手机检材，分析机主历史使用过telegram应用中，曾保存文件记录的后台密码为？（答案格式：与线索保持一致）"></a><font style="color:rgba(0, 0, 0, 0.9);">25、分析手机检材，分析机主历史使用过telegram应用中，曾保存文件记录的后台密码为？（答案格式：与线索保持一致）</font></h3><p>说的telegram应用保存的，那我们直接去telegram存东西的地方就好了</p>
+<p>即&#x2F;data&#x2F;media&#x2F;0&#x2F;Telegram</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764470560213-e94becdb-90bd-489d-84ab-7d994cfc0472.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现有个txt里边就写着后台密码</p>
+<p>159753lee</p>
+<h3 id="26、分析手机检材，邀请码-docx文件第三行内容为？（答案格式：与线索保持一致）"><a href="#26、分析手机检材，邀请码-docx文件第三行内容为？（答案格式：与线索保持一致）" class="headerlink" title="26、分析手机检材，邀请码.docx文件第三行内容为？（答案格式：与线索保持一致）"></a><font style="color:rgba(0, 0, 0, 0.9);">26、分析手机检材，邀请码.docx文件第三行内容为？（答案格式：与线索保持一致）</font></h3><p>就在上边那题的下边，直接索引搜索也能搜到，然后就能定位到上边那题（hhhh）</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764470868151-11cb95a3-181a-4e6c-979d-e3d7dc1d4a90.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764470788742-d35e1424-77c6-4f4a-b36c-2ab4d54f43f8.png" srcset="/img/loading.gif" lazyload></p>
+<p>欸要密码，根据提示爆破一下</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764470917002-0f43fabc-3d29-4d7a-bd2f-54d712e26e00.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到密码0227，打开即可</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764470947061-06e2fbac-f4f6-4599-a87f-c8eec23c37af_1.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以第三行是M3n4O5p6Q7r8</p>
+<h3 id="27、分析手机检材，机主通过WPS应用最后打开的文档名称是？（答案格式：包含后缀，如123Abc-docx）"><a href="#27、分析手机检材，机主通过WPS应用最后打开的文档名称是？（答案格式：包含后缀，如123Abc-docx）" class="headerlink" title="27、分析手机检材，机主通过WPS应用最后打开的文档名称是？（答案格式：包含后缀，如123Abc.docx）"></a><font style="color:rgba(0, 0, 0, 0.9);">27、分析手机检材，机主通过WPS应用最后打开的文档名称是？（答案格式：包含后缀，如123Abc.docx）</font></h3><p>这题两个做法，一个是你火眼直接看</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764470991791-340d1ca7-ed3f-4aba-803c-3dcbf2f06ce1.png" srcset="/img/loading.gif" lazyload></p>
+<p>看时间，答案就是AI换脸软件及教程.docx</p>
+<p>第二种就是仿真一下，意义不是很大，但我试过确实能出来，就是这个答案</p>
+<h3 id="28、分析手机检材，分析系统自带的相册应用，相册中的图片有多少张来源于豆包应用？（答案格式：仅数字）"><a href="#28、分析手机检材，分析系统自带的相册应用，相册中的图片有多少张来源于豆包应用？（答案格式：仅数字）" class="headerlink" title="28、分析手机检材，分析系统自带的相册应用，相册中的图片有多少张来源于豆包应用？（答案格式：仅数字）"></a><font style="color:rgba(0, 0, 0, 0.9);">28、分析手机检材，分析系统自带的相册应用，相册中的图片有多少张来源于豆包应用？（答案格式：仅数字）</font></h3><p><font style="color:rgba(0, 0, 0, 0.9);">一开始想在豆包的data文件里翻一下，但是没翻到</font></p>
+<p><font style="color:rgba(0, 0, 0, 0.9);">不过豆包生成的AI都是带着特殊标签的</font></p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471308345-df8421a6-7c6e-4c02-ad99-512ec38435cc.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以我们直接去相册应用找一下有几张这样子的就好了</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471347782-e19385ac-7221-4833-9d67-2674bd49f1af_1.png" srcset="/img/loading.gif" lazyload></p>
+<p>数了一下是13张</p>
+<h3 id="29、分析手机检材，机主安装的哪个应用可以对应用和文件系统进行隐藏，请给出该应用的包名是？（答案格式：com-tencent-mm）"><a href="#29、分析手机检材，机主安装的哪个应用可以对应用和文件系统进行隐藏，请给出该应用的包名是？（答案格式：com-tencent-mm）" class="headerlink" title="29、分析手机检材，机主安装的哪个应用可以对应用和文件系统进行隐藏，请给出该应用的包名是？（答案格式：com.tencent.mm）"></a><font style="color:rgba(0, 0, 0, 0.9);">29、分析手机检材，机主安装的哪个应用可以对应用和文件系统进行隐藏，请给出该应用的包名是？（答案格式：com.tencent.mm）</font></h3><p>要对应用和文件系统进行隐藏，我们得先找到这个APK</p>
+<p>一般这种的特殊小众应用有着很特殊的包名和logo</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471675054-897bdc7e-12d5-40ed-a274-18d0aa9cf6df.png" srcset="/img/loading.gif" lazyload></p>
+<p>遍历之后很容易确定是这一个</p>
+<p>一开始也有怀疑是右边那个</p>
+<p>我们安装看看就行</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471666538-e4475e18-a9c1-4c64-8a74-4db7df8efbae.png" srcset="/img/loading.gif" lazyload></p>
+<p>安装完发现肯定不是这玩意了（其实我一直觉得这个可能有用来着，但是到最后都没用上）</p>
+<p>安装完Amarok，就确定了，就是这玩意会隐藏</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471744586-e10f74a3-1e84-42a7-9831-d6e3e32cedcd.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471765877-d24676f6-116a-479d-a445-996860d99a6b_1.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="30、接上题，该应用隐藏的图片文件名是？（答案格式：包含后缀，如Abc123-jpg）"><a href="#30、接上题，该应用隐藏的图片文件名是？（答案格式：包含后缀，如Abc123-jpg）" class="headerlink" title="30、接上题，该应用隐藏的图片文件名是？（答案格式：包含后缀，如Abc123.jpg）"></a><font style="color:rgba(0, 0, 0, 0.9);">30、接上题，该应用隐藏的图片文件名是？（答案格式：包含后缀，如Abc123.jpg）</font></h3><p>找到隐藏图片是什么，首先要找是咋隐藏的</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471800731-9809e41d-c83e-48bd-8e9c-cf59cb676909_1.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现这个软件有很多可以自定义的隐藏方式</p>
+<p>所以我们还是应该仿真一下</p>
+<p>安装好了已经，我们先把data包拷到雷电的共享文件夹&#x2F;Picture</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471870807-877f2f37-41e5-4f9a-918a-df65ad8478d7.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后在雷电里打开MT管理器</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471911524-8ce360d3-b4bd-4d00-9fb3-545b0b84d511.png" srcset="/img/loading.gif" lazyload></p>
+<p>左边到..&#x2F;0&#x2F;Picture的共享文件夹里</p>
+<p>右边到&#x2F;data&#x2F;data里，放包的</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471953462-b45ec77a-8178-4274-8182-ce8f16f8089c.png" srcset="/img/loading.gif" lazyload></p>
+<p>长按选择复制</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764471972252-4ba3a38c-0574-4174-b527-ca99c109adc1.png" srcset="/img/loading.gif" lazyload></p>
+<p>全部复制并替换，然后打开软件，就已经有了犯罪嫌疑人的设置系统</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472007257-07b71ca0-f845-4c92-a98c-1074f7ab9131.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现还设置了应用锁</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472034256-95e9754d-f02b-4ba6-90df-179a7ef4bdba.png" srcset="/img/loading.gif" lazyload></p>
+<p>在火眼该软件的分析目录下边发现了xml文件中写了password：c33367701511b4f6020ec61ded352059</p>
+<p>明显是加密过的，看着像md5的哈希值，尝试hashcat爆破</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472114222-c16b23c6-05f9-4461-8c21-95ff546922e6.png" srcset="/img/loading.gif" lazyload></p>
+<p>（比赛的时候hashcat一分钟多一点就爆破出来了，我省点事用在线工具写一下），最后得到是654321</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472173058-adf48195-b7b3-4eb8-958d-901aa48bd4aa.png" srcset="/img/loading.gif" lazyload></p>
+<p>成功进入，看看隐藏设置</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472196867-9e640893-95bd-47c8-81be-6933aef47a47.png" srcset="/img/loading.gif" lazyload></p>
+<p>就是混淆了一下文件头而已其实</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472216437-2bd01f40-c1ac-46cc-91e1-e076e7edc56c.png" srcset="/img/loading.gif" lazyload></p>
+<p>隐藏文件就在这边</p>
+<p>所以我们其实可以直接去火眼找到原来的加密文件</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472249529-3f2be71d-b9c5-4d74-8f4a-88a1f5b5348b.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现了两个加密文件</p>
+<p>这个之后我们可以直接先保持加密的状态，然后这俩文件复制到&#x2F;storage&#x2F;emulated&#x2F;0&#x2F;Private这个路径</p>
+<p>其实一般是没有Private的路径的，我们需要自己新建一个过去</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472380079-f01ddf3c-97e8-43e2-a07d-cd07a4d7ff2f.png" srcset="/img/loading.gif" lazyload></p>
+<p>新建一个</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472396898-bf889d1d-3282-48ec-a84d-50b4d75fd9ae.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后左边共享文件夹，用MT复制过去（一定要保证现在这个软件是已隐藏的状态）</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472443903-bfe53991-230f-4014-bbb9-985a8329b671.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后放过去之后再解除隐藏</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472471497-f007ff3f-b07d-487b-9f56-60359119f409.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472483108-4ea8e980-898e-4152-85a6-d3c84cba1d42.png" srcset="/img/loading.gif" lazyload></p>
+<p>就会发现变成原来的文件啦~</p>
+<p>然后这题问的图片文件很明显就是下边这个啦</p>
+<p>Screenshot_20250925-231717.png</p>
+<h3 id="31、接上题，找到机主记录的仓库门禁密码是？（答案格式：按照实际值填写）"><a href="#31、接上题，找到机主记录的仓库门禁密码是？（答案格式：按照实际值填写）" class="headerlink" title="31、接上题，找到机主记录的仓库门禁密码是？（答案格式：按照实际值填写）"></a><font style="color:rgba(0, 0, 0, 0.9);">31、接上题，找到机主记录的仓库门禁密码是？（答案格式：按照实际值填写）</font></h3><p>接上题，这个解开的图片文件就是门禁密码存放处</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472542490-b9b7b4a6-2728-46f7-b9af-7d73f63aec81.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以答案是606888</p>
+<h3 id="32、请分析手机检材，从检材中找到机主给微信好友转账的好友卡号所属银行名称。（答案格式：需与检材中记录的银行名称一致，如招商银行）"><a href="#32、请分析手机检材，从检材中找到机主给微信好友转账的好友卡号所属银行名称。（答案格式：需与检材中记录的银行名称一致，如招商银行）" class="headerlink" title="32、请分析手机检材，从检材中找到机主给微信好友转账的好友卡号所属银行名称。（答案格式：需与检材中记录的银行名称一致，如招商银行）"></a><font style="color:rgba(0, 0, 0, 0.9);">32、请分析手机检材，从检材中找到机主给微信好友转账的好友卡号所属银行名称。（答案格式：需与检材中记录的银行名称一致，如招商银行）</font></h3><p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472587925-3c91791c-39de-487a-a7cf-a91e8d4d1c26.png" srcset="/img/loading.gif" lazyload></p>
+<p>微信聊天很少，很容易定位到这个银行卡号</p>
+<p>但是这是哪个银行呢，不太了解</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472643546-e8c9f106-a5eb-454a-8150-dface3c59555.png" srcset="/img/loading.gif" lazyload></p>
+<p>碰巧在追查那个隐藏文件的安装包Amarok的时候看到了下载文件夹里有着个银行bin码的图片啊</p>
+<p>好像坏了，看看怎么坏的</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472728132-85f429da-a99d-4bff-ab29-b5f25cd1a94d.png" srcset="/img/loading.gif" lazyload></p>
+<p>看起来只是文件头损坏了</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472927470-94a43a51-eb09-4a19-b501-2a2dbe1c544d.png" srcset="/img/loading.gif" lazyload></p>
+<p>把只读关了</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472956028-b784381e-e10b-4501-9c3e-631ee47805a0.png" srcset="/img/loading.gif" lazyload></p>
+<p>修一下</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764472970741-f20a2217-f73c-460c-a34f-2e8065110a0a.png" srcset="/img/loading.gif" lazyload></p>
+<p>好像还是不对，明显宽高有问题</p>
+<p>改一下高，懒得算CRC了，稍微扩高一点就好了（其实随波逐流也一样）</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473004513-5b6aaf1a-3b73-4d7b-b3c7-0ba9d7b3b6ad.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473051474-27bce034-2cd5-48ca-b19f-c456d18b3037.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473065879-786c91b4-23d9-45f9-9c9d-f9d65c02dc59.png" srcset="/img/loading.gif" lazyload></p>
+<p>看见了看见了，623110开头是苏州农商银行，即答案</p>
+<h3 id="33、请分析手机检材，机主收到了一个视频，该视频损坏后，机主对其进行了修复，请计算修复后的视频SHA1值？（答案格式：字母大写）"><a href="#33、请分析手机检材，机主收到了一个视频，该视频损坏后，机主对其进行了修复，请计算修复后的视频SHA1值？（答案格式：字母大写）" class="headerlink" title="33、请分析手机检材，机主收到了一个视频，该视频损坏后，机主对其进行了修复，请计算修复后的视频SHA1值？（答案格式：字母大写）"></a><font style="color:rgba(0, 0, 0, 0.9);">33、请分析手机检材，机主收到了一个视频，该视频损坏后，机主对其进行了修复，请计算修复后的视频SHA1值？（答案格式：字母大写）</font></h3><p>收到的视频说的是微信里边那个大老虎小老虎</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473196323-06d8de11-aa61-448c-8a8a-7065308dab90.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接看视频会发现中间有损坏片段</p>
+<p>但是在刚刚的下载文件夹里</p>
+<p>我们可以直接看到有个压缩包写着已修复</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473238309-aada921c-cf7f-44af-b91c-2e606f05c50b.png" srcset="/img/loading.gif" lazyload></p>
+<p>旁边还有本地的摩斯网站（我还以为要去上网机呢）</p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473381302-6a5d37ee-17df-4655-8bc8-884dcff7fe1c_1.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接查SHA1就好了，注意字母大写</p>
+<p>6ACE0A0CB5F1DD812DAD017BE38D138304411C74</p>
+<h3 id="34、请分析手机检材，加密压缩包的解压密码是？（答案格式：需与线索一致）"><a href="#34、请分析手机检材，加密压缩包的解压密码是？（答案格式：需与线索一致）" class="headerlink" title="34、请分析手机检材，加密压缩包的解压密码是？（答案格式：需与线索一致）"></a><font style="color:rgba(0, 0, 0, 0.9);">34、请分析手机检材，加密压缩包的解压密码是？（答案格式：需与线索一致）</font></h3><p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473475208-c29e28b0-c64c-45c9-ab8f-725fa0e81831_1.png" srcset="/img/loading.gif" lazyload></p>
+<p>加密压缩包就是这个机密，说的也很明确了，就是那个视频，而且说的很明确是摩斯</p>
+<p><font style="color:rgba(0, 0, 0, 0.9);">大老虎为摩斯密码1，小老虎为0，切换的时候就是空格</font></p>
+<p><font style="color:rgba(0, 0, 0, 0.9);">一开始感觉很离谱，但是赛后想了下也有道理</font></p>
+<p><font style="color:rgba(0, 0, 0, 0.9);">其实修视频就说明了跟视频内容很重要，视频内容无非是老虎</font></p>
+<p><font style="color:rgba(0, 0, 0, 0.9);">那就是白的和黄的还有小的和大的的区别</font></p>
+<p><font style="color:rgba(0, 0, 0, 0.9);">其实应该想到的</font></p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473601801-ffcd267b-d230-466b-91d4-ccde921f957b_1.png" srcset="/img/loading.gif" lazyload></p>
+<p><font style="color:rgba(0, 0, 0, 0.9);">总之这样子就能得到密文：1000 0010 00000 0 000 100 1101 011 1100 010 00111 01 00000 00001 0001 0</font></p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473628179-310cc460-aa82-4531-b0b3-4bc8f194a8e0.png" srcset="/img/loading.gif" lazyload></p>
+<p>向那个本地网站输入</p>
+<p>得到密码：BF5ESDQWZR2A54VE，即本题答案</p>
+<h3 id="35、请分析手机检材，报价文件的MD5值为？（答案格式：字母大写）"><a href="#35、请分析手机检材，报价文件的MD5值为？（答案格式：字母大写）" class="headerlink" title="35、请分析手机检材，报价文件的MD5值为？（答案格式：字母大写）"></a><font style="color:rgba(0, 0, 0, 0.9);">35、请分析手机检材，报价文件的MD5值为？（答案格式：字母大写）</font></h3><p><font style="color:rgba(0, 0, 0, 0.9);">上一题的压缩包解压就好了</font></p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473687331-cfa00a45-7cd1-406d-a49c-f085403a0213.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2025%E6%95%B0%E8%AF%81%E6%9D%AF%E5%86%B3%E8%B5%9B-%E5%9B%A2%E4%BD%93%E8%B5%9B/1764473721765-9d5692cf-33b3-40e4-93af-2e04e1e7a41b.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以答案是43042BF7EFA0F73DD69162A640FE923F</p>
+<p>总体而言本次手机做的还行吧，除了老虎和版本号以外都做出来了，下次继续努力</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%94%B5%E5%AD%90%E5%8F%96%E8%AF%81/" class="category-chain-item">电子取证</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Misc/" class="print-no-link">#Misc</a>
+      
+        <a href="/tags/Mobile/" class="print-no-link">#Mobile</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>2025数证杯决赛-团体赛（手机部分）</div>
+      <div>https://mei-you-qian.github.io/2025/12/01/2025数证杯决赛-团体赛/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Meiyouqian</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2025年12月1日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/11/30/2025SPC%E7%94%B5%E5%AD%90%E5%8F%96%E8%AF%81%E7%AB%9E%E8%B5%9B%E5%88%9D%E8%B5%9B/" title="2025SPC电子取证竞赛初赛">
+                        <span class="hidden-mobile">2025SPC电子取证竞赛初赛</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"cloud1-9g1zftrh46f4164f","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> 
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/scrollAnimation.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<!-- hexo injector body_end start --><script src="/js/backgroundize.js"></script><!-- hexo injector body_end end --></body>
+</html>
