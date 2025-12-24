@@ -258,6 +258,34 @@
     letter-spacing: 1px;
 }
 
+.results-link {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 12px 20px;
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    color: #fff;
+    text-decoration: none;
+    border-radius: 12px;
+    font-weight: 600;
+    font-size: 1rem;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(245, 158, 11, 0.3);
+    font-family: 'Inter', sans-serif;
+}
+
+.results-link:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(245, 158, 11, 0.4);
+    background: linear-gradient(135deg, #d97706, #b45309);
+    color: #fff;
+    text-decoration: none;
+}
+
+.results-link:active {
+    transform: translateY(0);
+}
+
 .lottery-form {
     margin-top: 24px;
 }
@@ -380,7 +408,7 @@
         0 6px 12px rgba(0, 0, 0, 0.15);
 }
 
-/* 头像光环效果 */
+/* 头像光环效果 - 修复遮挡问题 */
 .lottery-avatar-wrap::before {
     content: '';
     position: absolute;
@@ -394,11 +422,12 @@
     opacity: 0;
     transition: opacity 0.3s ease;
     animation: rotate 3s linear infinite;
-    z-index: -1;
+    z-index: 0;
+    pointer-events: none;
 }
 
-.lottery-avatar[style*="inline-block"]+.lottery-avatar-wrap::before {
-    opacity: 0.3;
+.lottery-avatar[style*="inline-block"]~.lottery-avatar-wrap::before {
+    opacity: 0.2;
 }
 
 @keyframes rotate {
@@ -709,6 +738,17 @@ html[data-user-color-scheme="dark"] .wechat-id {
     color: #10b981;
     background: rgba(16, 185, 129, 0.2);
     border-color: rgba(16, 185, 129, 0.4);
+}
+
+html[data-user-color-scheme="dark"] .results-link {
+    background: linear-gradient(135deg, #fbbf24, #f59e0b);
+    box-shadow: 0 4px 12px rgba(251, 191, 36, 0.3);
+}
+
+html[data-user-color-scheme="dark"] .results-link:hover {
+    background: linear-gradient(135deg, #f59e0b, #d97706);
+    box-shadow: 0 6px 16px rgba(251, 191, 36, 0.4);
+    color: #fff;
 }
 
 /* 加载动画 */

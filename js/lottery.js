@@ -58,36 +58,67 @@
             return;
         }
 
+        // 检查是否已经参与过抽奖
+        try {
+            const done = localStorage.getItem(LS_KEY);
+            if (done) {
+                setResult("您已经参与过抽奖了，请等待开奖结果！", false);
+                return;
+            }
+        } catch (_) { }
+
         drawBtn.disabled = true;
         const btnText = drawBtn.querySelector('.btn-text');
         const btnIcon = drawBtn.querySelector('.btn-icon');
         if (btnText) btnText.textContent = "抽奖中...";
         if (btnIcon) btnIcon.textContent = "⏳";
 
+        // 模拟抽奖延迟
+        await new Promise(resolve => setTimeout(resolve, 2000));
+
         try {
-            const resp = await fetch(API, {
-                method: "POST",
-                headers: { "Content-Type": "application/json" },
-                body: JSON.stringify({ qq }),
-            });
-            const data = await resp.json();
+            // 纯前端抽奖逻辑
+            const prizes = [
+                { name: "KFC套餐", probability: 0.05, emoji: "🍗" }, // 5% 概率
+                { name: "10元小红包", probability: 0.15, emoji: "🧧" }, // 15% 概率
+                { name: "未中奖", probability: 0.8, emoji: "😔" } // 80% 概率
+            ];
 
-            if (!data.success) {
-                setResult(data.message || "抽奖失败", false);
-                return;
+            // 使用QQ号作为随机种子，确保同一QQ号结果一致
+            const seed = parseInt(qq) % 10000;
+            const random = (seed * 9301 + 49297) % 233280 / 233280;
+
+            let cumulativeProbability = 0;
+            let selectedPrize = prizes[prizes.length - 1]; // 默认未中奖
+
+            for (const prize of prizes) {
+                cumulativeProbability += prize.probability;
+                if (random < cumulativeProbability) {
+                    selectedPrize = prize;
+                    break;
+                }
             }
 
-            // 成功
-            try { localStorage.setItem(LS_KEY, "1"); } catch (_) { }
-            const prize = data.prize || "未中奖";
-            if (prize === "未中奖") {
-                setResult("很遗憾，本次未中奖。", true);
+            // 记录参与状态
+            try {
+                localStorage.setItem(LS_KEY, "1");
+                localStorage.setItem(`lottery_result_${qq}`, JSON.stringify({
+                    prize: selectedPrize.name,
+                    time: new Date().toLocaleString('zh-CN'),
+                    qq: qq
+                }));
+            } catch (_) { }
+
+            // 显示结果
+            if (selectedPrize.name === "未中奖") {
+                setResult("很遗憾，本次未中奖。感谢参与！", true);
             } else {
-                setResult(`🎉 恭喜！你抽中了「${prize}」！`, true);
+                setResult(`🎉 恭喜！你抽中了「${selectedPrize.emoji} ${selectedPrize.name}」！`, true);
             }
-            setHint(`记录时间：${data.time || "已记录"}`);
+            setHint(`记录时间：${new Date().toLocaleString('zh-CN')} | 请等待跨年开奖揭晓最终结果`);
+
         } catch (e) {
-            setResult("请求失败：请检查后端是否启动 / 反代是否配置", false);
+            setResult("抽奖出现错误，请刷新页面重试", false);
             console.error(e);
         } finally {
             drawBtn.disabled = false;
