@@ -44,6 +44,10 @@
             const response = await authenticatedFetch(ADMIN_API);
             const data = await response.json();
 
+            // 添加调试日志
+            console.log('管理员API响应状态:', response.status);
+            console.log('管理员API返回数据:', data);
+
             if (!response.ok) {
                 if (response.status === 401) {
                     throw new Error('管理员认证失败，请检查密码');
@@ -81,18 +85,34 @@
 
     // 显示管理员数据
     function displayAdminData(data) {
+        console.log('开始显示管理员数据:', data);
+
         // 更新统计数字 - 修复字段映射
         if (participantCountEl) {
             participantCountEl.textContent = data.count || 0;
+            console.log('设置参与人数:', data.count);
         }
         if (uniqueIPsEl) {
             // 管理员API不返回独立IP数，使用参与人数作为近似值
             uniqueIPsEl.textContent = data.count || 0;
+            console.log('设置独立IP数:', data.count);
         }
 
         // 显示参与者列表 - 修复字段映射
+        console.log('检查参与者列表:', {
+            hasParticipantListEl: !!participantListEl,
+            hasLatestData: !!data.latest,
+            latestData: data.latest
+        });
+
         if (participantListEl && data.latest) {
+            console.log('调用displayParticipants，参与者数量:', data.latest.length);
             displayParticipants(data.latest);
+        } else {
+            console.log('未显示参与者列表，原因:', {
+                noElement: !participantListEl,
+                noData: !data.latest
+            });
         }
 
         // 更新时间
