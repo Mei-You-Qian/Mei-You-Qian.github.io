@@ -26,12 +26,10 @@
 <meta property="og:site_name" content="玫幽倩的小博客">
 <meta property="og:description" content=".admin-panel {     max-width: 1000px;     margin: 0 auto;     padding: 20px; }  .admin-card {     background: rgba(255, 255, 255, 0.95);     backdrop-filter: blur(10px);     border-radius: 20px;">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://mei-you-qian.github.io/img/avatar.png">
-<meta property="article:published_time" content="2025-12-24T10:19:58.234Z">
-<meta property="article:modified_time" content="2025-12-24T10:19:58.234Z">
+<meta property="article:published_time" content="2025-12-24T10:35:09.099Z">
+<meta property="article:modified_time" content="2025-12-24T10:35:09.099Z">
 <meta property="article:author" content="Meiyouqian">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://mei-you-qian.github.io/img/avatar.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -564,16 +562,20 @@
         console.log('检查参与者列表:', {
             hasParticipantListEl: !!participantListEl,
             hasLatestData: !!data.latest,
-            latestData: data.latest
+            latestData: data.latest,
+            latestLength: data.latest ? data.latest.length : 0,
+            fullData: data
         });
 
-        if (participantListEl && data.latest) {
+        if (participantListEl && data.latest && data.latest.length > 0) {
             console.log('调用displayParticipants，参与者数量:', data.latest.length);
+            console.log('参与者详细数据:', data.latest);
             displayParticipants(data.latest);
         } else {
             console.log('未显示参与者列表，原因:', {
                 noElement: !participantListEl,
-                noData: !data.latest
+                noData: !data.latest,
+                emptyData: data.latest && data.latest.length === 0
             });
             // 如果没有数据，显示空状态
             if (participantListEl) {
@@ -605,7 +607,13 @@
 
     // 显示参与者列表
     function displayParticipants(participants) {
-        if (!participantListEl) return;
+        console.log('显示参与者列表，数量:', participants.length);
+        console.log('参与者数据:', participants);
+        
+        if (!participantListEl) {
+            console.error('找不到participantsList元素');
+            return;
+        }
 
         if (!participants || participants.length === 0) {
             participantListEl.innerHTML = `
@@ -619,16 +627,19 @@
 
         let html = '';
         participants.forEach((participant, index) => {
-            const qq = participant.qq || '未知';
-            // 移除IP显示，Worker出于安全考虑不返回IP信息
-            const time = participant.timestamp ?
-                new Date(participant.timestamp).toLocaleString('zh-CN') :
-                (participant.time || '未知时间');
-            const avatar = `https://q.qlogo.cn/g?b=qq&nk=${encodeURIComponent(qq)}&s=100`;
+            console.log(`参与者 ${index}:`, participant);
+            // 使用完整QQ号和预生成的头像URL
+            const qq = participant.qq || participant.qqMasked || '未知';
+            const time = participant.joinedAt ? 
+                new Date(participant.joinedAt).toLocaleString('zh-CN') : 
+                '未知时间';
+            
+            // 使用API返回的头像URL，或者基于完整QQ号生成
+            const avatar = participant.avatar || `https://q1.qlogo.cn/g?b=qq&nk=${encodeURIComponent(qq)}&s=100`;
 
             html += `
                 <div class="participant-item" style="animation-delay: ${index * 0.05}s">
-                    <img class="participant-avatar" src="${avatar}" srcset="/img/loading.gif" lazyload alt="QQ头像" onerror="this.src='/img/avatar.png'">
+                    <img class="participant-avatar" src="${avatar}" srcset="/img/loading.gif" lazyload alt="QQ头像" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNDAiIGhlaWdodD0iNDAiIHZpZXdCb3g9IjAgMCA0MCA0MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjAiIGN5PSIyMCIgcj0iMjAiIGZpbGw9IiNmMGYwZjAiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHBhdGggZD0iTTEyIDEyQzE0LjIwOTEgMTIgMTYgMTAuMjA5MSAxNiA4QzE2IDUuNzkwODYgMTQuMjA5MSA0IDEyIDRDOS43OTA4NiA0IDggNS43OTA4NiA4IDhDOCAxMC4yMDkxIDkuNzkwODYgMTIgMTIgMTJaIiBmaWxsPSIjOWNhM2FmIi8+CjxwYXRoIGQ9Ik0xMiAxNEM5LjMzIDEzLjk5IDcuMDEgMTUuNzMgNi4yMiAxOC4zOUM2LjA5IDE4Ljc4IDYuNDEgMTkuMTcgNi44IDE5LjE3SDE3LjJDMTcuNTkgMTkuMTcgMTcuOTEgMTguNzggMTcuNzggMTguMzlDMTYuOTkgMTUuNzMgMTQuNjcgMTMuOTkgMTIgMTRaIiBmaWxsPSIjOWNhM2FmIi8+Cjwvc3ZnPgo8L3N2Zz4K'">
                     <div class="participant-info">
                         <div class="participant-qq">QQ: ${qq}</div>
                         <div class="participant-time">时间: ${time}</div>
@@ -639,6 +650,7 @@
         });
 
         participantListEl.innerHTML = html;
+        console.log('参与者列表HTML已更新');
     }
 
     // 显示加载状态
