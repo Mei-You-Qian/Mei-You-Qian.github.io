@@ -1,0 +1,652 @@
+/* 抽奖页面美化样式 */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+.lottery-wrap {
+    max-width: 480px;
+    margin: 2rem auto;
+    padding: 0 1rem;
+    position: relative;
+}
+
+/* 添加背景装饰 */
+.lottery-wrap::before {
+    content: '';
+    position: absolute;
+    top: -50px;
+    left: -50px;
+    right: -50px;
+    bottom: -50px;
+    background:
+        radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 80% 20%, rgba(255, 103, 132, 0.3) 0%, transparent 50%),
+        radial-gradient(circle at 40% 40%, rgba(120, 219, 226, 0.2) 0%, transparent 50%);
+    border-radius: 50px;
+    z-index: -1;
+    animation: float 6s ease-in-out infinite;
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0px) rotate(0deg);
+    }
+
+    50% {
+        transform: translateY(-10px) rotate(1deg);
+    }
+}
+
+.lottery-card {
+    border-radius: 24px;
+    padding: 32px 28px;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.1),
+        0 8px 16px rgba(0, 0, 0, 0.06),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    position: relative;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.lottery-card:hover {
+    transform: translateY(-2px);
+    box-shadow:
+        0 25px 50px rgba(0, 0, 0, 0.15),
+        0 12px 24px rgba(0, 0, 0, 0.08),
+        inset 0 1px 0 rgba(255, 255, 255, 0.8);
+}
+
+/* 卡片装饰元素 */
+.lottery-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 4px;
+    background: linear-gradient(90deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57);
+    background-size: 300% 100%;
+    animation: gradient 3s ease infinite;
+}
+
+@keyframes gradient {
+
+    0%,
+    100% {
+        background-position: 0% 50%;
+    }
+
+    50% {
+        background-position: 100% 50%;
+    }
+}
+
+.lottery-header {
+    text-align: center;
+    margin-bottom: 16px;
+}
+
+.lottery-title {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+    font-size: 2rem;
+    font-weight: 800;
+    letter-spacing: -0.02em;
+    margin-bottom: 4px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    position: relative;
+}
+
+.lottery-subtitle {
+    font-size: 0.9rem;
+    color: #f59e0b;
+    font-weight: 600;
+    background: linear-gradient(45deg, #f59e0b, #ef4444);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    margin-bottom: 8px;
+}
+
+@keyframes sparkle {
+
+    0%,
+    100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 0.7;
+    }
+
+    50% {
+        transform: scale(1.2) rotate(180deg);
+        opacity: 1;
+    }
+}
+
+.lottery-desc {
+    text-align: center;
+    margin-top: 8px;
+    margin-bottom: 24px;
+    color: #64748b;
+    font-size: 0.95rem;
+    line-height: 1.5;
+    font-weight: 500;
+}
+
+.lottery-form {
+    margin-top: 24px;
+}
+
+.input-group {
+    margin-bottom: 20px;
+}
+
+.lottery-label {
+    display: flex;
+    align-items: center;
+    font-weight: 600;
+    margin-bottom: 8px;
+    color: #374151;
+    font-size: 0.95rem;
+    font-family: 'Inter', sans-serif;
+    gap: 6px;
+}
+
+.label-icon {
+    font-size: 1rem;
+}
+
+.input-wrapper {
+    position: relative;
+}
+
+.input-decoration {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    border-radius: 16px;
+    background: linear-gradient(45deg, transparent, rgba(102, 126, 234, 0.05), transparent);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    pointer-events: none;
+}
+
+.lottery-input:focus+.input-decoration {
+    opacity: 1;
+}
+
+.lottery-input {
+    width: 100%;
+    border-radius: 16px;
+    padding: 16px 20px;
+    border: 2px solid #e5e7eb;
+    outline: none;
+    transition: all 0.2s ease;
+    font-size: 1.1rem;
+    font-weight: 500;
+    background: rgba(255, 255, 255, 0.8);
+    backdrop-filter: blur(10px);
+    font-family: 'Inter', sans-serif;
+}
+
+.lottery-input:focus {
+    border-color: #667eea;
+    box-shadow:
+        0 0 0 4px rgba(102, 126, 234, 0.1),
+        0 4px 12px rgba(102, 126, 234, 0.15);
+    transform: translateY(-1px);
+    background: rgba(255, 255, 255, 0.95);
+}
+
+.lottery-input::placeholder {
+    color: #9ca3af;
+    font-weight: 400;
+}
+
+.lottery-avatar-wrap {
+    margin: 20px 0;
+    text-align: center;
+    position: relative;
+}
+
+.avatar-container {
+    display: inline-block;
+    position: relative;
+}
+
+.lottery-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    display: none;
+    border: 4px solid #fff;
+    box-shadow:
+        0 8px 24px rgba(0, 0, 0, 0.15),
+        0 4px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+    position: relative;
+    z-index: 2;
+}
+
+.avatar-ring {
+    position: absolute;
+    top: -8px;
+    left: -8px;
+    right: -8px;
+    bottom: -8px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff6b6b);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    animation: rotate 3s linear infinite;
+    z-index: 1;
+}
+
+.lottery-avatar[style*="inline-block"]~.avatar-ring {
+    opacity: 0.6;
+}
+
+.lottery-avatar:hover {
+    transform: scale(1.05);
+    box-shadow:
+        0 12px 32px rgba(0, 0, 0, 0.2),
+        0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+/* 头像光环效果 */
+.lottery-avatar-wrap::before {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 120px;
+    height: 120px;
+    border-radius: 50%;
+    background: conic-gradient(from 0deg, #ff6b6b, #4ecdc4, #45b7d1, #96ceb4, #feca57, #ff6b6b);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    animation: rotate 3s linear infinite;
+    z-index: -1;
+}
+
+.lottery-avatar[style*="inline-block"]+.lottery-avatar-wrap::before {
+    opacity: 0.3;
+}
+
+@keyframes rotate {
+    from {
+        transform: translate(-50%, -50%) rotate(0deg);
+    }
+
+    to {
+        transform: translate(-50%, -50%) rotate(360deg);
+    }
+}
+
+.lottery-btn {
+    width: 100%;
+    padding: 18px 24px;
+    border: none;
+    border-radius: 16px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: #fff;
+    font-weight: 700;
+    font-size: 1.1rem;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    font-family: 'Inter', sans-serif;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 16px rgba(102, 126, 234, 0.3);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+
+.btn-text {
+    flex: 1;
+    text-align: center;
+}
+
+.btn-icon {
+    font-size: 1.2rem;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+@keyframes bounce {
+
+    0%,
+    20%,
+    50%,
+    80%,
+    100% {
+        transform: translateY(0);
+    }
+
+    40% {
+        transform: translateY(-3px);
+    }
+
+    60% {
+        transform: translateY(-2px);
+    }
+}
+
+.lottery-btn::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.2), transparent);
+    transition: left 0.5s ease;
+}
+
+.lottery-btn:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 24px rgba(102, 126, 234, 0.4);
+}
+
+.lottery-btn:hover::before {
+    left: 100%;
+}
+
+.lottery-btn:active {
+    transform: translateY(0);
+}
+
+.lottery-btn:disabled {
+    opacity: 0.7;
+    cursor: not-allowed;
+    transform: none;
+    background: #9ca3af;
+    box-shadow: 0 2px 8px rgba(156, 163, 175, 0.3);
+}
+
+.lottery-result {
+    margin-top: 20px;
+    font-size: 1.2rem;
+    font-weight: 700;
+    min-height: 1.5em;
+    text-align: center;
+    padding: 16px;
+    border-radius: 12px;
+    transition: all 0.3s ease;
+    font-family: 'Inter', sans-serif;
+}
+
+.lottery-result.ok {
+    color: #059669;
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    animation: success 0.5s ease;
+}
+
+.lottery-result.bad {
+    color: #dc2626;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.2);
+    animation: error 0.5s ease;
+}
+
+@keyframes success {
+    0% {
+        transform: scale(0.9);
+        opacity: 0;
+    }
+
+    50% {
+        transform: scale(1.05);
+    }
+
+    100% {
+        transform: scale(1);
+        opacity: 1;
+    }
+}
+
+@keyframes error {
+
+    0%,
+    100% {
+        transform: translateX(0);
+    }
+
+    25% {
+        transform: translateX(-5px);
+    }
+
+    75% {
+        transform: translateX(5px);
+    }
+}
+
+.lottery-hint {
+    margin-top: 12px;
+    color: #6b7280;
+    font-size: 0.9rem;
+    text-align: center;
+    font-weight: 500;
+    font-family: 'Inter', sans-serif;
+}
+
+/* 响应式设计 */
+@media (max-width: 640px) {
+    .lottery-wrap {
+        margin: 1rem auto;
+        padding: 0 0.75rem;
+    }
+
+    .lottery-card {
+        padding: 24px 20px;
+        border-radius: 20px;
+    }
+
+    .lottery-title {
+        font-size: 1.75rem;
+    }
+
+    .lottery-input {
+        padding: 14px 16px;
+        font-size: 1rem;
+    }
+
+    .lottery-btn {
+        padding: 16px 20px;
+        font-size: 1rem;
+    }
+
+    .lottery-avatar {
+        width: 80px;
+        height: 80px;
+    }
+}
+
+/* 暗色模式适配 */
+html[data-user-color-scheme="dark"] .lottery-card {
+    background: rgba(17, 24, 39, 0.95);
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow:
+        0 20px 40px rgba(0, 0, 0, 0.3),
+        0 8px 16px rgba(0, 0, 0, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.1);
+}
+
+html[data-user-color-scheme="dark"] .lottery-title {
+    background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+}
+
+html[data-user-color-scheme="dark"] .lottery-desc {
+    color: #9ca3af;
+}
+
+html[data-user-color-scheme="dark"] .lottery-label {
+    color: #e5e7eb;
+}
+
+html[data-user-color-scheme="dark"] .lottery-input {
+    background: rgba(55, 65, 81, 0.8);
+    border-color: rgba(75, 85, 99, 0.8);
+    color: #f3f4f6;
+}
+
+html[data-user-color-scheme="dark"] .lottery-input:focus {
+    background: rgba(55, 65, 81, 0.95);
+    border-color: #818cf8;
+    box-shadow:
+        0 0 0 4px rgba(129, 140, 248, 0.1),
+        0 4px 12px rgba(129, 140, 248, 0.15);
+}
+
+html[data-user-color-scheme="dark"] .lottery-input::placeholder {
+    color: #6b7280;
+}
+
+html[data-user-color-scheme="dark"] .lottery-avatar {
+    border-color: rgba(255, 255, 255, 0.2);
+}
+
+html[data-user-color-scheme="dark"] .lottery-btn {
+    background: linear-gradient(135deg, #818cf8 0%, #c084fc 100%);
+    box-shadow: 0 4px 16px rgba(129, 140, 248, 0.3);
+}
+
+html[data-user-color-scheme="dark"] .lottery-btn:hover {
+    box-shadow: 0 8px 24px rgba(129, 140, 248, 0.4);
+}
+
+html[data-user-color-scheme="dark"] .lottery-result.ok {
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.15);
+    border-color: rgba(16, 185, 129, 0.3);
+}
+
+html[data-user-color-scheme="dark"] .lottery-result.bad {
+    color: #f87171;
+    background: rgba(248, 113, 113, 0.15);
+    border-color: rgba(248, 113, 113, 0.3);
+}
+
+html[data-user-color-scheme="dark"] .lottery-hint {
+    color: #9ca3af;
+}
+
+/* 加载动画 */
+@keyframes pulse {
+
+    0%,
+    100% {
+        opacity: 1;
+    }
+
+    50% {
+        opacity: 0.5;
+    }
+}
+
+.lottery-btn:disabled {
+    animation: pulse 1.5s ease-in-out infinite;
+}
+
+/* 添加一些微交互效果 */
+.lottery-input:valid {
+    border-color: #10b981;
+}
+
+.lottery-form {
+    animation: slideUp 0.6s ease-out;
+}
+
+@keyframes slideUp {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* 装饰星星 */
+.decoration-stars {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    pointer-events: none;
+    overflow: hidden;
+}
+
+.star {
+    position: absolute;
+    font-size: 1.2rem;
+    opacity: 0.7;
+    animation: twinkle 3s ease-in-out infinite;
+}
+
+.star-1 {
+    top: 15%;
+    left: 10%;
+    animation-delay: 0s;
+}
+
+.star-2 {
+    top: 25%;
+    right: 15%;
+    animation-delay: 1s;
+}
+
+.star-3 {
+    bottom: 30%;
+    left: 20%;
+    animation-delay: 2s;
+}
+
+.star-4 {
+    bottom: 20%;
+    right: 10%;
+    animation-delay: 1.5s;
+}
+
+@keyframes twinkle {
+
+    0%,
+    100% {
+        opacity: 0.3;
+        transform: scale(1) rotate(0deg);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.2) rotate(180deg);
+    }
+}
+
+/* 暗色模式下的装饰星星 */
+html[data-user-color-scheme="dark"] .star {
+    opacity: 0.5;
+}
+
+html[data-user-color-scheme="dark"] .star:hover {
+    opacity: 0.8;
+}
