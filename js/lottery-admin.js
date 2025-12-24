@@ -16,10 +16,22 @@
         return;
     }
 
-    const statsSection = document.getElementById('statsSection');
-    const participantListEl = document.getElementById('participantsList');
-    const refreshBtn = document.getElementById('refreshBtn');
-    const errorMessage = document.getElementById('errorMessage');
+    let statsSection, participantListEl, refreshBtn, errorMessage;
+
+    // 初始化DOM元素
+    function initElements() {
+        statsSection = document.getElementById('statsSection');
+        participantListEl = document.getElementById('participantsList');
+        refreshBtn = document.getElementById('refreshBtn');
+        errorMessage = document.getElementById('errorMessage');
+
+        console.log('DOM元素初始化:', {
+            statsSection: !!statsSection,
+            participantListEl: !!participantListEl,
+            refreshBtn: !!refreshBtn,
+            errorMessage: !!errorMessage
+        });
+    }
 
     // 带认证的API请求
     async function authenticatedFetch(url, options = {}) {
@@ -232,13 +244,16 @@
         ]);
     }
 
-    // 绑定刷新按钮
-    if (refreshBtn) {
-        refreshBtn.addEventListener('click', refreshData);
-    }
-
     // 初始化
     async function init() {
+        // 首先初始化DOM元素
+        initElements();
+
+        // 绑定刷新按钮
+        if (refreshBtn) {
+            refreshBtn.addEventListener('click', refreshData);
+        }
+
         // 立即加载数据
         await refreshData();
 
@@ -250,6 +265,7 @@
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', init);
     } else {
-        init();
+        // 如果页面已经加载完成，延迟一点再初始化，确保DOM完全渲染
+        setTimeout(init, 100);
     }
 })();
