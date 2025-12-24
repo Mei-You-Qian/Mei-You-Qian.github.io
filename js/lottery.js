@@ -109,13 +109,9 @@
                 }));
             } catch (_) { }
 
-            // 显示结果
-            if (selectedPrize.name === "未中奖") {
-                setResult("很遗憾，本次未中奖。感谢参与！", true);
-            } else {
-                setResult(`🎉 恭喜！你抽中了「${selectedPrize.emoji} ${selectedPrize.name}」！`, true);
-            }
-            setHint(`记录时间：${new Date().toLocaleString('zh-CN')} | 请等待跨年开奖揭晓最终结果`);
+            // 不显示具体中奖结果，只显示参与成功
+            setResult("🎊 参与成功！您的抽奖记录已保存", true);
+            setHint(`参与时间：${new Date().toLocaleString('zh-CN')} | 请于 2025.12.31-2026.1.1 跨年时查看开奖结果`);
 
         } catch (e) {
             setResult("抽奖出现错误，请刷新页面重试", false);

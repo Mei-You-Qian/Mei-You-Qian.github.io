@@ -3,9 +3,23 @@ document.addEventListener('DOMContentLoaded', function () {
     // 开奖时间设置（2025年12月31日 23:59:59）
     const drawTime = new Date('2025-12-31T23:59:59+08:00').getTime();
 
+    // 获取服务器时间（防止修改系统时间）
+    async function getServerTime() {
+        try {
+            // 使用世界时钟API获取真实时间
+            const response = await fetch('https://worldtimeapi.org/api/timezone/Asia/Shanghai');
+            const data = await response.json();
+            return new Date(data.datetime).getTime();
+        } catch (error) {
+            // 如果API失败，使用本地时间作为备选
+            console.warn('无法获取服务器时间，使用本地时间');
+            return new Date().getTime();
+        }
+    }
+
     // 倒计时功能
-    function updateCountdown() {
-        const now = new Date().getTime();
+    async function updateCountdown() {
+        const now = await getServerTime();
         const distance = drawTime - now;
 
         if (distance > 0) {
@@ -15,63 +29,103 @@ document.addEventListener('DOMContentLoaded', function () {
             const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
             const seconds = Math.floor((distance % (1000 * 60)) / 1000);
 
-            document.getElementById('countdown').innerHTML =
-                `${days}天 ${hours}小时 ${minutes}分钟 ${seconds}秒`;
+            const countdownElement = document.getElementById('countdown');
+            if (countdownElement) {
+                countdownElement.innerHTML = `${days}天 ${hours}小时 ${minutes}分钟 ${seconds}秒`;
+            }
         } else {
             // 开奖时间到了，显示结果
             showResults();
         }
     }
 
+    // 从localStorage获取真实的参与者数据
+    function getRealParticipants() {
+        const participants = [];
+
+        // 遍历localStorage，找到所有抽奖记录
+        for (let i = 0; i < localStorage.length; i++) {
+            const key = localStorage.key(i);
+            if (key && key.startsWith('lottery_result_')) {
+                try {
+                    const data = JSON.parse(localStorage.getItem(key));
+                    if (data && data.qq && data.prize && data.time) {
+                        participants.push(data);
+                    }
+                } catch (e) {
+                    console.warn('解析抽奖记录失败:', key);
+                }
+            }
+        }
+
+        return participants;
+    }
+
     // 显示抽奖结果
     function showResults() {
-        document.getElementById('revealStatus').style.display = 'none';
-        document.getElementById('resultsSection').style.display = 'block';
+        const revealStatus = document.getElementById('revealStatus');
+        const resultsSection = document.getElementById('resultsSection');
 
-        // 模拟获奖数据（实际使用时应该从服务器获取）
-        const winners = {
-            kfc: [
-                { qq: '123456789', avatar: 'https://q1.qlogo.cn/g?b=qq&nk=123456789&s=100', time: '2025-12-31 23:59:01' },
-                { qq: '987654321', avatar: 'https://q1.qlogo.cn/g?b=qq&nk=987654321&s=100', time: '2025-12-31 23:59:15' },
-                { qq: '555666777', avatar: 'https://q1.qlogo.cn/g?b=qq&nk=555666777&s=100', time: '2025-12-31 23:59:30' }
-            ],
-            redpacket: [
-                { qq: '111222333', avatar: 'https://q1.qlogo.cn/g?b=qq&nk=111222333&s=100', time: '2025-12-31 23:59:45' },
-                { qq: '444555666', avatar: 'https://q1.qlogo.cn/g?b=qq&nk=444555666&s=100', time: '2026-01-01 00:00:01' },
-                { qq: '777888999', avatar: 'https://q1.qlogo.cn/g?b=qq&nk=777888999&s=100', time: '2026-01-01 00:00:15' },
-                { qq: '101112131', avatar: 'https://q1.qlogo.cn/g?b=qq&nk=101112131&s=100', time: '2026-01-01 00:00:30' },
-                { qq: '141516171', avatar: 'https://q1.qlogo.cn/g?b=qq&nk=141516171&s=100', time: '2026-01-01 00:00:45' },
-                { qq: '181920212', avatar: 'https://q1.qlogo.cn/g?b=qq&nk=181920212&s=100', time: '2026-01-01 00:01:00' },
-                { qq: '232425262', avatar: 'https://q1.qlogo.cn/g?b=qq&nk=232425262&s=100', time: '2026-01-01 00:01:15' },
-                { qq: '272829303', avatar: 'https://q1.qlogo.cn/g?b=qq&nk=272829303&s=100', time: '2026-01-01 00:01:30' },
-                { qq: '313233343', avatar: 'https://q1.qlogo.cn/g?b=qq&nk=313233343&s=100', time: '2026-01-01 00:01:45' },
-                { qq: '353637383', avatar: 'https://q1.qlogo.cn/g?b=qq&nk=353637383&s=100', time: '2026-01-01 00:02:00' }
-            ]
-        };
+        if (revealStatus) revealStatus.style.display = 'none';
+        if (resultsSection) resultsSection.style.display = 'block';
 
-        // 渲染KFC获奖者
-        renderWinners('kfcWinners', winners.kfc);
+        // 获取真实参与者数据
+        const participants = getRealParticipants();
 
-        // 渲染小红包获奖者
-        renderWinners('redpacketWinners', winners.redpacket);
+        // 按奖品类型分类
+        const kfcWinners = participants.filter(p => p.prize === 'KFC套餐');
+        const redpacketWinners = participants.filter(p => p.prize === '10元小红包');
+
+        // 如果没有真实数据，显示提示信息
+        if (participants.length === 0) {
+            const noDataMessage = `
+                <div style="text-align: center; padding: 40px; color: #6b7280;">
+                    <div style="font-size: 3rem; margin-bottom: 16px;">🎭</div>
+                    <div style="font-size: 1.2rem; font-weight: 600; margin-bottom: 8px;">暂无参与记录</div>
+                    <div style="font-size: 1rem;">请先参与抽奖活动</div>
+                </div>
+            `;
+
+            const kfcContainer = document.getElementById('kfcWinners');
+            const redpacketContainer = document.getElementById('redpacketWinners');
+
+            if (kfcContainer) kfcContainer.innerHTML = noDataMessage;
+            if (redpacketContainer) redpacketContainer.innerHTML = noDataMessage;
+            return;
+        }
+
+        // 渲染获奖者
+        renderWinners('kfcWinners', kfcWinners, '🍗');
+        renderWinners('redpacketWinners', redpacketWinners, '🧧');
     }
 
     // 渲染获奖者列表
-    function renderWinners(containerId, winnersList) {
+    function renderWinners(containerId, winnersList, emoji) {
         const container = document.getElementById(containerId);
-        let html = '';
+        if (!container) return;
 
+        if (winnersList.length === 0) {
+            container.innerHTML = `
+                <div style="text-align: center; padding: 20px; color: #6b7280;">
+                    <div style="font-size: 2rem; margin-bottom: 8px;">😔</div>
+                    <div>本轮暂无中奖者</div>
+                </div>
+            `;
+            return;
+        }
+
+        let html = '';
         winnersList.forEach((winner, index) => {
             html += `
                 <div class="winner-item" style="animation-delay: ${index * 0.1}s">
                     <div class="winner-avatar">
-                        <img src="${winner.avatar}" alt="QQ头像" onerror="this.src='/img/avatar.png'">
+                        <img src="https://q.qlogo.cn/g?b=qq&nk=${winner.qq}&s=100" alt="QQ头像" onerror="this.src='data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNTAiIGhlaWdodD0iNTAiIHZpZXdCb3g9IjAgMCA1MCA1MCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPGNpcmNsZSBjeD0iMjUiIGN5PSIyNSIgcj0iMjUiIGZpbGw9IiNFNUU3RUIiLz4KPHN2ZyB3aWR0aD0iMjQiIGhlaWdodD0iMjQiIHZpZXdCb3g9IjAgMCAyNCAyNCIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIiB4PSIxMyIgeT0iMTMiPgo8cGF0aCBkPSJNMTIgMTJDMTQuMjA5MSAxMiAxNiA5LjIwOTE0IDE2IDdDMTYgNC43OTA4NiAxNC4yMDkxIDMgMTIgM0M5Ljc5MDg2IDMgOCA0Ljc5MDg2IDggN0M4IDkuMjA5MTQgOS43OTA4NiAxMiAxMiAxMloiIGZpbGw9IiM5Q0EzQUYiLz4KPHBhdGggZD0iTTEyIDEzQzguMTM0MDEgMTMgNSAxNi4xMzQgNSAyMEg5SDE1SDE5QzE5IDE2LjEzNCAxNS44NjYgMTMgMTIgMTNaIiBmaWxsPSIjOUNBM0FGIi8+Cjwvc3ZnPgo8L3N2Zz4K'">
                     </div>
                     <div class="winner-info">
                         <div class="winner-qq">QQ: ${winner.qq}</div>
-                        <div class="winner-time">中奖时间: ${winner.time}</div>
+                        <div class="winner-time">参与时间: ${winner.time}</div>
                     </div>
-                    <div class="winner-badge">🎉</div>
+                    <div class="winner-badge">${emoji}</div>
                 </div>
             `;
         });
@@ -79,13 +133,21 @@ document.addEventListener('DOMContentLoaded', function () {
         container.innerHTML = html;
     }
 
-    // 检查是否已经到了开奖时间
-    const now = new Date().getTime();
-    if (now >= drawTime) {
-        showResults();
-    } else {
-        // 开始倒计时
-        updateCountdown();
-        setInterval(updateCountdown, 1000);
+    // 初始化检查
+    async function initialize() {
+        const now = await getServerTime();
+
+        if (now >= drawTime) {
+            // 已经到了开奖时间，直接显示结果
+            showResults();
+        } else {
+            // 还没到开奖时间，显示倒计时
+            await updateCountdown();
+            // 每秒更新一次倒计时
+            setInterval(updateCountdown, 1000);
+        }
     }
+
+    // 开始初始化
+    initialize();
 });
