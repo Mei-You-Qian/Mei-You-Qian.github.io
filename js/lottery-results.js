@@ -8,16 +8,18 @@
     const revealStatusEl = document.getElementById('revealStatus');
     const resultsSectionEl = document.getElementById('resultsSection');
 
-    // 严格的时间控制 - 只依赖后端API返回的开奖状态
+    // 检查开奖状态 - 根据实际Worker API返回格式
     async function checkDrawStatus() {
         try {
             const response = await fetch(API);
             const data = await response.json();
 
-            // 后端API应该返回 { success: true, drawn: true/false, winners: [...] }
-            // 只有当后端明确返回 drawn: true 时才显示结果
+            // Worker /winners 实际返回: { success: true, winners: [...] }
+            // 如果有winners数组且长度>0，说明已经开奖
+            const hasWinners = data.success && data.winners && data.winners.length > 0;
+
             return {
-                isDrawn: data.drawn === true,
+                isDrawn: hasWinners,
                 winners: data.winners || [],
                 success: data.success
             };

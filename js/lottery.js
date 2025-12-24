@@ -127,11 +127,13 @@
                 const participantCountEl = document.getElementById('participantCount');
                 const uniqueIPsEl = document.getElementById('uniqueIPs');
 
+                // Worker /stats 实际返回: { success: true, count: number }
                 if (participantCountEl) {
-                    participantCountEl.textContent = data.totalParticipants || 0;
+                    participantCountEl.textContent = data.count || 0;
                 }
                 if (uniqueIPsEl) {
-                    uniqueIPsEl.textContent = data.uniqueIPs || 0;
+                    // 如果没有独立IP统计，显示参与人数
+                    uniqueIPsEl.textContent = data.uniqueIPs || data.count || 0;
                 }
             }
         } catch (error) {

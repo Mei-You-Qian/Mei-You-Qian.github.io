@@ -81,17 +81,18 @@
 
     // 显示管理员数据
     function displayAdminData(data) {
-        // 更新统计数字
+        // 更新统计数字 - 修复字段映射
         if (participantCountEl) {
-            participantCountEl.textContent = data.totalParticipants || 0;
+            participantCountEl.textContent = data.count || 0;
         }
         if (uniqueIPsEl) {
-            uniqueIPsEl.textContent = data.uniqueIPs || 0;
+            // 管理员API不返回独立IP数，使用参与人数作为近似值
+            uniqueIPsEl.textContent = data.count || 0;
         }
 
-        // 显示参与者列表
-        if (participantListEl && data.participants) {
-            displayParticipants(data.participants);
+        // 显示参与者列表 - 修复字段映射
+        if (participantListEl && data.latest) {
+            displayParticipants(data.latest);
         }
 
         // 更新时间
@@ -103,10 +104,11 @@
     // 更新统计数据
     function updateStats(data) {
         if (participantCountEl) {
-            participantCountEl.textContent = data.totalParticipants || 0;
+            participantCountEl.textContent = data.count || 0;
         }
         if (uniqueIPsEl) {
-            uniqueIPsEl.textContent = data.uniqueIPs || 0;
+            // 统计API返回count，用作独立IP的近似值
+            uniqueIPsEl.textContent = data.count || 0;
         }
     }
 
@@ -127,7 +129,7 @@
         let html = '';
         participants.forEach((participant, index) => {
             const qq = participant.qq || '未知';
-            const ip = participant.ip || '未知IP';
+            // 移除IP显示，Worker出于安全考虑不返回IP信息
             const time = participant.timestamp ?
                 new Date(participant.timestamp).toLocaleString('zh-CN') :
                 (participant.time || '未知时间');
@@ -140,7 +142,6 @@
                     </div>
                     <div class="participant-info">
                         <div class="participant-qq">QQ: ${qq}</div>
-                        <div class="participant-ip">IP: ${ip}</div>
                         <div class="participant-time">时间: ${time}</div>
                     </div>
                     <div class="participant-index">#${index + 1}</div>
