@@ -142,6 +142,122 @@
     font-weight: 500;
 }
 
+/* 奖品展示区域 */
+.prize-section {
+    margin: 24px 0;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.1), rgba(255, 165, 0, 0.1));
+    border-radius: 16px;
+    border: 1px solid rgba(255, 215, 0, 0.2);
+}
+
+.prize-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-align: center;
+    margin-bottom: 16px;
+    color: #f59e0b;
+    font-family: 'Inter', sans-serif;
+}
+
+.prize-list {
+    display: flex;
+    gap: 16px;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+.prize-item {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 12px 16px;
+    background: rgba(255, 255, 255, 0.8);
+    border-radius: 12px;
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    transition: all 0.3s ease;
+    min-width: 140px;
+}
+
+.prize-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(255, 215, 0, 0.3);
+}
+
+.prize-icon {
+    font-size: 2rem;
+    animation: bounce 2s ease-in-out infinite;
+}
+
+.prize-info {
+    text-align: left;
+}
+
+.prize-name {
+    font-weight: 600;
+    color: #374151;
+    font-size: 1rem;
+    margin-bottom: 2px;
+}
+
+.prize-count {
+    font-size: 0.9rem;
+    color: #f59e0b;
+    font-weight: 500;
+}
+
+/* 开奖时间区域 */
+.reveal-section {
+    margin: 24px 0;
+    padding: 20px;
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.1), rgba(205, 133, 63, 0.1));
+    border-radius: 16px;
+    border: 1px solid rgba(139, 69, 19, 0.2);
+    text-align: center;
+}
+
+.reveal-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    margin-bottom: 12px;
+    color: #8b4513;
+    font-family: 'Inter', sans-serif;
+}
+
+.reveal-time {
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: #d2691e;
+    margin-bottom: 16px;
+    padding: 8px 16px;
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 8px;
+    display: inline-block;
+}
+
+.contact-info {
+    margin-top: 12px;
+}
+
+.contact-text {
+    font-size: 0.95rem;
+    color: #6b7280;
+    margin-bottom: 8px;
+}
+
+.wechat-id {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: #059669;
+    background: rgba(16, 185, 129, 0.1);
+    padding: 8px 16px;
+    border-radius: 8px;
+    display: inline-block;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+    font-family: 'Courier New', monospace;
+    letter-spacing: 1px;
+}
+
 .lottery-form {
     margin-top: 24px;
 }
@@ -546,6 +662,53 @@ html[data-user-color-scheme="dark"] .lottery-result.bad {
 
 html[data-user-color-scheme="dark"] .lottery-hint {
     color: #9ca3af;
+}
+
+/* 暗色模式下的奖品和开奖区域 */
+html[data-user-color-scheme="dark"] .prize-section {
+    background: linear-gradient(135deg, rgba(255, 215, 0, 0.15), rgba(255, 165, 0, 0.15));
+    border-color: rgba(255, 215, 0, 0.3);
+}
+
+html[data-user-color-scheme="dark"] .prize-title {
+    color: #fbbf24;
+}
+
+html[data-user-color-scheme="dark"] .prize-item {
+    background: rgba(55, 65, 81, 0.8);
+    border-color: rgba(255, 215, 0, 0.4);
+}
+
+html[data-user-color-scheme="dark"] .prize-name {
+    color: #f3f4f6;
+}
+
+html[data-user-color-scheme="dark"] .prize-count {
+    color: #fbbf24;
+}
+
+html[data-user-color-scheme="dark"] .reveal-section {
+    background: linear-gradient(135deg, rgba(139, 69, 19, 0.2), rgba(205, 133, 63, 0.2));
+    border-color: rgba(139, 69, 19, 0.4);
+}
+
+html[data-user-color-scheme="dark"] .reveal-title {
+    color: #cd853f;
+}
+
+html[data-user-color-scheme="dark"] .reveal-time {
+    color: #daa520;
+    background: rgba(55, 65, 81, 0.6);
+}
+
+html[data-user-color-scheme="dark"] .contact-text {
+    color: #9ca3af;
+}
+
+html[data-user-color-scheme="dark"] .wechat-id {
+    color: #10b981;
+    background: rgba(16, 185, 129, 0.2);
+    border-color: rgba(16, 185, 129, 0.4);
 }
 
 /* 加载动画 */
