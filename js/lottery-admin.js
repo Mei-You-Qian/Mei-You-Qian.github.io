@@ -16,11 +16,10 @@
         return;
     }
 
-    const participantCountEl = document.getElementById('participantCount');
-    const uniqueIPsEl = document.getElementById('uniqueIPs');
-    const participantListEl = document.getElementById('participantList');
-    const lastUpdateEl = document.getElementById('lastUpdate');
+    const statsSection = document.getElementById('statsSection');
+    const participantListEl = document.getElementById('participantsList');
     const refreshBtn = document.getElementById('refreshBtn');
+    const errorMessage = document.getElementById('errorMessage');
 
     // 带认证的API请求
     async function authenticatedFetch(url, options = {}) {
@@ -87,15 +86,24 @@
     function displayAdminData(data) {
         console.log('开始显示管理员数据:', data);
 
-        // 更新统计数字 - 修复字段映射
-        if (participantCountEl) {
-            participantCountEl.textContent = data.count || 0;
-            console.log('设置参与人数:', data.count);
-        }
-        if (uniqueIPsEl) {
-            // 管理员API不返回独立IP数，使用参与人数作为近似值
-            uniqueIPsEl.textContent = data.count || 0;
-            console.log('设置独立IP数:', data.count);
+        // 创建统计数据显示
+        if (statsSection) {
+            const count = data.count || 0;
+            statsSection.innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-number">${count}</div>
+                    <div class="stat-label">总参与人数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${count}</div>
+                    <div class="stat-label">独立IP数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${new Date().toLocaleString('zh-CN')}</div>
+                    <div class="stat-label">最后更新</div>
+                </div>
+            `;
+            console.log('设置统计数据:', count);
         }
 
         // 显示参与者列表 - 修复字段映射
@@ -113,22 +121,31 @@
                 noElement: !participantListEl,
                 noData: !data.latest
             });
-        }
-
-        // 更新时间
-        if (lastUpdateEl) {
-            lastUpdateEl.textContent = new Date().toLocaleString('zh-CN');
+            // 如果没有数据，显示空状态
+            if (participantListEl) {
+                displayParticipants([]);
+            }
         }
     }
 
     // 更新统计数据
     function updateStats(data) {
-        if (participantCountEl) {
-            participantCountEl.textContent = data.count || 0;
-        }
-        if (uniqueIPsEl) {
-            // 统计API返回count，用作独立IP的近似值
-            uniqueIPsEl.textContent = data.count || 0;
+        if (statsSection) {
+            const count = data.count || 0;
+            statsSection.innerHTML = `
+                <div class="stat-item">
+                    <div class="stat-number">${count}</div>
+                    <div class="stat-label">总参与人数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${count}</div>
+                    <div class="stat-label">独立IP数</div>
+                </div>
+                <div class="stat-item">
+                    <div class="stat-number">${new Date().toLocaleString('zh-CN')}</div>
+                    <div class="stat-label">最后更新</div>
+                </div>
+            `;
         }
     }
 
@@ -138,7 +155,7 @@
 
         if (!participants || participants.length === 0) {
             participantListEl.innerHTML = `
-                <div class="no-data">
+                <div style="text-align: center; padding: 40px; color: #6b7280;">
                     <div style="font-size: 2rem; margin-bottom: 16px;">📝</div>
                     <div>暂无参与者数据</div>
                 </div>
@@ -157,9 +174,7 @@
 
             html += `
                 <div class="participant-item" style="animation-delay: ${index * 0.05}s">
-                    <div class="participant-avatar">
-                        <img src="${avatar}" alt="QQ头像" onerror="this.src='/img/avatar.png'">
-                    </div>
+                    <img class="participant-avatar" src="${avatar}" alt="QQ头像" onerror="this.src='/img/avatar.png'">
                     <div class="participant-info">
                         <div class="participant-qq">QQ: ${qq}</div>
                         <div class="participant-time">时间: ${time}</div>
