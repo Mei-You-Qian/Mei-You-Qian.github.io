@@ -27,7 +27,7 @@
 <meta property="og:description" content="🎁 跨年幸运抽奖       2025新年特别活动          输入 QQ 号参与抽奖（每个 QQ + 每个 IP 仅一次）                      🏆 丰厚奖品                           🍗                        KFC套餐             3份">
 <meta property="og:locale" content="zh_CN">
 <meta property="article:published_time" content="2025-12-24T02:58:50.000Z">
-<meta property="article:modified_time" content="2025-12-25T11:58:38.267Z">
+<meta property="article:modified_time" content="2025-12-25T12:05:15.650Z">
 <meta property="article:author" content="Meiyouqian">
 <meta name="twitter:card" content="summary_large_image">
   
@@ -418,18 +418,40 @@ function showResult(message, type) {
 // 加载统计数据
 async function loadStats() {
     try {
-        const response = await fetch('https://lottery.meiyouqian.workers.dev/api/stats');
+        console.log('开始加载统计数据...');
+        const response = await fetch('https://lottery-api.19921461660.workers.dev/stats');
+        console.log('API响应状态:', response.status);
+        
         const data = await response.json();
+        console.log('API返回数据:', data);
         
         if (data.success) {
             const participantCountEl = document.getElementById('participantCount');
             const uniqueIPsEl = document.getElementById('uniqueIPs');
             
-            if (participantCountEl) participantCountEl.textContent = data.participantCount || 0;
-            if (uniqueIPsEl) uniqueIPsEl.textContent = data.uniqueIPs || 0;
+            if (participantCountEl) {
+                participantCountEl.textContent = data.count || 0;
+                console.log('设置参与人数:', data.count);
+            }
+            if (uniqueIPsEl) {
+                uniqueIPsEl.textContent = data.count || 0;
+                console.log('设置独立IP数:', data.count);
+            }
+        } else {
+            console.error('API返回失败:', data.message);
+            // 如果API失败，显示0而不是-
+            const participantCountEl = document.getElementById('participantCount');
+            const uniqueIPsEl = document.getElementById('uniqueIPs');
+            if (participantCountEl) participantCountEl.textContent = '0';
+            if (uniqueIPsEl) uniqueIPsEl.textContent = '0';
         }
     } catch (error) {
         console.error('加载统计数据失败:', error);
+        // 网络错误时也显示0
+        const participantCountEl = document.getElementById('participantCount');
+        const uniqueIPsEl = document.getElementById('uniqueIPs');
+        if (participantCountEl) participantCountEl.textContent = '0';
+        if (uniqueIPsEl) uniqueIPsEl.textContent = '0';
     }
 }
 
@@ -487,7 +509,7 @@ document.addEventListener('DOMContentLoaded', function() {
             drawBtn.innerHTML = '<span class="btn-text">参与中...</span><span class="btn-icon">⏳</span>';
             
             try {
-                const response = await fetch('https://lottery.meiyouqian.workers.dev/api/participate', {
+                const response = await fetch('https://lottery-api.19921461660.workers.dev/participate', {
                     method: 'POST',
                     headers: {
                         'Content-Type': 'application/json',
