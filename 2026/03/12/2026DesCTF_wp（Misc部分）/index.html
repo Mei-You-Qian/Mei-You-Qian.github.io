@@ -1,0 +1,979 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fufu.png">
+  <link rel="icon" href="/img/fufu.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Meiyouqian">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="DesCTF的misc部分wp Real sign in？  根据题意，我们需要找到secret之后去找天命团队的公众号交流得到flag（像公众号推广题目） 首先给了一个challenge.zip的压缩包，在解开它之前，我们先进行binwalk查看   发现文件最后存在有7-zip数据，我们可以将文件放入Winhex搜索是否存在7z文件文件头 17z文件头：37 7A BC AF 27 1C">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2026DesCTF_wp（Misc部分）">
+<meta property="og:url" content="https://mei-you-qian.github.io/2026/03/12/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/index.html">
+<meta property="og:site_name" content="玫幽倩的小博客">
+<meta property="og:description" content="DesCTF的misc部分wp Real sign in？  根据题意，我们需要找到secret之后去找天命团队的公众号交流得到flag（像公众号推广题目） 首先给了一个challenge.zip的压缩包，在解开它之前，我们先进行binwalk查看   发现文件最后存在有7-zip数据，我们可以将文件放入Winhex搜索是否存在7z文件文件头 17z文件头：37 7A BC AF 27 1C">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772973762284-673975bd-c513-4c40-b479-cc7ba4a5f72d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772973879495-b765c3d2-b030-4b54-9c88-596b4683c430.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772973982128-0d7e8b11-384e-489e-82df-3032d0c673d6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772974087271-9f592a64-66d4-4c3c-9f3a-92443a3b234d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772974148787-5dd301ea-95f1-45ed-9151-a55e7330dc13.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772974970112-ca9e7e78-f107-4074-9f06-9d6be1d5c76a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772976017055-b7ad65e8-6979-4632-b0a9-862ac416c809.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772976651436-16e85873-73d4-4254-b811-6459747c9d53.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772976719707-6ccf2b89-5846-4b67-adf9-79c21a6ad435.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772976740770-46bbccd9-2538-41f5-8cf5-b98d68c73af6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772976989986-f2de6701-1ece-4bf1-b60f-7ccf68d3e296.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772977017398-aa09a8cb-4438-4132-a191-0cfb195f7d49.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772958412337-90c8f7ef-5244-46f1-89ef-6cfa0de6ef29.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772975733715-a4f7f4b1-e683-4bf2-9b7e-37fdefc555e9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773017946306-a5d20f8f-a233-4b66-9a09-33a70f75a461.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773286210118-6b7bce0a-d7f5-4a06-ba74-4eae99b82f43.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772975752907-02bd0ed0-bbfc-48f3-8971-a4a86fe4d0a5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773297529790-f14f4b2d-a0d0-413a-ba93-23e9f1a3dabb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773297671224-5c9ee51f-68d2-4c90-806c-6aa2f62b6c5e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773298192244-3f3e0cdd-b4ed-4d0a-8f57-9d2846682a41.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772975773905-8d081f27-b121-43df-8075-ab37893c4a2f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773299099279-c83eaa58-e8c9-4351-a568-7608b1b8b932.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773299606358-8a77ce6e-84e2-4d83-8190-97d4c17fcf17.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773299864272-085c4df8-8482-4e98-8e77-9b95f624fdc4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773299921439-ae1ea96d-3cf9-4169-a630-252303f5cc65.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773300040465-8afb39d3-7234-440c-95ce-ef9859c66d62.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773300343015-1f9570c3-d043-45a0-a7a8-d01a110e15d1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773300365749-b43cb939-be09-47ae-a4ae-f2d9dab4d509.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773300420882-ccc2c610-7684-4078-becb-0552ec327fb4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772975795381-9991fd5c-87a8-474b-9dc8-4d028bb1fabc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287031354-998e106d-ee63-45fd-a91f-c7b2347f552e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287217102-5f19c2aa-5ca1-48f9-a113-7b2a7962c1f3.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287570316-ca7d8ec8-6a4d-4da5-b602-0c427342d1e4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287612601-1d796c1c-e458-4875-b231-70fe0b488baf.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287650143-a0c18089-8318-4756-9c6e-74a05f23ab7a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287662653-9be1daa0-d8eb-4af1-b975-ada09f12ce50.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287763358-49aeda8a-8647-4d44-8263-6e0359b3269c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287815257-6f7104fc-3575-4786-bc35-6bf392d987c0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287890702-ad61d95c-4555-4c41-9c5d-63c23a8643bd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287871769-1d7cf3f7-5ae2-4664-b132-6c856a352993.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287941780-30eecba2-1331-4f11-9c83-057467275889.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287957746-cbdf480c-c96a-45fa-8b31-91cc24dd6661.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287848923-87eb6cb5-5c28-49c3-b82e-cc9c67e50c65.png">
+<meta property="article:published_time" content="2026-03-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-03-12T07:53:31.199Z">
+<meta property="article:author" content="Meiyouqian">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="Misc">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mei-you-qian.github.io/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772973762284-673975bd-c513-4c40-b479-cc7ba4a5f72d.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>2026DesCTF_wp（Misc部分） - 玫幽倩的小博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css">
+<link rel="stylesheet" href="/css/scrollAnimation.css">
+<link rel="stylesheet" href="/css/mk.css">
+<link rel="stylesheet" href="/css/selection.css">
+<link rel="stylesheet" href="/css/glassBg.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mei-you-qian.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.0"></head>
+
+
+<body><!-- hexo injector body_begin start --><div id="web_bg"></div><!-- hexo injector body_begin end -->
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>玫幽倩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/beijing.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="2026DesCTF_wp（Misc部分）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-03-12 00:00" pubdate>
+          2026年3月12日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          2.8k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          24 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">2026DesCTF_wp（Misc部分）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772973762284-673975bd-c513-4c40-b479-cc7ba4a5f72d.png" srcset="/img/loading.gif" lazyload></p>
+<p>DesCTF的misc部分wp</p>
+<h2 id="Real-sign-in？"><a href="#Real-sign-in？" class="headerlink" title="Real sign in？"></a>Real sign in？</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772973879495-b765c3d2-b030-4b54-9c88-596b4683c430.png" srcset="/img/loading.gif" lazyload></p>
+<p>根据题意，我们需要找到secret之后去找天命团队的公众号交流得到flag（像公众号推广题目）</p>
+<p>首先给了一个challenge.zip的压缩包，在解开它之前，我们先进行binwalk查看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772973982128-0d7e8b11-384e-489e-82df-3032d0c673d6.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现文件最后存在有7-zip数据，我们可以将文件放入Winhex搜索是否存在7z文件文件头</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">7z文件头：37 7A BC AF 27 1C<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772974087271-9f592a64-66d4-4c3c-9f3a-92443a3b234d.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现确实是在zip文件后存在多余7zip数据，提取出来，命名为7z文件</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772974148787-5dd301ea-95f1-45ed-9151-a55e7330dc13.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开发现有一个markdown文件</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772974970112-ca9e7e78-f107-4074-9f06-9d6be1d5c76a.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到这是一个矩阵的ZigZag扫描重排的操作</p>
+<p>这边第一个矩阵在通过标准的之字形扫描顺序之后变成了一维序列，之后行优先排为了第二个44矩阵</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">(0,0)→(0,1)→(1,0)→(2,0)→(1,1)→(0,2)→(0,3)→(1,2)→(2,1)→(3,0)→(3,1)→(2,2)→(1,3)→(2,3)→(3,2)→(3,3)<br></code></pre></td></tr></table></figure>
+
+<p>这种Zigzag一般用在图像或者视频编码，我们继续往下看，打开压缩包看看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772976017055-b7ad65e8-6979-4632-b0a9-862ac416c809.png" srcset="/img/loading.gif" lazyload></p>
+<p>很好，里边是一个png文件，这很有可能是一张zigzag处理之后的，不急，我们至少得先打开这个</p>
+<p>可以看到很关键的点在于这边的加密方式是ZipCrypto，压缩方式是Store</p>
+<p>这意味着这个加密的png文件可以被明文爆破出来，由于png的前十六字节基本上都是一样的，我们可以由此进行爆破</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">89504e470d0a1a0a  #PNG文件头<br>0000000d          #文件数据块IHDR长度<br>49484452          #IHDR标识<br></code></pre></td></tr></table></figure>
+
+<p>由此我们可以直接在这边进行明文爆破，利用bkcrack即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">bkcrack -C &quot;challenge.zip&quot; -c challenge.png -x 0 89504e470d0a1a0a0000000d49484452<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772976651436-16e85873-73d4-4254-b811-6459747c9d53.png" srcset="/img/loading.gif" lazyload></p>
+<p>成功爆破得到key</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">bkcrack -C 1.zip -k 5eb34ede c49019bf 815834b9 -U new.zip easy<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772976719707-6ccf2b89-5846-4b67-adf9-79c21a6ad435.png" srcset="/img/loading.gif" lazyload></p>
+<p>成功解锁</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772976740770-46bbccd9-2538-41f5-8cf5-b98d68c73af6.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开是这样子一张扭曲的照片，根据前边的分析，这是被zigzag变化之后的，它的像素值已经按照Zigzag顺序被展开成了一维数组，我们需要将其重组为二维</p>
+<p>我们知道了原始图片是通过DCT变化得到的系数矩阵，而后经过Zigzag扫描变成了一维序列</p>
+<p>所以逆向的话就是按照Zigzag顺序填充到矩阵，然后逆DCT变化就好了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><code class="hljs plain">from PIL import Image<br>import numpy as np<br><br>def zigzag_indices(h, w):<br>    &quot;&quot;&quot;<br>    生成 h x w 矩阵的二维 zigzag 顺序坐标<br>    &quot;&quot;&quot;<br>    result = []<br>    for s in range(h + w - 1):<br>        diag = []<br>        r_start = max(0, s - (w - 1))<br>        r_end = min(h - 1, s)<br>        for r in range(r_start, r_end + 1):<br>            c = s - r<br>            diag.append((r, c))<br><br>        # 偶数对角线反向，奇数对角线正向<br>        if s % 2 == 0:<br>            diag.reverse()<br><br>        result.extend(diag)<br>    return result<br><br>def inverse_whole_image_zigzag(img_path, out_path):<br>    img = Image.open(img_path).convert(&quot;L&quot;)<br>    arr = np.array(img)<br>    h, w = arr.shape<br><br>    flat = arr.flatten()<br>    coords = zigzag_indices(h, w)<br><br>    restored = np.zeros((h, w), dtype=np.uint8)<br><br>    for i, (r, c) in enumerate(coords):<br>        restored[r, c] = flat[i]<br><br>    Image.fromarray(restored).save(out_path)<br>    return restored<br><br>if __name__ == &quot;__main__&quot;:<br>    restored = inverse_whole_image_zigzag(&quot;challenge.png&quot;, &quot;whole_invzig.png&quot;)<br>    print(&quot;done&quot;)<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772976989986-f2de6701-1ece-4bf1-b60f-7ccf68d3e296.png" srcset="/img/loading.gif" lazyload></p>
+<p>运行后成功得到二维码</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772977017398-aa09a8cb-4438-4132-a191-0cfb195f7d49.png" srcset="/img/loading.gif" lazyload></p>
+<p>扫码得到内容为I_love_DesCTF</p>
+<p>发给公众号就好了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772958412337-90c8f7ef-5244-46f1-89ef-6cfa0de6ef29.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="Neural-Secrets"><a href="#Neural-Secrets" class="headerlink" title="Neural Secrets"></a>Neural Secrets</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772975733715-a4f7f4b1-e683-4bf2-9b7e-37fdefc555e9.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773017946306-a5d20f8f-a233-4b66-9a09-33a70f75a461.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到这边给了一个pth文件，也就是PyTorch Model File，这是一个典型的pytorch模型的打包文件</p>
+<p>本质上说这就是一个python的pickle文件，通常使用zip进行压缩打包，主要装模型参数和模型对象</p>
+<p>阅读一下题目，题目说了”他一直在利用神经网络模型作为‘死信箱’来传递哈机密”</p>
+<p>根据题目，很有可能这题是静态分析的，我们需要查看结构字段等来找flag，由此我们很容易想到先去查看一下这一个pth文件的checkpoint</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plain">import torch<br>checkpoint = torch.load(&#x27;model.pth&#x27;, map_location=&#x27;cpu&#x27;)<br>print(&quot;Checkpoint keys:&quot;, checkpoint.keys())<br><br># Checkpoint keys: dict_keys([&#x27;model_state_dict&#x27;, &#x27;optimizer_state_dict&#x27;, &#x27;epoch&#x27;, &#x27;train_loss&#x27;, &#x27;val_loss&#x27;, &#x27;best_val_loss&#x27;, &#x27;vocab&#x27;, &#x27;model_config&#x27;, &#x27;eval_cache&#x27;])<br></code></pre></td></tr></table></figure>
+
+<p>可以看到输出了很多字段，在这些字段里大都常见，只有eval_cache不是特别标准的那一条字段，还叫缓存，很可疑</p>
+<p>我们查看其属性，利用type可以直接确定位&lt;class ‘torch.Tensor’&gt;</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs plain">import torch<br>checkpoint = torch.load(&#x27;model.pth&#x27;, map_location=&#x27;cpu&#x27;)<br><br>cache = checkpoint[&#x27;eval_cache&#x27;]<br>print(f&quot;eval_cache 类型: &#123;type(cache)&#125;&quot;)<br>print(f&quot;eval_cache 形状: &#123;cache.shape&#125;&quot;)<br>print(f&quot;eval_cache 数据类型: &#123;cache.dtype&#125;&quot;)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">eval_cache 类型: &lt;class &#x27;torch.Tensor&#x27;&gt;<br>eval_cache 形状: torch.Size([39, 64])<br>eval_cache 数据类型: torch.float32<br></code></pre></td></tr></table></figure>
+
+<p>暂时只能看到说形状是[39, 64]，即它有39行每行64维，那我们再看看别的参数</p>
+<p>继续查看关键参数，发现了model_state_dict有重要信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs plain">import torch<br>ckpt = torch.load(&quot;model.pth&quot;, map_location=&quot;cpu&quot;)<br><br>state = ckpt[&quot;model_state_dict&quot;]<br><br>for k, v in state.items():<br>    print(k, tuple(v.shape))<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773286210118-6b7bce0a-d7f5-4a06-ba74-4eae99b82f43.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现了<code>embedding.weight</code> 形状是 <code>[95, 64]</code></p>
+<p>意思是一共有95个字符。每一个字符都有个64维的embedding向量</p>
+<p>这和上边那一个eval_cache的形状似乎十分相近</p>
+<p>不难推测出研究院应该是把文本里的每个字符都替换成了对应的embedding向量之后存进的eval_cache，所以我们只需要将其中的每一行重新拿回去比对找到原来的即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plain">result = []<br><br>for vec in cache:<br>    dists = torch.norm(emb - vec.unsqueeze(0), dim=1)<br>    idx = torch.argmin(dists).item()<br>    result.append(idx2char[idx])<br></code></pre></td></tr></table></figure>
+
+<p>写得解题脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs plain">import torch<br><br>ckpt = torch.load(&quot;model.pth&quot;, map_location=&quot;cpu&quot;)<br><br>state = ckpt[&quot;model_state_dict&quot;]<br>emb = state[&quot;embedding.weight&quot;]          # [95, 64]<br>cache = ckpt[&quot;eval_cache&quot;]               # [39, 64]<br>vocab = ckpt[&quot;vocab&quot;]<br><br><br>if isinstance(vocab, list):<br>    idx2char = &#123;i: ch for i, ch in enumerate(vocab)&#125;<br>elif isinstance(vocab, dict):<br>    if all(isinstance(k, int) for k in vocab.keys()):<br>        idx2char = vocab<br>    else:<br>        idx2char = &#123;v: k for k, v in vocab.items()&#125;<br>else:<br>    raise TypeError(&quot;unknown vocab format&quot;)<br><br>result = []<br><br>for vec in cache:<br>    # 计算与所有 embedding 向量的距离<br>    dists = torch.norm(emb - vec.unsqueeze(0), dim=1)<br>    idx = torch.argmin(dists).item()<br>    result.append(idx2char[idx])<br><br>flag = &quot;&quot;.join(result)<br>print(flag)<br></code></pre></td></tr></table></figure>
+
+<p>解得最后的flag为DesCTF{n3ur4l_st3g0_1n_emb3dd1ng_sp4c3}</p>
+<h2 id="infrared-code"><a href="#infrared-code" class="headerlink" title="infrared_code"></a>infrared_code</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772975752907-02bd0ed0-bbfc-48f3-8971-a4a86fe4d0a5.png" srcset="/img/loading.gif" lazyload></p>
+<p>根据题意，遥控操作中隐藏着某种暗号信息，我们打开文件看看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773297529790-f14f4b2d-a0d0-413a-ba93-23e9f1a3dabb.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开ir_challenge.txt，我们可以看到里边是很多的地址和命令，这个文件包含了捕获的红外信息数据，也即是NEC扩展协议，在pdf可以看到这台电视配的是 <strong>IR &#x2F; EN2B36H</strong> 遥控器  </p>
+<p>仔细看看可以看到每个命令包含了一个命令字节，command的第一字节是按键码，对应着遥控器上按下的特定按钮，也就是给的那一个png图片</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773297671224-5c9ee51f-68d2-4c90-806c-6aa2f62b6c5e.png" srcset="/img/loading.gif" lazyload></p>
+<p>统计之后发现一共有1000条记录，15种按键码，其中15&#x2F;16&#x2F;17&#x2F;18&#x2F;19出现次数很低，很像是确认和方向键</p>
+<p>结合上边给的这个png图片以及知道的FLAG开头，我们可以尝试将这些做出映射</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plain">15 -&gt; OK<br>16 -&gt; UP<br>17 -&gt; DOWN<br>18 -&gt; RIGHT<br>19 -&gt; LEFT<br></code></pre></td></tr></table></figure>
+
+<p>之后再利用题目这个6*6键盘来模拟布局即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plain">A B C D E F<br>G H I J K L<br>M N O P Q R<br>S T U V W X<br>Y Z 1 2 3 4<br>5 6 7 8 9 0<br></code></pre></td></tr></table></figure>
+
+<p>方向移动按“环绕”处理，越界会从另一边回来，把 OK 时当前位置字符记下来</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773298192244-3f3e0cdd-b4ed-4d0a-8f57-9d2846682a41.png" srcset="/img/loading.gif" lazyload></p>
+<p>从9&#x2F;0的位置起步，注意这边还有一个删除的按钮，第12次实际上是这个删除</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><code class="hljs plain">import re<br>from collections import Counter<br><br>with open(&quot;ir_challenge.txt&quot;, &quot;r&quot;, encoding=&quot;utf-8&quot;) as f:<br>    data = f.read()<br><br># 提取命令字节<br>cmds = [a for a, _ in re.findall(r&quot;command:\s*([0-9A-F]&#123;2&#125;)\s+([0-9A-F]&#123;2&#125;)&quot;, data)]<br><br># 低频导航按钮映射<br>mapping = &#123;<br>    &quot;15&quot;: &quot;OK&quot;,<br>    &quot;16&quot;: &quot;U&quot;,  # 向上<br>    &quot;17&quot;: &quot;D&quot;,  # 向下<br>    &quot;18&quot;: &quot;R&quot;,  # 向右<br>    &quot;19&quot;: &quot;L&quot;,  # 向左<br>&#125;<br><br>nav = &quot;&quot;.join(mapping[c] for c in cmds if c in mapping)<br>segments = nav.split(&quot;OK&quot;)<br>if segments and segments[-1] == &quot;&quot;:<br>    segments.pop()<br><br>grid = [<br>    list(&quot;ABCDEF&quot;),<br>    list(&quot;GHIJKL&quot;),<br>    list(&quot;MNOPQR&quot;),<br>    list(&quot;STUVWX&quot;),<br>    list(&quot;YZ1234&quot;),<br>    list(&quot;567890&quot;),<br>]<br><br># 从底部右侧开始<br>r, c = 5, 4<br>out = []<br><br>for idx, seg in enumerate(segments, 1):<br>    for ch in seg:<br>        if ch == &quot;U&quot;:<br>            r = (r - 1) % 6  # 纵向环绕<br>        elif ch == &quot;D&quot;:<br>            r = (r + 1) % 6<br>        elif ch == &quot;L&quot;:<br>            c = max(0, c - 1)  # 水平不环绕<br>        elif ch == &quot;R&quot;:<br>            c = min(5, c + 1)<br><br>    cur = grid[r][c]<br><br>    # 第12次确认实际上是“删除”操作，删掉上一个字符<br>    if idx == 12:<br>        if out:<br>            out.pop()<br>    else:<br>        out.append(cur)<br><br>result = &quot;&quot;.join(out)<br>print(f&quot;Flag: flag&#123;&#123;&#123;result[4:].lower()&#125;&#125;&#125;&quot;)<br></code></pre></td></tr></table></figure>
+
+<p>得到最后的文本为 FLAG1NFR4R3DISFUN  </p>
+<p>所以flag为：flag{1nfr4r3disfun}  </p>
+<h2 id="wireshark"><a href="#wireshark" class="headerlink" title="wireshark"></a>wireshark</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772975773905-8d081f27-b121-43df-8075-ab37893c4a2f.png" srcset="/img/loading.gif" lazyload></p>
+<p>给了一个流量包，先翻译一下题目：</p>
+<p>“流量显示正常的Modbus流量和“额外”的通信——所有这些都符合协议，规避了防火墙警报。攻击者了解该协议。”</p>
+<p>意思很明确了，是个Modbus工控流量，攻击者应该是在这些正常协议里用的异常用法</p>
+<p>常见的Modbus功能码是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plain">01 Read Coils<br>03 Read Holding Registers<br>04 Read Input Registers<br>05 Write Single Coil<br>06 Write Single Register<br>10 Write Multiple Registers<br></code></pre></td></tr></table></figure>
+
+<p>我们打开压缩包，先过滤tcp.port &#x3D;&#x3D; 502</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773299099279-c83eaa58-e8c9-4351-a568-7608b1b8b932.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以发现192.168.100.10像正常的主站</p>
+<p>而192.168.100.101，192.168.100.102和192.168.100.103这几个像是PLC</p>
+<p>跟着我们刚刚的思路，找找异常请求，发现大部分都是正常通信，只有功能码是8的不正常，过滤一下看看</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">modbus.func_code == 8<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773299606358-8a77ce6e-84e2-4d83-8190-97d4c17fcf17.png" srcset="/img/loading.gif" lazyload></p>
+<p>功能码8是Diagnostics，其中一大功能就是这边的Return Query Data</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773299864272-085c4df8-8482-4e98-8e77-9b95f624fdc4.png" srcset="/img/loading.gif" lazyload></p>
+<p>这个合法而且可以塞任意请求，很适合做数据隐藏</p>
+<p>过滤之后我们继续探查，发现了很多ASCII内容</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773299921439-ae1ea96d-3cf9-4169-a630-252303f5cc65.png" srcset="/img/loading.gif" lazyload></p>
+<p>像LINK，PING，ECHO，有很多</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773300040465-8afb39d3-7234-440c-95ce-ef9859c66d62.png" srcset="/img/loading.gif" lazyload></p>
+<p>直到中间有一部分发现不像刚刚那种的，长度固定的字符串，很像是密文块</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plain">ded7825ede4fd19c<br>9f37371c37c6fa2d<br>54e6fe2801f0df1d<br>763175a586db1c62<br>9efa82d0f8eacb41<br>7b4419392b4a6aa8<br></code></pre></td></tr></table></figure>
+
+<p>考虑到是八字节每个，怀疑是DES，而且既然有密文，很有可能有密钥</p>
+<p>继续寻找密钥，猜测是8字节的key</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773300343015-1f9570c3-d043-45a0-a7a8-d01a110e15d1.png" srcset="/img/loading.gif" lazyload></p>
+<p>不断找，还能找到假flag</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773300365749-b43cb939-be09-47ae-a4ae-f2d9dab4d509.png" srcset="/img/loading.gif" lazyload></p>
+<p>一直到这里发现一个突兀的八字节字符串S7COMM01</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773300420882-ccc2c610-7684-4078-becb-0552ec327fb4.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现成功解出flag</p>
+<p>flag{a3f8e2d1-7c19-4a6b-b5e8-9d2f0c4a7e31}</p>
+<h2 id="张三的秘密"><a href="#张三的秘密" class="headerlink" title="张三的秘密"></a>张三的秘密</h2><h2 id=""><a href="#" class="headerlink" title=""></a><!-- 这是一张图片，ocr 内容为： --></h2><p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1772975795381-9991fd5c-87a8-474b-9dc8-4d028bb1fabc.png" srcset="/img/loading.gif" lazyload><br>先看题目，题目说什么沙米尔，秘密</p>
+<p>很有可能是让我们收集Shamir分片，但不急，继续往下看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287031354-998e106d-ee63-45fd-a91f-c7b2347f552e.png" srcset="/img/loading.gif" lazyload></p>
+<p>附件给了一个E01文件，明显是一道取证的题目，我们可以先进行仿真</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287217102-5f19c2aa-5ca1-48f9-a113-7b2a7962c1f3.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287570316-ca7d8ec8-6a4d-4da5-b602-0c427342d1e4.png" srcset="/img/loading.gif" lazyload></p>
+<p>在仿真过程中可以跑一下取证软件，可以先看看张三浏览过的文件，发现了个很可疑的叫hint.dll的</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287612601-1d796c1c-e458-4875-b231-70fe0b488baf.png" srcset="/img/loading.gif" lazyload></p>
+<p>仿真好了，这个壁纸左上角还有个假flag，或许壁纸也不一般，还是先找hint.dll</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287650143-a0c18089-8318-4756-9c6e-74a05f23ab7a.png" srcset="/img/loading.gif" lazyload></p>
+<p>就在快速访问，更快了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287662653-9be1daa0-d8eb-4af1-b975-ada09f12ce50.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现还真是个hint啊，只要我们只要5个密钥就能解开秘密，应该也就是flag了，还给了我们一个</p>
+<p>继续寻找，发现桌面有个二维码</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287763358-49aeda8a-8647-4d44-8263-6e0359b3269c.png" srcset="/img/loading.gif" lazyload></p>
+<p>一扫就获得了第二个shares</p>
+<p>继续寻找，我们没思路的时候可以继续看看浏览记录</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287815257-6f7104fc-3575-4786-bc35-6bf392d987c0.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现在看壁纸，看看壁纸</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287890702-ad61d95c-4555-4c41-9c5d-63c23a8643bd.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现明看看不出啥</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287871769-1d7cf3f7-5ae2-4664-b132-6c856a352993.png" srcset="/img/loading.gif" lazyload></p>
+<p>但是放入WinHex后找到了第三串shares，只差最后两个了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287941780-30eecba2-1331-4f11-9c83-057467275889.png" srcset="/img/loading.gif" lazyload></p>
+<p>继续找，发现这个批注不简单</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287957746-cbdf480c-c96a-45fa-8b31-91cc24dd6661.png" srcset="/img/loading.gif" lazyload></p>
+<p>上边直接就写了第四条，至此我们得到了四条，也就是最简单的四条，就是第五条怎么找都找不到</p>
+<p>于是我们选择了爆搜</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026DesCTF_wp%EF%BC%88Misc%E9%83%A8%E5%88%86%EF%BC%89/1773287848923-87eb6cb5-5c28-49c3-b82e-cc9c67e50c65.png" srcset="/img/loading.gif" lazyload></p>
+<p>根据题目提示搜索沙米尔，发现了一大堆的这样子的类似shares的字符串，至此我们就集齐了五条，解密即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br></pre></td><td class="code"><pre><code class="hljs plain">from itertools import permutations<br><br><br># From the recovered hint.dll / screenshots.<br># `p` is the Shamir field modulus.<br>P = int(<br>    &quot;666c61677b3431e120579912cdf6831aed2476b0f3fab7c37b86a5c7b847e226a97f72f45783&quot;,<br>    16,<br>)<br><br># These are the corrected values that appeared in the earlier recovery session.<br># Two shares were copied from evidence with the same truncation that the prior solve used.<br>SHARES = [<br>    int(&quot;4e769b2cb222e299d33ea4b89e2831e12399a6b0117336e981a567371726b3368c73f3488e18&quot;, 16),<br>    int(&quot;47bb1ac5f6a422e8b4d483334b5d7fe2f8bae6ae665322ff30b2cade7f03e434a2e849d08599&quot;, 16),<br>    int(&quot;3f961ff18045be09c0ef92b6a5813cdfe8dc365f613b130ed430095e657c8391a1c03ac5ace5&quot;, 16),<br>    int(&quot;f0fe0b8be939ecd598f774ca043352f43dfb9fa3b74678aa9f9c9f68ab385f071d84376e64e&quot;, 16),<br>    int(&quot;4a37c5fad9d060d12f2cf65650fdd718d18d7e0a777276e85e1dd70a4a3c5b842d1feb896c42&quot;, 16),<br>]<br><br><br>def lagrange_at_zero(xs, ys, mod):<br>    total = 0<br>    for i, xi in enumerate(xs):<br>        num = 1<br>        den = 1<br>        for j, xj in enumerate(xs):<br>            if i == j:<br>                continue<br>            num = (num * (-xj)) % mod<br>            den = (den * (xi - xj)) % mod<br>        total = (total + ys[i] * num * pow(den, -1, mod)) % mod<br>    return total<br><br><br>def to_bytes(value):<br>    width = max(1, (value.bit_length() + 7) // 8)<br>    return value.to_bytes(width, &quot;big&quot;)<br><br><br>def main():<br>    hits = []<br>    for xs in permutations(range(1, 10), len(SHARES)):<br>        secret = lagrange_at_zero(xs, SHARES, P)<br>        blob = to_bytes(secret)<br>        if blob.startswith(b&quot;flag&#123;&quot;) and blob.endswith(b&quot;&#125;&quot;):<br>            hits.append((xs, blob.decode(&quot;ascii&quot;)))<br><br>    if not hits:<br>        print(&quot;No flag-looking result found.&quot;)<br>        return<br><br>    print(&quot;Candidate hits:&quot;)<br>    for xs, flag in hits:<br>        print(f&quot;x mapping = &#123;xs&#125;&quot;)<br>        print(flag)<br><br><br>if __name__ == &quot;__main__&quot;:<br>    main()<br></code></pre></td></tr></table></figure>
+
+<p>得到flag{37af8b400737929ad29ad6876d283e92}</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/CTF/" class="print-no-link">#CTF</a>
+      
+        <a href="/tags/Misc/" class="print-no-link">#Misc</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>2026DesCTF_wp（Misc部分）</div>
+      <div>https://mei-you-qian.github.io/2026/03/12/2026DesCTF_wp（Misc部分）/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Meiyouqian</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年3月12日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/03/04/HGAME_2026wp/" title="HGAME 2026wp">
+                        <span class="hidden-mobile">HGAME 2026wp</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"cloud1-9g1zftrh46f4164f","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/scrollAnimation.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<!-- hexo injector body_end start --><script src="/js/backgroundize.js"></script><!-- hexo injector body_end end --></body>
+</html>
