@@ -11,3 +11,41 @@
     -webkit-backdrop-filter: blur(15px);
     backdrop-filter: blur(15px);
 }
+
+html[data-user-color-scheme="dark"] .index-header,
+html[data-user-color-scheme="dark"] .index-header a,
+html[data-user-color-scheme="dark"] .index-header a:hover {
+    color: #f5f7fb !important;
+}
+
+html[data-user-color-scheme="dark"] .markdown-body h1,
+html[data-user-color-scheme="dark"] .markdown-body h2,
+html[data-user-color-scheme="dark"] .markdown-body h3,
+html[data-user-color-scheme="dark"] .markdown-body h4,
+html[data-user-color-scheme="dark"] .markdown-body h5,
+html[data-user-color-scheme="dark"] .markdown-body h6,
+html[data-user-color-scheme="dark"] .post-content h1,
+html[data-user-color-scheme="dark"] .post-content h2,
+html[data-user-color-scheme="dark"] .post-content h3,
+html[data-user-color-scheme="dark"] .post-content h4,
+html[data-user-color-scheme="dark"] .post-content h5,
+html[data-user-color-scheme="dark"] .post-content h6 {
+    color: #e7edf5 !important;
+}
+
+html[data-user-color-scheme="dark"] #toc {
+    color: #b8c4d1 !important;
+}
+
+html[data-user-color-scheme="dark"] #toc a,
+html[data-user-color-scheme="dark"] #toc li,
+html[data-user-color-scheme="dark"] #toc p,
+html[data-user-color-scheme="dark"] #toc span {
+    color: #b8c4d1 !important;
+}
+
+html[data-user-color-scheme="dark"] #toc .tocbot-active-link,
+html[data-user-color-scheme="dark"] #toc .active,
+html[data-user-color-scheme="dark"] #toc .is-active-link {
+    color: #48c3ff !important;
+}

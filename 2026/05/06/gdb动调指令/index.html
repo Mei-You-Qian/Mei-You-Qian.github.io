@@ -1,0 +1,816 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fufu.png">
+  <link rel="icon" href="/img/fufu.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Meiyouqian">
+  <meta name="keywords" content="CTF,电子取证,Web安全,Pwn,Reverse,Writeup,Hexo">
+  
+    <meta name="description" content="注：本篇博客来自JerryXie：JerryXie的博客 1) 启动与运行控制启动123gdb .&#x2F;a.outgdb -q .&#x2F;a.out              # 安静模式gdb --args .&#x2F;a.out a b c    # 直接带参数  运行&#x2F;重启&#x2F;退出123456run (r)            # 运行start              # 在 main">
+<meta property="og:type" content="article">
+<meta property="og:title" content="gdb动调指令">
+<meta property="og:url" content="https://mei-you-qian.github.io/2026/05/06/gdb%E5%8A%A8%E8%B0%83%E6%8C%87%E4%BB%A4/index.html">
+<meta property="og:site_name" content="玫幽倩的小博客">
+<meta property="og:description" content="注：本篇博客来自JerryXie：JerryXie的博客 1) 启动与运行控制启动123gdb .&#x2F;a.outgdb -q .&#x2F;a.out              # 安静模式gdb --args .&#x2F;a.out a b c    # 直接带参数  运行&#x2F;重启&#x2F;退出123456run (r)            # 运行start              # 在 main">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2026-05-05T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-05-06T00:39:28.856Z">
+<meta property="article:author" content="Meiyouqian">
+<meta property="article:tag" content="Pwn">
+<meta name="twitter:card" content="summary_large_image">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>gdb动调指令 - 玫幽倩的小博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css">
+<link rel="stylesheet" href="/css/scrollAnimation.css">
+<link rel="stylesheet" href="/css/mk.css">
+<link rel="stylesheet" href="/css/selection.css">
+<link rel="stylesheet" href="/css/glassBg.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mei-you-qian.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.0"></head>
+
+
+<body><!-- hexo injector body_begin start --><div id="web_bg"></div><!-- hexo injector body_begin end -->
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>玫幽倩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/beijing.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="gdb动调指令"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-05-06 00:00" pubdate>
+          2026年5月6日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          990 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          9 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">gdb动调指令</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <p>注：本篇博客来自JerryXie：<a target="_blank" rel="noopener" href="https://jerryxie.top/">JerryXie的博客</a></p>
+<h2 id="1-启动与运行控制"><a href="#1-启动与运行控制" class="headerlink" title="1) 启动与运行控制"></a>1) 启动与运行控制</h2><h3 id="启动"><a href="#启动" class="headerlink" title="启动"></a>启动</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs bash">gdb ./a.out<br>gdb -q ./a.out              <span class="hljs-comment"># 安静模式</span><br>gdb --args ./a.out a b c    <span class="hljs-comment"># 直接带参数</span><br></code></pre></td></tr></table></figure>
+
+<h3 id="运行-重启-退出"><a href="#运行-重启-退出" class="headerlink" title="运行&#x2F;重启&#x2F;退出"></a>运行&#x2F;重启&#x2F;退出</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plain">run (r)            # 运行<br>start              # 在 main 前停住（自动下断）<br>starti             # 从入口第一条指令开始停（更底层）<br>kill               # 杀掉被调试进程<br>run                # 重新 run（相当于重启）<br>quit (q)           # 退出 gdb<br></code></pre></td></tr></table></figure>
+
+<h3 id="继续-单步"><a href="#继续-单步" class="headerlink" title="继续&#x2F;单步"></a>继续&#x2F;单步</h3><ul>
+<li>源码级（有符号时更好用）</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs plain">next (n)           # 下一行（不进函数）<br>step (s)           # 进入函数<br>finish             # 跑到当前函数返回处<br>until              # 跑到当前循环/当前函数内的某行之后<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>指令级（pwn 最常用）</li>
+</ul>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">ni                 # next instruction：下一条指令（不跟进 call）<br>si                 # step instruction：下一条指令（会跟进 call）<br>continue (c)       # 继续跑到下个断点<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="2-断点：下断、查看、管理、条件断点"><a href="#2-断点：下断、查看、管理、条件断点" class="headerlink" title="2) 断点：下断、查看、管理、条件断点"></a>2) 断点：下断、查看、管理、条件断点</h2><h3 id="常见下断方式"><a href="#常见下断方式" class="headerlink" title="常见下断方式"></a>常见下断方式</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plain">break main                 # 按符号名<br>break *0x401234            # 按地址（pwn 常用）<br>break file.c:123           # 按文件行号<br>tbreak main                # 临时断点（命中一次自动删）<br>rbreak ^foo                # 正则断点（符号很多时好用）<br></code></pre></td></tr></table></figure>
+
+<h3 id="条件断点"><a href="#条件断点" class="headerlink" title="条件断点"></a>条件断点</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">break *0x401234 if $rax==0<br>break vuln if $rsp &lt; 0x7fffffffe000<br></code></pre></td></tr></table></figure>
+
+<h3 id="查看-删除-启用禁用"><a href="#查看-删除-启用禁用" class="headerlink" title="查看&#x2F;删除&#x2F;启用禁用"></a>查看&#x2F;删除&#x2F;启用禁用</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plain">info breakpoints (i b)<br>delete 1            # 删除编号 1 的断点<br>disable 1<br>enable 1<br>clear               # 清掉当前行断点（源码级）<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="3-寄存器-调用栈-当前栈帧"><a href="#3-寄存器-调用栈-当前栈帧" class="headerlink" title="3) 寄存器&#x2F;调用栈&#x2F;当前栈帧"></a>3) 寄存器&#x2F;调用栈&#x2F;当前栈帧</h2><h3 id="看寄存器（EIP-RIP、ESP-RSP、EBP-RBP-等）"><a href="#看寄存器（EIP-RIP、ESP-RSP、EBP-RBP-等）" class="headerlink" title="看寄存器（EIP&#x2F;RIP、ESP&#x2F;RSP、EBP&#x2F;RBP 等）"></a>看寄存器（EIP&#x2F;RIP、ESP&#x2F;RSP、EBP&#x2F;RBP 等）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs plain">info registers<br>info registers rip rsp rbp      # x64<br>info registers eip esp ebp      # x86<br>p/x $rip                        # 打印 rip（十六进制）<br></code></pre></td></tr></table></figure>
+
+<h3 id="调用栈（谁调用了谁）"><a href="#调用栈（谁调用了谁）" class="headerlink" title="调用栈（谁调用了谁）"></a>调用栈（谁调用了谁）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plain">bt                 # backtrace<br>bt full            # 带局部变量（有符号时）<br>frame 2            # 切到第 2 帧<br>info frame         # 当前栈帧细节（保存了什么返回地址等）<br>up / down          # 上下移动栈帧<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="4-反汇编与“下一条指令在哪里”"><a href="#4-反汇编与“下一条指令在哪里”" class="headerlink" title="4) 反汇编与“下一条指令在哪里”"></a>4) 反汇编与“下一条指令在哪里”</h2><h3 id="反汇编"><a href="#反汇编" class="headerlink" title="反汇编"></a>反汇编</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs plain">disassemble<br>disassemble main<br>disassemble /m main          # 混合源码/汇编（有符号时）<br>x/10i $rip                   # 从 rip 开始看 10 条指令（最常用）<br></code></pre></td></tr></table></figure>
+
+<h3 id="切-Intel-语法（建议）"><a href="#切-Intel-语法（建议）" class="headerlink" title="切 Intel 语法（建议）"></a>切 Intel 语法（建议）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">set disassembly-flavor intel<br>set disassemble-next-line on<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="5-读内存：x-命令（pwn-必会）"><a href="#5-读内存：x-命令（pwn-必会）" class="headerlink" title="5) 读内存：x 命令（pwn 必会）"></a>5) 读内存：x 命令（pwn 必会）</h2><p><code>x</code> 的格式：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">x /&lt;数量&gt;&lt;格式&gt;&lt;单位&gt; &lt;地址&gt;<br></code></pre></td></tr></table></figure>
+
+<ul>
+<li>格式：<code>x</code>(hex) <code>d</code>(dec) <code>u``t``c``s</code>(string) <code>i</code>(instruction)</li>
+<li>单位：<code>b</code>(1) <code>h</code>(2) <code>w</code>(4) <code>g</code>(8)</li>
+</ul>
+<h3 id="常用例子"><a href="#常用例子" class="headerlink" title="常用例子"></a>常用例子</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plain">x/16gx $rsp           # 以 8 字节为单位看栈（x64）<br>x/32wx $esp           # 以 4 字节为单位看栈（x86）<br><br>x/10i  $rip           # 从当前指令开始看 10 条<br>x/s    0x404080       # 把某地址当 C 字符串打印<br>x/32bx 0x404080       # 按字节看（适合看输入/patch）<br></code></pre></td></tr></table></figure>
+
+<p><strong>理解栈布局的小技巧</strong>：栈向“低地址”增长，所以如果你希望“低地址在上”，那你读栈时就把地址从小到大理解为从上到下；<code>x/..</code>输出通常是地址递增排列。</p>
+<hr>
+<h2 id="6-打印与计算：p-set-printf（调试表达式）"><a href="#6-打印与计算：p-set-printf（调试表达式）" class="headerlink" title="6) 打印与计算：p &#x2F; set &#x2F; printf（调试表达式）"></a>6) 打印与计算：p &#x2F; set &#x2F; printf（调试表达式）</h2><h3 id="p：打印变量-表达式"><a href="#p：打印变量-表达式" class="headerlink" title="p：打印变量&#x2F;表达式"></a>p：打印变量&#x2F;表达式</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs plain">p var<br>p/x var<br>p/x $rsp<br>p (char*)0x404080<br></code></pre></td></tr></table></figure>
+
+<h3 id="printf：按格式打印（调试输出很爽）"><a href="#printf：按格式打印（调试输出很爽）" class="headerlink" title="printf：按格式打印（调试输出很爽）"></a>printf：按格式打印（调试输出很爽）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">printf &quot;rsp=%p rip=%p\n&quot;, $rsp, $rip<br></code></pre></td></tr></table></figure>
+
+<h3 id="set：改寄存器-改内存（动调-patch）"><a href="#set：改寄存器-改内存（动调-patch）" class="headerlink" title="set：改寄存器&#x2F;改内存（动调 patch）"></a>set：改寄存器&#x2F;改内存（动调 patch）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plain">set $rip = 0x401000                 # 改控制流（演示用途）<br>set $rax = 0<br><br>set &#123;int&#125;0x404080 = 0xdeadbeef       # 往内存写 4 字节<br>set &#123;long&#125;0x404080 = 0x1122334455667788  # 写 8 字节<br>set *(int*)0x404080 = 123<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="7-监视点（watchpoint）：变量-内存被谁改了"><a href="#7-监视点（watchpoint）：变量-内存被谁改了" class="headerlink" title="7) 监视点（watchpoint）：变量&#x2F;内存被谁改了"></a>7) 监视点（watchpoint）：变量&#x2F;内存被谁改了</h2><p>当你想知道“哪个指令改了某个值”：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs plain">watch *(int*)0x404080     # 写触发<br>rwatch *(int*)0x404080    # 读触发<br>awatch *(int*)0x404080    # 读写都触发<br>info watchpoints<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="8-断点命中时自动执行命令（很实用）"><a href="#8-断点命中时自动执行命令（很实用）" class="headerlink" title="8) 断点命中时自动执行命令（很实用）"></a>8) 断点命中时自动执行命令（很实用）</h2><p>例如每次停住都自动显示寄存器和栈顶：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs plain">commands 1<br>silent<br>printf &quot;RIP=%p RSP=%p RBP=%p\n&quot;, $rip, $rsp, $rbp<br>x/8i $rip<br>x/16gx $rsp<br>continue<br>end<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="9-多线程-多进程、attach、跟-fork（实战常见）"><a href="#9-多线程-多进程、attach、跟-fork（实战常见）" class="headerlink" title="9) 多线程&#x2F;多进程、attach、跟 fork（实战常见）"></a>9) 多线程&#x2F;多进程、attach、跟 fork（实战常见）</h2><h3 id="attach-到正在跑的进程"><a href="#attach-到正在跑的进程" class="headerlink" title="attach 到正在跑的进程"></a>attach 到正在跑的进程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">attach &lt;pid&gt;<br>detach<br></code></pre></td></tr></table></figure>
+
+<h3 id="线程"><a href="#线程" class="headerlink" title="线程"></a>线程</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">info threads<br>thread 2<br></code></pre></td></tr></table></figure>
+
+<h3 id="fork-exec（调试子进程很常用）"><a href="#fork-exec（调试子进程很常用）" class="headerlink" title="fork&#x2F;exec（调试子进程很常用）"></a>fork&#x2F;exec（调试子进程很常用）</h3><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs plain">set follow-fork-mode child<br>set detach-on-fork off<br>catch fork<br>catch exec<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="10-建议的基础配置（进-gdb-先敲这几句）"><a href="#10-建议的基础配置（进-gdb-先敲这几句）" class="headerlink" title="10) 建议的基础配置（进 gdb 先敲这几句）"></a>10) 建议的基础配置（进 gdb 先敲这几句）</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">set pagination off<br>set disassembly-flavor intel<br>set print pretty on<br></code></pre></td></tr></table></figure>
+
+<hr>
+<h2 id="11-一个最小“函数调用过程”动调观察模板（看-esp-ebp-eip-或-rsp-rbp-rip）"><a href="#11-一个最小“函数调用过程”动调观察模板（看-esp-ebp-eip-或-rsp-rbp-rip）" class="headerlink" title="11) 一个最小“函数调用过程”动调观察模板（看 esp&#x2F;ebp&#x2F;eip 或 rsp&#x2F;rbp&#x2F;rip）"></a>11) 一个最小“函数调用过程”动调观察模板（看 esp&#x2F;ebp&#x2F;eip 或 rsp&#x2F;rbp&#x2F;rip）</h2><p>假设你停在 <code>call foo</code> 附近：</p>
+<ol>
+<li>看当前下一条指令与栈顶：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">x/6i  $rip<br>x/16gx $rsp     # x64；x86 用 x/32wx $esp<br>info reg rip rsp rbp<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li><code>si</code> 进入 call（会跳进 foo），观察：</li>
+</ol>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">si<br>info reg rip rsp rbp<br>x/16gx $rsp<br></code></pre></td></tr></table></figure>
+
+<ol>
+<li>看到 <code>push rbp; mov rbp,rsp; sub rsp,xx</code> 后，再看：</li>
+</ol>
+<ul>
+<li><code>rbp</code> 会变成“新栈帧基址”</li>
+<li><code>rsp</code> 会向低地址移动（分配局部变量空间）</li>
+<li>栈上通常能看到“返回地址”“保存的 rbp”</li>
+</ul>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Pwn/" class="print-no-link">#Pwn</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>gdb动调指令</div>
+      <div>https://mei-you-qian.github.io/2026/05/06/gdb动调指令/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Meiyouqian</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年5月6日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/04/21/2025-SWPU-NSSCTF(Pwn%E5%85%A8)/" title="2025-SWPU-NSSCTF(Pwn全)">
+                        <span class="hidden-mobile">2025-SWPU-NSSCTF(Pwn全)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"cloud1-9g1zftrh46f4164f","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/scrollAnimation.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<!-- hexo injector body_end start --><script src="/js/backgroundize.js"></script><!-- hexo injector body_end end --></body>
+</html>

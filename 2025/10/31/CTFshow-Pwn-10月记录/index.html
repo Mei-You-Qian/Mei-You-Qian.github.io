@@ -17,7 +17,7 @@
   
   <meta name="theme-color" content="#2f4154">
   <meta name="author" content="Meiyouqian">
-  <meta name="keywords" content="">
+  <meta name="keywords" content="CTF,电子取证,Web安全,Pwn,Reverse,Writeup,Hexo">
   
     <meta name="description" content="pwn25后边栈溢出学的差不多了，我们来回顾一下把这题ret2libc做了  保护：  跟题目说的一样，只开了个NX保护，而且是动态，可用ret2libc  而且在主函数的ctfshow函数可以找到栈溢出的点 padding&#x3D;0x88+4  这边用了一堆的puts函数，直接puts泄露偏移地址了 main &#x3D; elf.symbols[“main”] puts_plt &amp;#x3D">
 <meta property="og:type" content="article">

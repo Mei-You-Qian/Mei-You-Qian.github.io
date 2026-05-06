@@ -17,7 +17,7 @@
   
   <meta name="theme-color" content="#2f4154">
   <meta name="author" content="Meiyouqian">
-  <meta name="keywords" content="">
+  <meta name="keywords" content="CTF,电子取证,Web安全,Pwn,Reverse,Writeup,Hexo">
   
     <meta name="description" content="pwn91  保护：   是一个32位的，开了栈金丝雀，这意味着传统的简单栈溢出无用了   打开main函数，发现程序逻辑很简单，就是要我们让daniu变成6就好了   进入ctfshow()函数看看如何令daniu变成6 在这里我们就看见了格式化字符串的漏洞，楼哦对那个正在这两句话 12read(0, s, 0x50u);printf(s);  系统会输出用户可控输入s，这意味着我们可以在这个s">
 <meta property="og:type" content="article">
