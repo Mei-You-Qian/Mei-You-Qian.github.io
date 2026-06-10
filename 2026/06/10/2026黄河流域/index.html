@@ -1,0 +1,1143 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fufu.png">
+  <link rel="icon" href="/img/fufu.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Meiyouqian">
+  <meta name="keywords" content="CTF,电子取证,Web安全,Pwn,Reverse,Writeup,Hexo">
+  
+    <meta name="description" content="Miscsignin?    给了这样子一个txt文件 随便阅读一下可以发现语义压根没啥内容，题目也说明了“毕竟签到题通常不会真的要求选手精读一大段废话” 让我们看形式本身，猜测就是看标点符号 猜测需要标点进行映射，我们可以尝试一下，按照一般的排列逻辑也是，。；: 1234， &#x3D; 0。 &#x3D; 1； &#x3D; 2： &#x3D; 3  只需要每四个四进制转为一个ASCII即可 试了一下发现能解出flag头，继续写得脚">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2026黄河流域wp（Misc全）">
+<meta property="og:url" content="https://mei-you-qian.github.io/2026/06/10/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/index.html">
+<meta property="og:site_name" content="玫幽倩的小博客">
+<meta property="og:description" content="Miscsignin?    给了这样子一个txt文件 随便阅读一下可以发现语义压根没啥内容，题目也说明了“毕竟签到题通常不会真的要求选手精读一大段废话” 让我们看形式本身，猜测就是看标点符号 猜测需要标点进行映射，我们可以尝试一下，按照一般的排列逻辑也是，。；: 1234， &#x3D; 0。 &#x3D; 1； &#x3D; 2： &#x3D; 3  只需要每四个四进制转为一个ASCII即可 试了一下发现能解出flag头，继续写得脚">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780720099472-8c4b0b56-1514-4d6c-9790-e4ee38c2b173.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780710330327-0048552e-92b6-4bc2-9566-c6bce53cfc8c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780726261212-5f8cacb5-e4c3-4f50-be49-2ccca3f94fdd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780817275908-32f4b2ae-c27c-49ae-b61e-598d3ca2283a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780817294179-8c7bbf5c-fba7-47cf-9034-e763e110f8a8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780817344090-14be7dcb-a568-4354-a9db-e609429d9252.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780726981961-8f652f20-3972-4425-a309-94ffae587fd6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780727002470-8db8ba5a-52f8-49ff-a90f-60b5fbe04d3a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780842623105-36fe8e8d-163a-4cd6-8c57-9bdc5660dfc4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780727051231-c10f7f14-454b-4032-bd94-5525ea786f6c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780840706897-62200179-6b4f-4f11-a83b-f90091c0c943.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780841014520-51732ba8-a14f-4f46-94a1-ca04e0382beb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780841039993-3c6de0b5-e4d6-49e4-ba25-d4381d06cd23.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780841146261-c0c6c856-681d-4133-b1ff-f4d175402be4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780844097484-958d013d-7c8f-4725-9c4a-5b8f609af703.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780729101203-864f3684-17e4-4d31-a1ed-f599e3b6b58a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780729156734-d88ae46e-d86c-4437-9845-8f90da6e0f81.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780729465295-a9de9257-1281-42f0-95eb-ad106f16ae0d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780844575241-f1f25f17-dcc6-45ad-8eeb-3475050aeebd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780844591611-2e766aa8-339e-41f3-9c38-0e9dd4e99c39.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780845184307-f4a809a4-4817-469a-9bb4-413c355a485c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780729454685-5fb16b17-dbcf-4f30-9c0f-e472f2f634c0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780733715492-eeb2fd1d-b419-4a07-93d2-10f1d6c26b23.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780733777293-6491fcf2-a112-4040-b8f5-ab4b4572e387.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780733881644-4e780646-a6fc-4079-9c47-f643ad38da39.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780845370666-a2f4fabd-e51f-4c23-9009-598fae400422.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780733920036-40c0d707-b808-4de1-b074-626ce7a45956.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780733932896-98f80552-d5d1-4b0a-a035-aaa42e1bd365.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780736094326-68521f31-9f9f-4340-bd9a-8397d9d1dcdc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780845506465-15179ce1-1d5f-46da-af01-a0196aae04af.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780845545089-ebab8e0d-2de5-4b4a-a8b2-d529dbaec826.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780845579565-ea48e760-8e09-44c4-a5fa-34276e3c9a96.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780846313413-c75368d5-cd08-474e-a82b-d233f551ed25.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780846457122-868131af-dfec-49ba-bf52-0ca4e36aa113.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780846570233-856d7468-a1b3-4297-b515-17d57a84abf0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780846594059-8a9153bf-c571-44e8-a678-dcbaf38c6d27.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780737863871-624202bb-416f-42df-aa7b-44a9fd8b8de1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780738040892-67d1cd9a-d75c-48bd-b886-a3a469515578.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780738068592-a286b5c8-2ccb-4295-ba11-4e6bc792659e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780738079997-89c113a1-c52a-495c-b74e-2a8c96f3a4eb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780738086424-fa20d183-42c8-4bcc-b834-c1bc36bd6960.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780816784830-a2135447-d13c-4e22-91de-23d4c4135646.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780846971893-e6c27df4-5ba2-4808-b0cf-429dc5ecb9b8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848065870-78ff49c4-699b-45ab-8b11-c34ab76a037b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848153658-d4765fd4-bd4b-4b1f-aa54-404caa1fcab8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848168635-c25f20ea-4384-4603-a3d6-074875095f39.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848347302-7a32451a-8089-4e27-90b1-f9531ccb20db.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848466140-a811024e-a242-458d-bf00-95cd50509c1e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848484167-410a1b40-471c-4ab4-a26b-b4e4072b503d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848503659-cb082a04-ad4d-47fc-981d-5ee478f99197.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780847008246-6bbca90b-b976-4b80-b07a-7405bd895950.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848617205-3d8284f1-43e5-40a9-a9eb-72a60fae8daa.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848767637-a714c292-a432-4965-b3d2-c3809fd6c210.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848829671-e0d13090-5f6f-4d69-a13d-eece56f95f18.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780849028011-4ab0ce92-e0bd-4721-9d98-8aad48e99924.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780849057685-d5fd85a9-a170-4fe6-92a5-0803511a9332.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780849238095-03fd3810-1df9-4fd6-97f3-c6eac9527933.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780849636124-7057b3dd-5359-4743-98cb-75cd57eb986a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780849697327-4de79575-3bb0-450a-aeb0-a570e88b693a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780733729757-d7f9e1dc-2cbd-4759-9559-b3c8d91823a4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780733757752-2b6bafc8-f3ff-4e45-b1c1-80bc69b9637e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780734021349-b77e510e-5144-489c-a859-b8a9282d517d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780733997690-6e951219-1656-4267-89eb-b4274709dd39.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780734008710-22a3f427-8202-433c-a475-3e6916e6bc58.png">
+<meta property="article:published_time" content="2026-06-09T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-06-10T12:35:22.377Z">
+<meta property="article:author" content="Meiyouqian">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="Misc">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780720099472-8c4b0b56-1514-4d6c-9790-e4ee38c2b173.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>2026黄河流域wp（Misc全） - 玫幽倩的小博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css">
+<link rel="stylesheet" href="/css/scrollAnimation.css">
+<link rel="stylesheet" href="/css/mk.css">
+<link rel="stylesheet" href="/css/selection.css">
+<link rel="stylesheet" href="/css/glassBg.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mei-you-qian.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.0"></head>
+
+
+<body><!-- hexo injector body_begin start --><div id="web_bg"></div><!-- hexo injector body_begin end -->
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>玫幽倩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/beijing.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="2026黄河流域wp（Misc全）"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-06-10 00:00" pubdate>
+          2026年6月10日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.2k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          36 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">2026黄河流域wp（Misc全）</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="Misc"><a href="#Misc" class="headerlink" title="Misc"></a>Misc</h2><h3 id="signin"><a href="#signin" class="headerlink" title="signin?"></a>signin?</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780720099472-8c4b0b56-1514-4d6c-9790-e4ee38c2b173.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780710330327-0048552e-92b6-4bc2-9566-c6bce53cfc8c.png" srcset="/img/loading.gif" lazyload></p>
+<p>给了这样子一个txt文件</p>
+<p>随便阅读一下可以发现语义压根没啥内容，题目也说明了“毕竟签到题通常不会真的要求选手精读一大段废话”</p>
+<p>让我们看形式本身，猜测就是看标点符号</p>
+<p>猜测需要标点进行映射，我们可以尝试一下，按照一般的排列逻辑也是，。；:</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs plain">， = 0<br>。 = 1<br>； = 2<br>： = 3<br></code></pre></td></tr></table></figure>
+
+<p>只需要每四个四进制转为一个ASCII即可</p>
+<p>试了一下发现能解出flag头，继续写得脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs plain">import sys<br><br>text = open(sys.argv[1] if len(sys.argv) &gt; 1 else &quot;ai_reply.txt&quot;, encoding=&quot;utf-8&quot;).read()<br>mp = &#123;&quot;，&quot;: &quot;0&quot;, &quot;。&quot;: &quot;1&quot;, &quot;；&quot;: &quot;2&quot;, &quot;：&quot;: &quot;3&quot;&#125;<br><br>s = &quot;&quot;.join(mp[c] for c in text if c in mp)<br>out = &quot;&quot;.join(chr(int(s[i:i+4], 4)) for i in range(0, len(s) - 3, 4))<br><br>print(out)<br></code></pre></td></tr></table></figure>
+
+<p> sdpcsec{welcome_2026_4nd_competiton!}  </p>
+<h3 id="Cake"><a href="#Cake" class="headerlink" title="Cake"></a>Cake</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780726261212-5f8cacb5-e4c3-4f50-be49-2ccca3f94fdd.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780817275908-32f4b2ae-c27c-49ae-b61e-598d3ca2283a.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开来俩文件</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780817294179-8c7bbf5c-fba7-47cf-9034-e763e110f8a8.png" srcset="/img/loading.gif" lazyload></p>
+<p>cake_knife.txt就只有这样子三行十六进制数</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780817344090-14be7dcb-a568-4354-a9db-e609429d9252.png" srcset="/img/loading.gif" lazyload></p>
+<p>另一个cake_base.bin放到Winhex看看，发现啥都看不出</p>
+<p>猜测需要那个knife去处理这个蛋糕的base</p>
+<p>所以这题的关键点落在了 <code>cake_knife.txt</code> 中的三个 32 位整数：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">0xb47e923c<br>0x5aeb49a7<br>0xa3cd7af0<br></code></pre></td></tr></table></figure>
+
+<p>三个数，每个数都是8位十六进制数，很明显是某个算法的内部状态</p>
+<p>需要我们联想到ZipCrypto</p>
+<p>这是一个很老的传统ZIP加密手段，属于流加密，只要正确的密钥流就能解密了</p>
+<p>要注意这边的ZipCrypto只是拿来作为一种加密算法，不是像普通zip加密这样子</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plain">普通 ZIP 加密：<br>ZIP 容器头不加密，只加密里面的文件数据<br><br>这题：<br>把整个 ZIP 文件本身当成一段普通数据，再用 ZipCrypto 算法加密<br></code></pre></td></tr></table></figure>
+
+<p>ZipCrypto是这样子运行的</p>
+<p>当加密的时候，不会直接拿密码去加密</p>
+<p>而是先用密码生成三个内部状态key0，key1，key2</p>
+<p>然后对他们初始化，初始化好之后把密码的每一个字节喂进去，不断更新这三个key</p>
+<p>那这题已经直接把最后的三个key都给我们了，我们只需要进行解密就好了</p>
+<p>怎么解密呢，分为三步</p>
+<p>第一步：生成密钥流字节k</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">def decrypt_byte(key2):<br>    temp = (key2 | 2) &amp; 0xffffffff   # 确保最低位为 0，次低位为 1<br>    return ((temp * (temp ^ 1)) &gt;&gt; 8) &amp; 0xff<br></code></pre></td></tr></table></figure>
+
+<p>key2 | 2，保证temp是偶数，然后计算temp * (temp ^ 1)，右移 8 位，取低 8 位作为密钥流字节 k</p>
+<p>第二步：解密得到明文字节p</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">p = c ^ k<br></code></pre></td></tr></table></figure>
+
+<p>第三步，更新密钥状态</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plain">def update_keys(key0, key1, key2, plain):<br>    key0 = crc32_update(key0, plain)          # 更新 CRC32<br>    key1 = (key1 + (key0 &amp; 0xff)) &amp; 0xffffffff<br>    key1 = (key1 * 134775813 + 1) &amp; 0xffffffff  # 线性同余<br>    key2 = crc32_update(key2, (key1 &gt;&gt; 24) &amp; 0xff)<br>    return key0, key1, key2<br></code></pre></td></tr></table></figure>
+
+<p>这边三个key各司其职</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">key0：用明文字节更新 CRC32。<br>key1：加上 key0的低 8 位，然后乘以常数 134775813（0x8088405）并加 1。<br>key2：用 key1的高 8 位更新另一个 CRC32<br></code></pre></td></tr></table></figure>
+
+<p>就是以上三步，我们来回做这三步对每一个字节进行解密，最后就能得到一个文件</p>
+<p>完整解密脚本如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br></pre></td><td class="code"><pre><code class="hljs plain">import zlib<br>import zipfile<br>import os<br>import cv2<br><br>KEY0 = 0xb47e923c<br>KEY1 = 0x5aeb49a7<br>KEY2 = 0xa3cd7af0<br><br>def crc32_update(old_crc, c):<br>    return (zlib.crc32(bytes([c]), old_crc ^ 0xffffffff) ^ 0xffffffff) &amp; 0xffffffff<br><br>def decrypt_byte(key2):<br>    temp = (key2 | 2) &amp; 0xffffffff<br>    return ((temp * (temp ^ 1)) &gt;&gt; 8) &amp; 0xff<br><br>def update_keys(key0, key1, key2, plain):<br>    key0 = crc32_update(key0, plain)<br>    key1 = (key1 + (key0 &amp; 0xff)) &amp; 0xffffffff<br>    key1 = (key1 * 134775813 + 1) &amp; 0xffffffff<br>    key2 = crc32_update(key2, (key1 &gt;&gt; 24) &amp; 0xff)<br>    return key0, key1, key2<br><br>def decrypt_zipcrypto(data, key0, key1, key2):<br>    out = bytearray()<br><br>    for c in data:<br>        k = decrypt_byte(key2)<br>        p = c ^ k<br>        out.append(p)<br>        key0, key1, key2 = update_keys(key0, key1, key2, p)<br><br>    return bytes(out)<br><br>with open(&quot;cake_base.bin&quot;, &quot;rb&quot;) as f:<br>    enc = f.read()<br><br>dec = decrypt_zipcrypto(enc, KEY0, KEY1, KEY2)<br><br>print(dec[:4])<br><br>with open(&quot;cake_decrypted.zip&quot;, &quot;wb&quot;) as f:<br>    f.write(dec)<br><br>os.makedirs(&quot;out&quot;, exist_ok=True)<br><br>with zipfile.ZipFile(&quot;cake_decrypted.zip&quot;, &quot;r&quot;) as z:<br>    z.extractall(&quot;out&quot;)<br><br>print(os.listdir(&quot;out&quot;))<br></code></pre></td></tr></table></figure>
+
+<p>运行后就能解密这个cake的base，发现文件头是一个zip，解压即可</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780726981961-8f652f20-3972-4425-a309-94ffae587fd6.png" srcset="/img/loading.gif" lazyload></p>
+<p>解压得到这样子三个文件：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780727002470-8db8ba5a-52f8-49ff-a90f-60b5fbe04d3a.png" srcset="/img/loading.gif" lazyload></p>
+<p>接着就是对这三个文件进行探秘了</p>
+<p>这边我不知道为什么上边俩文件到最后都没用到，不知道怎么用（），txt里边可能是哈希吧，但是我爆破不出来</p>
+<p>而flag的提取也只和这个avi文件有关</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780842623105-36fe8e8d-163a-4cd6-8c57-9bdc5660dfc4.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现有一些像素逐帧发生了改变，但是不确定读哪一个坐标，所以进行了遍历</p>
+<p>我们直接遍历所有坐标，然后检查 RGB 三个通道中是否存在可打印 ASCII 字符</p>
+<p>需要注意，OpenCV 读取图片时默认通道顺序是 BGR，因此脚本中需要转成 RGB 或者直接遍历三个通道。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs plain">import cv2<br><br>cap = cv2.VideoCapture(&quot;scream.avi&quot;)<br><br>frames = []<br>while True:<br>    ret, frame = cap.read()<br>    if not ret:<br>        break<br>    frames.append(frame)<br><br>cap.release()<br><br>h, w = frames[0].shape[:2]<br><br>for y in range(h):<br>    for x in range(w):<br>        s = &quot;&quot;<br><br>        for frame in frames:<br>            b, g, r = frame[y, x]<br><br>            # OpenCV 默认是 BGR，这里按 RGB 顺序检查<br>            for v in [r, g, b]:<br>                v = int(v)<br>                if 32 &lt;= v &lt;= 126:<br>                    s += chr(v)<br><br>        if &quot;flag&#123;&quot; in s:<br>            print(x, y, s)<br></code></pre></td></tr></table></figure>
+
+<p>运行后发现了在(123，45)的地方有，flag是flag{W0w_d3lici0us_c4ke!!}</p>
+<h3 id="encrypt"><a href="#encrypt" class="headerlink" title="encrypt"></a>encrypt</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780727051231-c10f7f14-454b-4032-bd94-5525ea786f6c.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780840706897-62200179-6b4f-4f11-a83b-f90091c0c943.png" srcset="/img/loading.gif" lazyload></p>
+<p>上来给了俩文件，一个exe一个png，怀疑是exe对png做了什么处理，我们先分析exe</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780841014520-51732ba8-a14f-4f46-94a1-ca04e0382beb.png" srcset="/img/loading.gif" lazyload></p>
+<p>先塞到DIE看看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780841039993-3c6de0b5-e4d6-49e4-ba25-d4381d06cd23.png" srcset="/img/loading.gif" lazyload></p>
+<p>不难发现是PyInstaller打包的Python程序，我们尝试提取Python字节码</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780841146261-c0c6c856-681d-4133-b1ff-f4d175402be4.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">python3 pyinstxtractor.py Encrypt.exe<br></code></pre></td></tr></table></figure>
+
+<p>用pyinstxtractor解包一下</p>
+<p>解出来很多东西啊</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plain">pyiboot / pyimod / pyi_rth  → PyInstaller 运行时<br>PIL / numpy / dll / pyd     → 第三方库和运行环境<br>struct.pyc                  → Python 标准库<br>srpm_cli.pyc                → 很像题目自己的入口文件<br>PYZ.pyz                     → 真正 Python 模块压缩包<br></code></pre></td></tr></table></figure>
+
+<p>主要还是看srpm_cli.pyc和PYZ.pyz   </p>
+<p>srpm_cli.pyc由于python版本有点高，是python3.13的，不太好反编译，不过在线工具还是能反编译出一点</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780844097484-958d013d-7c8f-4725-9c4a-5b8f609af703.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">from encrypt import encrypt_image<br></code></pre></td></tr></table></figure>
+
+<p>能反编译出这句话就够了，我们接着去找encrypt模块即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><code class="hljs plain">import sys<br>import re<br>import dis<br>import types<br><br>sys.path.insert(0, &quot;.&quot;)<br><br>from pyimod01_archive import ZlibArchiveReader<br><br>z = ZlibArchiveReader(&quot;PYZ.pyz&quot;, 0)<br><br>for name in z.toc:<br>    if re.search(r&quot;encrypt|srpm|image&quot;, name, re.I):<br>        print(&quot;[MODULE]&quot;, name)<br><br>for modname in [&quot;encrypt&quot;, &quot;srpm_utils&quot;]:<br>    print(&quot;=&quot; * 80)<br>    print(&quot;MODULE:&quot;, modname)<br><br>    code = z.extract(modname)<br><br>    for obj in code.co_consts:<br>        if isinstance(obj, types.CodeType):<br>            print(&quot;\n--- FUNCTION:&quot;, obj.co_name, &quot;---&quot;)<br>            print(&quot;varnames:&quot;, obj.co_varnames)<br>            print(&quot;names:&quot;, obj.co_names)<br>            dis.dis(obj)<br></code></pre></td></tr></table></figure>
+
+<p>分析PYZ.pyz，可以看到逻辑</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plain">Image.open<br>convert(&quot;RGB&quot;)<br>np.array<br>reshape(-1)<br>swapped[index], swapped[target] = swapped[target], swapped[index]<br></code></pre></td></tr></table></figure>
+
+<p>即主逻辑是对图片 RGB 三个通道分别做多轮像素交换，本质是 swap 交换</p>
+<p>所以可以通过反向遍历来恢复原图</p>
+<p>根据<code>3.png</code> 的文件名提示，猜测 <code>rounds=3</code></p>
+<p>加密时大致流程为：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plain">for r in range(rounds):<br>    for c in range(3):<br>        for i in range(n):<br>            target = (i * i + (2 * r + 3) * i + 7 * (c + 1)) % n<br>            swap(i, target)<br></code></pre></td></tr></table></figure>
+
+<p>逆过程的时候我们只需要将轮数、像素下标反向执行即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plain">for r in range(rounds - 1, -1, -1):<br>    for c in range(3):<br>        for i in range(n - 1, -1, -1):<br>            target = (i * i + (2 * r + 3) * i + 7 * (c + 1)) % n<br>            swap(i, target)<br></code></pre></td></tr></table></figure>
+
+<p>写得脚本</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs plain">#!/usr/bin/env python3<br>from PIL import Image<br>import numpy as np<br>import sys<br><br><br>def undo_one_round(flat: np.ndarray, round_index: int, channel_index: int) -&gt; None:<br>    n = flat.size<br>    a = 2 * round_index + 3<br>    b = 7 * (channel_index + 1)<br>    # inverse of: for i in range(n): swap(i, target(i))<br>    for i in range(n - 1, -1, -1):<br>        j = (i * i + a * i + b) % n<br>        flat[i], flat[j] = flat[j], flat[i]<br><br><br>def decrypt(input_png: str, output_png: str, rounds: int) -&gt; None:<br>    arr = np.array(Image.open(input_png).convert(&#x27;RGB&#x27;))<br>    h, w, _ = arr.shape<br>    out = np.empty_like(arr)<br>    for c in range(3):<br>        flat = arr[:, :, c].reshape(-1).copy()<br>        for r in range(rounds - 1, -1, -1):<br>            undo_one_round(flat, r, c)<br>        out[:, :, c] = flat.reshape(h, w)<br>    Image.fromarray(out, &#x27;RGB&#x27;).save(output_png)<br><br><br>if __name__ == &#x27;__main__&#x27;:<br>    if len(sys.argv) != 4:<br>        print(f&#x27;Usage: &#123;sys.argv[0]&#125; &lt;encrypted.png&gt; &lt;output.png&gt; &lt;rounds&gt;&#x27;)<br>        sys.exit(1)<br>    decrypt(sys.argv[1], sys.argv[2], int(sys.argv[3]))<br></code></pre></td></tr></table></figure>
+
+<p>成功解得下图</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780729101203-864f3684-17e4-4d31-a1ed-f599e3b6b58a.png" srcset="/img/loading.gif" lazyload></p>
+<p>明显flag这个图片有关，但是尝试了经典隐写都没有成果</p>
+<p>这边想到由于题目先通过像素置换隐藏图片，说明还原后的图可能还藏有频域信息</p>
+<p>因此我们可以继续尝试傅里叶变换分析</p>
+<p>对还原后的图片做灰度处理，然后进行 FFT：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><code class="hljs plain">from PIL import Image<br>import numpy as np<br>import matplotlib.pyplot as plt<br><br>img = Image.open(&quot;dec3.png&quot;).convert(&quot;L&quot;)<br>arr = np.array(img)<br><br>f = np.fft.fft2(arr)<br>fshift = np.fft.fftshift(f)<br><br>spectrum = np.log(np.abs(fshift) + 1)<br><br>plt.figure(figsize=(10, 10))<br>plt.imshow(spectrum, cmap=&quot;gray&quot;)<br>plt.axis(&quot;off&quot;)<br>plt.savefig(&quot;fft_result.png&quot;, bbox_inches=&quot;tight&quot;, pad_inches=0)<br></code></pre></td></tr></table></figure>
+
+<p>运行后我们得到了文件fft_result.png，可以在频谱图边缘发现隐藏文字：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780729156734-d88ae46e-d86c-4437-9845-8f90da6e0f81.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以flag是flag{Wei_Hai_journey}</p>
+<h3 id="鲨士比亚王国的金融危机"><a href="#鲨士比亚王国的金融危机" class="headerlink" title="鲨士比亚王国的金融危机"></a>鲨士比亚王国的金融危机</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780729465295-a9de9257-1281-42f0-95eb-ad106f16ae0d.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780844575241-f1f25f17-dcc6-45ad-8eeb-3475050aeebd.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780844591611-2e766aa8-339e-41f3-9c38-0e9dd4e99c39.png" srcset="/img/loading.gif" lazyload></p>
+<p>上来就是这样子两张图</p>
+<p>这边的<code>flag.png</code> 是 889×889，观察一下可以发现明显是像素螺旋打乱，也符合题目的漩涡</p>
+<p>而<code>SCB.png</code> 是 2587×307</p>
+<p>发现很巧啊，SCB.png中白色像素数量刚好889 × 889 ，和我们flag.png一样</p>
+<p>所以猜测我们可以先对 <code>flag.png</code> 做反螺旋恢复，然后再把这些像素替换掉SCB.png的白色像素，黑色的 <code>SCB</code> 保留</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br></pre></td><td class="code"><pre><code class="hljs plain">#!/usr/bin/env python3<br>from pathlib import Path<br>from zipfile import ZipFile<br>from PIL import Image<br>import numpy as np<br><br><br>flag = np.array(Image.open(&#x27;flag.png&#x27;).convert(&#x27;RGB&#x27;))<br>scb = np.array(Image.open(&#x27;SCB.png&#x27;).convert(&#x27;RGB&#x27;))<br>n = flag.shape[0]<br>assert flag.shape == (n, n, 3)<br>assert scb.shape[0] * scb.shape[1] &gt;= n * n<br><br>def spiral_indices(n: int):<br>    top, left = 0, 0<br>    bottom, right = n - 1, n - 1<br>    out = []<br>    while top &lt;= bottom and left &lt;= right:<br>        for x in range(left, right + 1):<br>            out.append((top, x))<br>        for y in range(top + 1, bottom + 1):<br>            out.append((y, right))<br>        if top &lt; bottom:<br>            for x in range(right - 1, left - 1, -1):<br>                out.append((bottom, x))<br>        if left &lt; right:<br>            for y in range(bottom - 1, top, -1):<br>                out.append((y, left))<br>        top += 1<br>        bottom -= 1<br>        left += 1<br>        right -= 1<br>    return out<br><br>path = [(y, n - 1 - x) for y, x in spiral_indices(n)][::-1]<br>coin = np.empty_like(flag)<br>coin.reshape(-1, 3)[:] = flag[[y for y, x in path], [x for y, x in path]]<br>Image.fromarray(coin).save(&#x27;SCB_coin.png&#x27;)<br><br>white = np.all(scb == 255, axis=2)<br>assert int(white.sum()) == n * n<br>res = np.full_like(scb, 255)<br>res[~white] = [0, 0, 0]<br>res[white] = coin.reshape(-1, 3)<br>Image.fromarray(res).save(&#x27;revealed.png&#x27;)<br><br>r, g, b = res[:, :, 0].astype(int), res[:, :, 1].astype(int), res[:, :, 2].astype(int)<br>green = (g - r &gt; 20) &amp; (g - b &gt; 20) &amp; (g &lt; 250)<br>mask = np.full_like(res, 255)<br>mask[green] = [0, 0, 0]<br>Image.fromarray(mask).save(&#x27;revealed_green_mask.png&#x27;)<br><br>print(f&#x27;wrote: &#123;&quot;SCB_coin.png&quot;&#125;&#x27;)<br>print(f&#x27;wrote: &#123;&quot;revealed.png&quot;&#125;&#x27;)<br>print(f&#x27;wrote: &#123;&quot;revealed_green_mask.png&quot;&#125;&#x27;)<br></code></pre></td></tr></table></figure>
+
+<p>成功还原出硬币</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780845184307-f4a809a4-4817-469a-9bb4-413c355a485c.png" srcset="/img/loading.gif" lazyload></p>
+<p>填到刚刚的文件里</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780729454685-5fb16b17-dbcf-4f30-9c0f-e472f2f634c0.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到flag——flag{You_saved_SCB_by_the_coin}</p>
+<h3 id="Upper-Tower"><a href="#Upper-Tower" class="headerlink" title="Upper Tower"></a>Upper Tower</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780733715492-eeb2fd1d-b419-4a07-93d2-10f1d6c26b23.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780733777293-6491fcf2-a112-4040-b8f5-ab4b4572e387.png" srcset="/img/loading.gif" lazyload></p>
+<p>上来只有两张照片，但是题目还有提示，题目暗示了Tupper，而文本的寂静暗示了SilentEye</p>
+<p>上来先分析一下1.png，考虑图片隐写</p>
+<p>对 PNG 的 RGB 通道做 LSB 检查，发现蓝色通道最低位中隐藏了一段数据。提取脚本如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><code class="hljs plain">from PIL import Image<br>import numpy as np<br><br>img = np.array(Image.open(&quot;1.png&quot;).convert(&quot;RGBA&quot;))<br><br># 取蓝色通道 LSB<br>bits = (img[:, :, 2] &amp; 1).ravel()<br><br>out = bytearray()<br>for i in range(0, len(bits) // 8 * 8, 8):<br>    v = 0<br>    for b in bits[i:i + 8]:<br>        v = (v &lt;&lt; 1) | int(b)<br>    out.append(v)<br><br>data = bytes(out)<br><br># 前 4 字节为后续十进制字符串长度<br>ln_bits = int.from_bytes(data[:4], &quot;big&quot;)<br>digits = data[4:4 + ln_bits // 8].decode()<br><br>print(digits[:100])<br>print(len(digits))<br></code></pre></td></tr></table></figure>
+
+<p>可以得到一串非常大的十进制整数。</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780733881644-4e780646-a6fc-4079-9c47-f643ad38da39.png" srcset="/img/loading.gif" lazyload></p>
+<p>接着就是Tupper了，利用Tupper公式还原密码</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780845370666-a2f4fabd-e51f-4c23-9009-598fae400422.png" srcset="/img/loading.gif" lazyload></p>
+<p>Tupper塔珀自指公式通常以 17 像素为高度，将大整数作为纵坐标进行绘制</p>
+<p>渲染脚本如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br></pre></td><td class="code"><pre><code class="hljs plain">from PIL import Image<br>import numpy as np<br><br>k = int(digits)<br><br>h = 17<br>w = (k.bit_length() + 16) // 17<br><br>arr = np.zeros((h, w), dtype=np.uint8)<br><br>for x in range(w):<br>    for y in range(h):<br>        bit = ((k + y) // 17 &gt;&gt; (17 * x + y)) &amp; 1<br>        arr[h - 1 - y, x] = 255 if bit else 0<br><br>Image.fromarray(arr, &quot;L&quot;).resize(<br>    (w * 10, h * 10),<br>    Image.Resampling.NEAREST<br>).save(&quot;tupper.png&quot;)<br></code></pre></td></tr></table></figure>
+
+<p>我们成功得到了Tupper公式绘图的成果</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780733920036-40c0d707-b808-4de1-b074-626ce7a45956.png" srcset="/img/loading.gif" lazyload></p>
+<p>生成的图片中可以看到密码是4thHHLY</p>
+<p>所以现在我们手里有一串密码，还有一个2.jpg，可以想一些加密手段</p>
+<p>结合题目描述中的“寂静”，不难想到应该对应的是SilentEye</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780733932896-98f80552-d5d1-4b0a-a035-aaa42e1bd365.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到flag</p>
+<h3 id="AD-ASTRA"><a href="#AD-ASTRA" class="headerlink" title="AD ASTRA"></a>AD ASTRA</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780736094326-68521f31-9f9f-4340-bd9a-8397d9d1dcdc.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780845506465-15179ce1-1d5f-46da-af01-a0196aae04af.png" srcset="/img/loading.gif" lazyload></p>
+<p>上来就一个wav和一个png文件</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780845545089-ebab8e0d-2de5-4b4a-a8b2-d529dbaec826.png" srcset="/img/loading.gif" lazyload></p>
+<p>先看看这个flag.png，先看看文件类型file flag.png</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780845579565-ea48e760-8e09-44c4-a5fa-34276e3c9a96.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现 <code>flag.png</code> 并不是真正的 PNG，而是一个Webp文件</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780846313413-c75368d5-cd08-474e-a82b-d233f551ed25.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们知道Webp的文件头是这样子写的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">52 49 46 46        -&gt; &quot;RIFF&quot;<br>xx xx xx xx        -&gt; RIFF size，小端序<br>57 45 42 50        -&gt; &quot;WEBP&quot;<br></code></pre></td></tr></table></figure>
+
+<p>所以size是 0x10be4（注意小端序啊）</p>
+<p>所以正常的Webp结束位置应该是 8 + 0x10be4 &#x3D; 0x10be8  </p>
+<p>但是发现这边结束后还有追加数据</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780846457122-868131af-dfec-49ba-bf52-0ca4e36aa113.png" srcset="/img/loading.gif" lazyload></p>
+<p>明显是一个zip啊</p>
+<p>提取一下追加的，用什么其实都可以，正好今天群里在聊这个，foremost也行，binwalk也行，直接dd if也可以</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">dd if=flag.png of=hidden.zip bs=1 skip=68588<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780846570233-856d7468-a1b3-4297-b515-17d57a84abf0.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到9个txt文件</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780846594059-8a9153bf-c571-44e8-a678-dcbaf38c6d27.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现这些文件内容都是 base64 片段。按文件名顺序拼接并解码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">cat hidden/*.txt | base64 -d &gt; clue.png<br></code></pre></td></tr></table></figure>
+
+<p>得到这样子一张图</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780737863871-624202bb-416f-42df-aa7b-44a9fd8b8de1.png" srcset="/img/loading.gif" lazyload></p>
+<p>合并成一句就是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">To the stars we come from<br></code></pre></td></tr></table></figure>
+
+<p>因此继续分析AD ASTRA.wav</p>
+<p>一开始可以尝试常见音频隐写方向，比如频谱图、LSB等</p>
+<p>但是都没什么收获</p>
+<p>进一步检查 WAV 数据区，发现其隐藏了 DeepSound 数据</p>
+<p>DeepSound 会把数据藏在 WAV 音频采样的低位中，可以通过解码低 4 bit 检查是否存在 DeepSound 头</p>
+<p>检测脚本如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><code class="hljs plain">import struct<br><br>path = &quot;AD ASTRA.wav&quot;<br>data = open(path, &quot;rb&quot;).read()<br><br>pos = 12<br>data_start = None<br><br>while pos + 8 &lt;= len(data):<br>    cid = data[pos:pos+4]<br>    size = struct.unpack(&quot;&lt;I&quot;, data[pos+4:pos+8])[0]<br><br>    if cid == b&quot;data&quot;:<br>        data_start = pos + 8<br>        break<br><br>    pos += 8 + size + (size &amp; 1)<br><br>if data_start is None:<br>    raise SystemExit(&quot;no data chunk&quot;)<br><br>def decode_normal(buf):<br>    out = bytearray()<br><br>    for i in range(0, len(buf) // 4 * 4, 4):<br>        out.append(((buf[i] &amp; 0x0f) &lt;&lt; 4) | (buf[i+2] &amp; 0x0f))<br><br>    return bytes(out)<br><br>ds = decode_normal(data[data_start:data_start + 104])<br><br>print(&quot;data_start =&quot;, data_start)<br>print(&quot;header_hex =&quot;, ds[:26].hex())<br>print(&quot;magic      =&quot;, ds[:4])<br>print(&quot;mode       =&quot;, ds[4])<br>print(&quot;encrypted  =&quot;, ds[5])<br>print(&quot;hash       =&quot;, ds[6:26].hex())<br><br>full = decode_normal(data[data_start:])<br>open(&quot;deepsound_stream.bin&quot;, &quot;wb&quot;).write(full)<br></code></pre></td></tr></table></figure>
+
+<p>运行结果：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plain">data_start = 46<br>header_hex = 445343320401f54db3d444654ff613ca115add3377e62a17205e<br>magic      = b&#x27;DSC2&#x27;<br>mode       = 4<br>encrypted  = 1<br>hash       = f54db3d444654ff613ca115add3377e62a17205e<br></code></pre></td></tr></table></figure>
+
+<p>这里的 DSC2 是 DeepSound 的标志、</p>
+<p>说明我们的 <code>AD ASTRA.wav</code> 中确实存在 DeepSound 隐写数据，并且是加密状态</p>
+<p>使用前面提示图得到的密码：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">To the stars we come from<br></code></pre></td></tr></table></figure>
+
+<p>用 DeepSound 打开 <code>AD ASTRA.wav</code>，输入该密码，可以成功提取出下一层文件：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780738040892-67d1cd9a-d75c-48bd-b886-a3a469515578.png" srcset="/img/loading.gif" lazyload></p>
+<p>接下来这个加密的docx毫无头绪，最后我直接爆破了，不知道是不是非预期</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780738068592-a286b5c8-2ccb-4295-ba11-4e6bc792659e.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接hashcat爆破哈希值得到docx的密码是skadi2530（是斯卡蒂啊</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780738079997-89c113a1-c52a-495c-b74e-2a8c96f3a4eb.png" srcset="/img/loading.gif" lazyload></p>
+<p>（浊蒂真好看，虽然不是深海队的吃不到buff）</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780738086424-fa20d183-42c8-4bcc-b834-c1bc36bd6960.png" srcset="/img/loading.gif" lazyload></p>
+<p>图片挪开就能得到flag了</p>
+<p>sdpcsec{AD_ASTRA_INFINITUM}</p>
+<h3 id="Do-you-know-RA2"><a href="#Do-you-know-RA2" class="headerlink" title="Do you know RA2?"></a>Do you know RA2?</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780816784830-a2135447-d13c-4e22-91de-23d4c4135646.png" srcset="/img/loading.gif" lazyload></p>
+<p>比赛没做出来，赛后Alex教的，谢谢Alex</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780846971893-e6c27df4-5ba2-4808-b0cf-429dc5ecb9b8.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开来三个文件，我们一个个看</p>
+<p>先看这个总部发来的讯息.wav</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">ffprobe -hide_banner -show_format -show_streams &quot;总部发来的讯息.wav&quot;<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848065870-78ff49c4-699b-45ab-8b11-c34ab76a037b.png" srcset="/img/loading.gif" lazyload></p>
+<p>听一下，这个刺耳朵的声音很像SSTV</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848153658-d4765fd4-bd4b-4b1f-aa54-404caa1fcab8.png" srcset="/img/loading.gif" lazyload></p>
+<p>频谱图看着也很像，SSTV解一下看看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848168635-c25f20ea-4384-4603-a3d6-074875095f39.png" srcset="/img/loading.gif" lazyload></p>
+<p>用虚拟声卡比较好</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848347302-7a32451a-8089-4e27-90b1-f9531ccb20db.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以得到这样子一张图片</p>
+<p>写了密码packed up and ready</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs plain">from collections import Counter<br>from math import log2<br><br>data = open(&quot;盟军战车工厂&quot;, &quot;rb&quot;).read()<br>cnt = Counter(data)<br>entropy = -sum((n/len(data)) * log2(n/len(data)) for n in cnt.values())<br>print(entropy)<br></code></pre></td></tr></table></figure>
+
+<p>中间那个文件，算熵，发现接近8，高熵且13.0mb，像是vc容器</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848466140-a811024e-a242-458d-bf00-95cd50509c1e.png" srcset="/img/loading.gif" lazyload></p>
+<p>用刚刚的密码成功加载</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848484167-410a1b40-471c-4ab4-a26b-b4e4072b503d.png" srcset="/img/loading.gif" lazyload></p>
+<p>没什么文件，就一个png</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848503659-cb082a04-ad4d-47fc-981d-5ee478f99197.png" srcset="/img/loading.gif" lazyload></p>
+<p>看着有点怪，猜测有隐写，但是想不到是什么隐写，这个时候就想到读一下最后一个txt文件</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780847008246-6bbca90b-b976-4b80-b07a-7405bd895950.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现这边提到了一个新型坦克-幻影坦克</p>
+<p><a target="_blank" rel="noopener" href="https://github.com/TankFactory/Mirage_Cloak">GitHub - TankFactory&#x2F;Mirage_Cloak: 幻影&#x2F;无影及其杂交坦克编解码工具</a></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848617205-3d8284f1-43e5-40a9-a9eb-72a60fae8daa.png" srcset="/img/loading.gif" lazyload></p>
+<p>对应了这样子一个幻影坦克的类lsb隐写术</p>
+<p>大致原理上文也说了，就是一种基于棋盘格幻影坦克图的隐写术</p>
+<p>我们看到的png需要把像素分成两类</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">黑格 / 低亮格：RGB 接近 0<br>白格 / 高亮格：RGB 接近 255<br></code></pre></td></tr></table></figure>
+
+<p>然后利用RGB离0和255的偏移量来存数据</p>
+<p>我们这个图每个通道存2bit</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><code class="hljs plain">低亮格：<br>0 附近       -&gt; 00<br>2t 附近      -&gt; 01<br>4t 附近      -&gt; 10<br>6t 附近      -&gt; 11<br><br>高亮格：<br>255 附近     -&gt; 00<br>255-2t 附近  -&gt; 01<br>255-4t 附近  -&gt; 10<br>255-6t 附近  -&gt; 11<br></code></pre></td></tr></table></figure>
+
+<p>t是threshold，我们图的t是8</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848767637-a714c292-a432-4965-b3d2-c3809fd6c210.png" srcset="/img/loading.gif" lazyload></p>
+<p>利用这个项目就可以进行解密得到这样子一个31B的文件</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780848829671-e0d13090-5f6f-4d69-a13d-eece56f95f18.png" srcset="/img/loading.gif" lazyload></p>
+<p>这就是容器的隐藏卷密码了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780849028011-4ab0ce92-e0bd-4721-9d98-8aad48e99924.png" srcset="/img/loading.gif" lazyload></p>
+<p>这次挂载得到了flag.png</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780849057685-d5fd85a9-a170-4fe6-92a5-0803511a9332.png" srcset="/img/loading.gif" lazyload></p>
+<p>又是一张浊蒂的照片，我怀疑和上一题同一个出题人，浊蒂真好看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780849238095-03fd3810-1df9-4fd6-97f3-c6eac9527933.png" srcset="/img/loading.gif" lazyload></p>
+<p>不难发现照片右下角藏着一个二维码，但是怎么扫都扫不出，发现是又做了一层2x2棋盘化</p>
+<p>所以我们肉眼看着像有网纹一样</p>
+<p>其实随便看几个像素就很明显</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plain">0: (194, 211, 216, 255)<br>1: (22, 25, 25, 255)<br>2: (196, 213, 218, 255)<br>3: (24, 25, 25, 255)<br>4: (195, 215, 217, 255)<br>5: (24, 25, 25, 255)<br></code></pre></td></tr></table></figure>
+
+<p>可以看见是亮暗交错的</p>
+<p>原理就是把图片切成2x2小格</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">A B<br>B A<br></code></pre></td></tr></table></figure>
+
+<p>A是一层图，B是一层图</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs plain">hidden = (<br>    arr[0:2*H:2, 1:2*W:2].astype(np.uint16) +<br>    arr[1:2*H:2, 0:2*W:2].astype(np.uint16)<br>) // 2<br></code></pre></td></tr></table></figure>
+
+<p>给他们拆开就好了</p>
+<p>那因为这边二维码藏的比较淡，我们也可以调一下灰度，增强对比度（不调也没啥事</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br></pre></td><td class="code"><pre><code class="hljs plain">#!/usr/bin/env python3<br># -*- coding: utf-8 -*-<br><br>from PIL import Image, ImageOps<br>import numpy as np<br>import sys<br><br><br>def main():<br>    if len(sys.argv) &lt; 2:<br>        print(&quot;Usage: python3 extract_flag_from_png.py flag.png&quot;)<br>        raise SystemExit(1)<br><br>    in_path = sys.argv[1]<br>    img = Image.open(in_path).convert(&quot;RGB&quot;)<br>    arr = np.array(img)<br><br>    h, w, _ = arr.shape<br>    H, W = h // 2, w // 2<br><br>    # 提取棋盘格中的隐藏层<br>    hidden = (<br>        arr[0:2*H:2, 1:2*W:2].astype(np.uint16) +<br>        arr[1:2*H:2, 0:2*W:2].astype(np.uint16)<br>    ) // 2<br><br>    hidden = hidden.astype(np.uint8)<br>    hidden_img = Image.fromarray(hidden)<br><br>    # 灰度化 + 自动对比度<br>    gray = ImageOps.autocontrast(ImageOps.grayscale(hidden_img))<br>    gray.save(&quot;hidden_layer.png&quot;)<br><br>    # 裁剪右下角二维码<br>    qr = gray.crop((800, 470, 920, 570))<br>    qr = ImageOps.autocontrast(qr)<br>    qr = qr.resize((960, 800), Image.Resampling.NEAREST)<br><br>    # 二值化 + 反色<br>    qr_bw = qr.point(lambda p: 255 if p &gt; 140 else 0)<br>    qr_out = ImageOps.invert(qr_bw)<br>    qr_out.save(&quot;extracted_qr.png&quot;)<br><br>    print(&quot;[+] saved hidden layer: hidden_layer.png&quot;)<br>    print(&quot;[+] saved QR image: extracted_qr.png&quot;)<br><br>    try:<br>        import cv2<br>        data, points, _ = cv2.QRCodeDetector().detectAndDecode(<br>            np.array(qr_out.convert(&quot;RGB&quot;))<br>        )<br>        print(&quot;[+] QR content:&quot;, data)<br>    except Exception:<br>        print(&quot;[!] OpenCV unavailable, scan extracted_qr.png manually&quot;)<br><br><br>if __name__ == &quot;__main__&quot;:<br>    main()<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780849636124-7057b3dd-5359-4743-98cb-75cd57eb986a.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780849697327-4de79575-3bb0-450a-aeb0-a570e88b693a.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到flag：sdpcsec{Focusing_light_energy}</p>
+<h3 id="问卷"><a href="#问卷" class="headerlink" title="问卷"></a>问卷</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780733729757-d7f9e1dc-2cbd-4759-9559-b3c8d91823a4.png" srcset="/img/loading.gif" lazyload></p>
+<p>做好即可，感谢出题人的付出</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780733757752-2b6bafc8-f3ff-4e45-b1c1-80bc69b9637e.png" srcset="/img/loading.gif" lazyload></p>
+<p><font style="color:rgb(51, 51, 51);">SDPCSEC{SE#_Y@U_NE7T_Y2AR!!!}</font></p>
+<h3 id="LLM问卷"><a href="#LLM问卷" class="headerlink" title="LLM问卷"></a>LLM问卷</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780734021349-b77e510e-5144-489c-a859-b8a9282d517d.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780733997690-6e951219-1656-4267-89eb-b4274709dd39.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F/1780734008710-22a3f427-8202-433c-a475-3e6916e6bc58.png" srcset="/img/loading.gif" lazyload></p>
+<p>没开玩笑,我真全用的网页，花了0元，如果谁愿意教我ai的高级用法可以私信我，老了用不来（）</p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Misc/" class="print-no-link">#Misc</a>
+      
+        <a href="/tags/CTF/" class="print-no-link">#CTF</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>2026黄河流域wp（Misc全）</div>
+      <div>https://mei-you-qian.github.io/2026/06/10/2026黄河流域/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Meiyouqian</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年6月10日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/05/07/2026FIC%E5%88%9D%E8%B5%9B/" title="2026FIC初赛（全流程wp）">
+                        <span class="hidden-mobile">2026FIC初赛（全流程wp）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"cloud1-9g1zftrh46f4164f","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/scrollAnimation.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<!-- hexo injector body_end start --><script src="/js/backgroundize.js"></script><!-- hexo injector body_end end --></body>
+</html>
