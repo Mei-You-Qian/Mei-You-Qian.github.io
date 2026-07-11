@@ -19,12 +19,12 @@
   <meta name="author" content="Meiyouqian">
   <meta name="keywords" content="CTF,电子取证,Web安全,Pwn,Reverse,Writeup,Hexo">
   
-    <meta name="description" content="签到题      flag{Welcome_to_the_3rd_JuHeXieZhi_Cup} 一、手机取证1. 请分析检材1：手机的序列号是什么？【答案格式：AB65CDEFG6HIJKLM,字母全部大写】  火眼的基本信息基本上啥都没有搜出来，只能去系统日志里边找了 在启动日志中检索 &lt;font style&#x3D;&quot;color:rgb(51, 51, 51);background-">
+    <meta name="description" content="签到题      flag{Welcome_to_the_3rd_JuHeXieZhi_Cup} 一、手机取证1. 请分析检材1：手机的序列号是什么？【答案格式：AB65CDEFG6HIJKLM,字母全部大写】  火眼的基本信息基本上啥都没有搜出来，只能去系统日志里边找了 在启动日志中检索 serialno序列号 12adb\lspd\log.old\kmsg.logadb\ksu\log\dme">
 <meta property="og:type" content="article">
 <meta property="og:title" content="2026獬豸杯wp（全）">
 <meta property="og:url" content="https://mei-you-qian.github.io/2026/06/18/2026%E7%8D%AC%E8%B1%B8%E6%9D%AF/index.html">
 <meta property="og:site_name" content="玫幽倩的小博客">
-<meta property="og:description" content="签到题      flag{Welcome_to_the_3rd_JuHeXieZhi_Cup} 一、手机取证1. 请分析检材1：手机的序列号是什么？【答案格式：AB65CDEFG6HIJKLM,字母全部大写】  火眼的基本信息基本上啥都没有搜出来，只能去系统日志里边找了 在启动日志中检索 &lt;font style&#x3D;&quot;color:rgb(51, 51, 51);background-">
+<meta property="og:description" content="签到题      flag{Welcome_to_the_3rd_JuHeXieZhi_Cup} 一、手机取证1. 请分析检材1：手机的序列号是什么？【答案格式：AB65CDEFG6HIJKLM,字母全部大写】  火眼的基本信息基本上啥都没有搜出来，只能去系统日志里边找了 在启动日志中检索 serialno序列号 12adb\lspd\log.old\kmsg.logadb\ksu\log\dme">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="https://mei-you-qian.github.io/2026%E7%8D%AC%E8%B1%B8%E6%9D%AF/1781404950537-e945c7d5-9f03-4648-bfa6-844390a48d4b.png">
 <meta property="og:image" content="https://mei-you-qian.github.io/2026%E7%8D%AC%E8%B1%B8%E6%9D%AF/1781404953613-05cfbd92-a033-4cba-a1a8-14697f5df02e.png">
@@ -232,7 +232,7 @@
 <meta property="og:image" content="https://mei-you-qian.github.io/2026%E7%8D%AC%E8%B1%B8%E6%9D%AF/1781499398018-cf94bec8-a885-414a-abcd-09e9946caf96.png">
 <meta property="og:image" content="https://mei-you-qian.github.io/2026%E7%8D%AC%E8%B1%B8%E6%9D%AF/1781410485540-34e1b551-7bdf-4369-96d6-21ab6d0ce241.png">
 <meta property="article:published_time" content="2026-06-17T16:00:00.000Z">
-<meta property="article:modified_time" content="2026-06-18T03:06:26.343Z">
+<meta property="article:modified_time" content="2026-07-11T11:22:38.652Z">
 <meta property="article:author" content="Meiyouqian">
 <meta property="article:tag" content="Misc">
 <meta property="article:tag" content="Mobile">
@@ -464,7 +464,7 @@
         
         
         
-          107 分钟
+          105 分钟
         
       </span>
     
@@ -516,7 +516,7 @@
 <h2 id="一、手机取证"><a href="#一、手机取证" class="headerlink" title="一、手机取证"></a>一、手机取证</h2><h3 id="1-请分析检材1：手机的序列号是什么？【答案格式：AB65CDEFG6HIJKLM-字母全部大写】"><a href="#1-请分析检材1：手机的序列号是什么？【答案格式：AB65CDEFG6HIJKLM-字母全部大写】" class="headerlink" title="1. 请分析检材1：手机的序列号是什么？【答案格式：AB65CDEFG6HIJKLM,字母全部大写】"></a>1. 请分析检材1：手机的序列号是什么？【答案格式：AB65CDEFG6HIJKLM,字母全部大写】</h3><!-- 这是一张图片，ocr 内容为： -->
 <p><img src="/2026%E7%8D%AC%E8%B1%B8%E6%9D%AF/1781692136539-70285551-5f40-4e9f-b8cd-b7fd029bc921.png" srcset="/img/loading.gif" lazyload></p>
 <p>火眼的基本信息基本上啥都没有搜出来，只能去系统日志里边找了</p>
-<p><font style="color:rgb(51, 51, 51);">在启动日志中检索 </font><code>&lt;font style=&quot;color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);&quot;&gt;serialno&lt;/font&gt;</code><font style="color:rgb(51, 51, 51);">序列号</font></p>
+<p><font style="color:rgb(51, 51, 51);">在启动日志中检索 </font><code>serialno</code><font style="color:rgb(51, 51, 51);">序列号</font></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">adb\lspd\log.old\kmsg.log<br>adb\ksu\log\dmesg.log<br></code></pre></td></tr></table></figure>
 
 <!-- 这是一张图片，ocr 内容为： -->
@@ -526,7 +526,7 @@
 <h3 id="2-该手机的具体型号是什么？【答案格式：小米17至尊版】"><a href="#2-该手机的具体型号是什么？【答案格式：小米17至尊版】" class="headerlink" title="2. 该手机的具体型号是什么？【答案格式：小米17至尊版】"></a>2. 该手机的具体型号是什么？【答案格式：小米17至尊版】</h3><!-- 这是一张图片，ocr 内容为： -->
 <p><img src="/2026%E7%8D%AC%E8%B1%B8%E6%9D%AF/1781692449082-ac21b32c-d70d-4477-9efb-23ed16200dae.png" srcset="/img/loading.gif" lazyload></p>
 <p>设备信息里只为我们展示了蓝牙名称，所以我们必须要去查看系统配置属性才行</p>
-<p><font style="color:rgb(51, 51, 51);">直接全局检索 </font><code>&lt;font style=&quot;color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);&quot;&gt;ro.product.marketname&lt;/font&gt;</code><font style="color:rgb(51, 51, 51);">、</font><code>&lt;font style=&quot;color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);&quot;&gt;ro.product.model&lt;/font&gt;</code>这些可能记录手机型号的字段</p>
+<p><font style="color:rgb(51, 51, 51);">直接全局检索 </font><code>ro.product.marketname</code><font style="color:rgb(51, 51, 51);">、</font><code>ro.product.model</code>这些可能记录手机型号的字段</p>
 <!-- 这是一张图片，ocr 内容为： -->
 <p><img src="/2026%E7%8D%AC%E8%B1%B8%E6%9D%AF/1781692720886-41010fad-4672-4805-9f96-a4cb8171be21.png" srcset="/img/loading.gif" lazyload></p>
 <p><font style="color:rgb(51, 51, 51);">全局搜索后可以在很多的属性文件及伪装机型模块中发现以上字段</font></p>
@@ -641,7 +641,7 @@
 <p>user\0\com.baidu.netdisk\databases\7045389826filelist.db</p>
 <!-- 这是一张图片，ocr 内容为： -->
 <p><img src="/2026%E7%8D%AC%E8%B1%B8%E6%9D%AF/1781695926375-b0540e28-6a74-4c90-9bb5-64219ce9d693.png" srcset="/img/loading.gif" lazyload></p>
-<p><font style="color:rgb(51, 51, 51);">发现表 </font><code>&lt;font style=&quot;color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);&quot;&gt;download_tasks&lt;/font&gt;</code><font style="color:rgb(51, 51, 51);"> 中记录了这个数据.zip的下载详情</font></p>
+<p><font style="color:rgb(51, 51, 51);">发现表 </font><code>download_tasks</code><font style="color:rgb(51, 51, 51);"> 中记录了这个数据.zip的下载详情</font></p>
 <!-- 这是一张图片，ocr 内容为： -->
 <p><img src="/2026%E7%8D%AC%E8%B1%B8%E6%9D%AF/1781695959494-63491d9a-2533-4916-91f4-3e5dca23cf22.png" srcset="/img/loading.gif" lazyload></p>
 <p>得到下载的时间戳，dcode<font style="color:rgb(51, 51, 51);">转换为北京时间即可</font></p>
@@ -674,7 +674,7 @@
 <!-- 这是一张图片，ocr 内容为： -->
 <p><img src="/2026%E7%8D%AC%E8%B1%B8%E6%9D%AF/1781697260406-f6b8ed71-46a4-4525-b03f-677081ac9c77.png" srcset="/img/loading.gif" lazyload></p>
 <p>发现主要是<font style="color:rgb(51, 51, 51);">ZIP数据流尾部截断</font></p>
-<p><font style="color:rgb(51, 51, 51);">虽然只有外层 ，但关键的 </font><code>&lt;font style=&quot;color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);&quot;&gt;xl/worksheets/sheet1.xml&lt;/font&gt;</code><font style="color:rgb(51, 51, 51);"> 与 </font><code>&lt;font style=&quot;color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);&quot;&gt;xl/sharedStrings.xml&lt;/font&gt;</code><font style="color:rgb(51, 51, 51);"> 可恢复</font></p>
+<p><font style="color:rgb(51, 51, 51);">虽然只有外层 ，但关键的 </font><code>xl/worksheets/sheet1.xml</code><font style="color:rgb(51, 51, 51);"> 与 </font><code>xl/sharedStrings.xml</code><font style="color:rgb(51, 51, 51);"> 可恢复</font></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br></pre></td><td class="code"><pre><code class="hljs plain">import struct<br>import zlib<br>import re<br>import xml.etree.ElementTree as ET<br><br>path = &quot;1.zip&quot;<br><br>data = open(path, &quot;rb&quot;).read()<br><br># 1. 找外层 ZIP 本地文件头<br>idx = data.find(b&quot;PK\x03\x04&quot;)<br>if idx == -1:<br>    raise Exception(&quot;找不到 PK\\x03\\x04&quot;)<br><br>outer = data[idx:]<br><br>nlen = struct.unpack_from(&quot;&lt;H&quot;, outer, 26)[0]<br>elen = struct.unpack_from(&quot;&lt;H&quot;, outer, 28)[0]<br>dstart = 30 + nlen + elen<br><br># 2. 解外层 deflate，尾部截断没关系，能解多少算多少<br>d = zlib.decompressobj(-15)<br>xlsx_data = d.decompress(outer[dstart:], max_length=200000)<br><br>print(&quot;恢复出的内层 xlsx 数据长度:&quot;, len(xlsx_data))<br>print(&quot;外层是否完整:&quot;, d.eof)<br><br>files = &#123;&#125;<br><br># 3. 扫内层 xlsx 的本地文件头<br>off = 0<br>while off &lt; len(xlsx_data) - 30:<br>    pos = xlsx_data.find(b&quot;PK\x03\x04&quot;, off)<br>    if pos == -1:<br>        break<br><br>    method = struct.unpack_from(&quot;&lt;H&quot;, xlsx_data, pos + 8)[0]<br>    csize = struct.unpack_from(&quot;&lt;I&quot;, xlsx_data, pos + 18)[0]<br>    nlen = struct.unpack_from(&quot;&lt;H&quot;, xlsx_data, pos + 26)[0]<br>    elen = struct.unpack_from(&quot;&lt;H&quot;, xlsx_data, pos + 28)[0]<br><br>    name_start = pos + 30<br>    name = xlsx_data[name_start:name_start + nlen].decode(&quot;utf-8&quot;, errors=&quot;ignore&quot;)<br><br>    dstart = name_start + nlen + elen<br>    dend = dstart + csize<br><br>    # 不完整的文件直接跳过<br>    if dend &gt; len(xlsx_data):<br>        off = pos + 4<br>        continue<br><br>    raw = xlsx_data[dstart:dend]<br><br>    if method == 8:<br>        try:<br>            raw = zlib.decompress(raw, -15)<br>        except Exception:<br>            off = dend<br>            continue<br><br>    files[name] = raw<br>    off = dend<br><br>print(&quot;已恢复文件:&quot;)<br>for k in files:<br>    print(&quot; &quot;, k)<br><br>shared_xml = files.get(&quot;xl/sharedStrings.xml&quot;)<br>sheet_xml = files.get(&quot;xl/worksheets/sheet1.xml&quot;)<br><br>if not shared_xml or not sheet_xml:<br>    raise Exception(&quot;没有恢复出 sharedStrings.xml 或 sheet1.xml&quot;)<br><br># 4. 解析 sharedStrings<br>strings = re.findall(r&quot;&lt;t[^&gt;]*&gt;(.*?)&lt;/t&gt;&quot;, shared_xml.decode(&quot;utf-8&quot;, errors=&quot;ignore&quot;), re.DOTALL)<br><br># 5. 解析 sheet1<br>root = ET.fromstring(sheet_xml)<br>ns = &#123;&quot;a&quot;: &quot;http://schemas.openxmlformats.org/spreadsheetml/2006/main&quot;&#125;<br><br>def col_index(cell_ref):<br>    m = re.match(r&quot;([A-Z]+)&quot;, cell_ref)<br>    col = m.group(1)<br>    num = 0<br>    for ch in col:<br>        num = num * 26 + ord(ch) - ord(&quot;A&quot;) + 1<br>    return num - 1<br><br>rows = []<br><br>for row in root.findall(&quot;.//a:row&quot;, ns):<br>    arr = []<br>    for c in row.findall(&quot;a:c&quot;, ns):<br>        ref = c.attrib.get(&quot;r&quot;, &quot;&quot;)<br>        idx = col_index(ref) if ref else len(arr)<br><br>        while len(arr) &lt;= idx:<br>            arr.append(&quot;&quot;)<br><br>        t = c.attrib.get(&quot;t&quot;)<br>        v = c.find(&quot;a:v&quot;, ns)<br><br>        if v is None:<br>            arr[idx] = &quot;&quot;<br>            continue<br><br>        val = v.text or &quot;&quot;<br><br>        if t == &quot;s&quot;:<br>            arr[idx] = strings[int(val)]<br>        else:<br>            arr[idx] = val<br><br>    rows.append(arr)<br><br># 6. 打印表格<br>for row in rows:<br>    print(&quot;\t&quot;.join(row))<br></code></pre></td></tr></table></figure>
 
 <!-- 这是一张图片，ocr 内容为： -->
@@ -1398,16 +1398,16 @@
 <p>所以<font style="color:rgb(51, 51, 51);">可去内存搜索字节：</font></p>
 <figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">DE C0 AD DE ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? ?? BE BA FE CA<br></code></pre></td></tr></table></figure>
 
-<p><font style="color:rgb(51, 51, 51);">注意 x86 小端序下，</font><code>&lt;font style=&quot;color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);&quot;&gt;0xDEADC0DE&lt;/font&gt;</code><font style="color:rgb(51, 51, 51);"> 在内存中是 </font><code>&lt;font style=&quot;color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);&quot;&gt;DE C0 AD DE&lt;/font&gt;</code><font style="color:rgb(51, 51, 51);">，</font><code>&lt;font style=&quot;color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);&quot;&gt;0xCAFEBABE&lt;/font&gt;</code><font style="color:rgb(51, 51, 51);"> 在内存中是 </font><code>&lt;font style=&quot;color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);&quot;&gt;BE BA FE CA&lt;/font&gt;</code><font style="color:rgb(51, 51, 51);">。两者中间的 16 字节即第 7 题答案</font></p>
+<p><font style="color:rgb(51, 51, 51);">注意 x86 小端序下，</font><code>0xDEADC0DE</code><font style="color:rgb(51, 51, 51);"> 在内存中是 </font><code>DE C0 AD DE</code><font style="color:rgb(51, 51, 51);">，</font><code>0xCAFEBABE</code><font style="color:rgb(51, 51, 51);"> 在内存中是 </font><code>BE BA FE CA</code><font style="color:rgb(51, 51, 51);">。两者中间的 16 字节即第 7 题答案</font></p>
 <!-- 这是一张图片，ocr 内容为： -->
 <p><img src="/2026%E7%8D%AC%E8%B1%B8%E6%9D%AF/1781499915813-f9a605a9-2b91-41b7-9307-f94ba74ca4d2.png" srcset="/img/loading.gif" lazyload></p>
-<p>所以答案是<code>cb&lt;font style=&quot;color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);&quot;&gt;8978dde5b08227aac1c40ba91849c5&lt;/font&gt;</code></p>
+<p>所以答案是<code>cb8978dde5b08227aac1c40ba91849c5</code></p>
 <h3 id="8-请结合内存样本、导入表或静态逆向分析，对-enc-文件中密文部分所采用的加密算法名称是什么？【答案格式：大写】"><a href="#8-请结合内存样本、导入表或静态逆向分析，对-enc-文件中密文部分所采用的加密算法名称是什么？【答案格式：大写】" class="headerlink" title="8. 请结合内存样本、导入表或静态逆向分析，对 .enc 文件中密文部分所采用的加密算法名称是什么？【答案格式：大写】"></a><font style="color:rgb(51, 51, 51);">8. </font>请结合内存样本、导入表或静态逆向分析，对 .enc 文件中密文部分所采用的加密算法名称是什么？【答案格式：大写】</h3><!-- 这是一张图片，ocr 内容为： -->
 <p><img src="/2026%E7%8D%AC%E8%B1%B8%E6%9D%AF/1781498755312-1c355b5a-087c-476f-95a0-af4775ff6802.png" srcset="/img/loading.gif" lazyload></p>
 <p>第三题分析过了，在sub_1400014C0函数，是RC4加密</p>
 <h3 id="9-程序在启动加密前，通过哪个-Windows-CryptoAPI-函数生成了随机密钥？（写出函数名）【答案格式：全小写】"><a href="#9-程序在启动加密前，通过哪个-Windows-CryptoAPI-函数生成了随机密钥？（写出函数名）【答案格式：全小写】" class="headerlink" title="9. 程序在启动加密前，通过哪个 Windows CryptoAPI 函数生成了随机密钥？（写出函数名）【答案格式：全小写】"></a><font style="color:rgb(51, 51, 51);">9. </font>程序在启动加密前，通过哪个 Windows CryptoAPI 函数生成了随机密钥？（写出函数名）【答案格式：全小写】</h3><!-- 这是一张图片，ocr 内容为： -->
 <p><img src="/2026%E7%8D%AC%E8%B1%B8%E6%9D%AF/1781499081612-992e14b9-1bc9-4b97-82a7-7c3461c91c75.png" srcset="/img/loading.gif" lazyload></p>
-<p><code>&lt;font style=&quot;color:rgb(51, 51, 51);background-color:rgb(243, 244, 244);&quot;&gt;cryptgenrandom&lt;/font&gt;</code></p>
+<p><code>cryptgenrandom</code></p>
 <p><font style="color:rgb(51, 51, 51);">分析过了真正生成随机密钥的函数就是 CryptGenRandom</font></p>
 <!-- 这是一张图片，ocr 内容为： -->
 <p><img src="/2026%E7%8D%AC%E8%B1%B8%E6%9D%AF/1781410471467-d09650cc-69c4-4e39-8451-9cc8c53e894e.png" srcset="/img/loading.gif" lazyload></p>
@@ -1416,7 +1416,7 @@
 <p>第一题就分析过了，这边写的很清楚要0.5 BTC</p>
 <h3 id="11-攻击者留下的联系邮箱是什么？【按实际值填写】"><a href="#11-攻击者留下的联系邮箱是什么？【按实际值填写】" class="headerlink" title="11. 攻击者留下的联系邮箱是什么？【按实际值填写】"></a><font style="color:rgb(51, 51, 51);">11. </font>攻击者留下的联系邮箱是什么？【按实际值填写】</h3><!-- 这是一张图片，ocr 内容为： -->
 <p><img src="/2026%E7%8D%AC%E8%B1%B8%E6%9D%AF/1781498259777-9e17b38c-d6af-4710-a27f-4ea3ef267a15.png" srcset="/img/loading.gif" lazyload></p>
-<p>同一个地方，也是第一题，联系<a href="mailto:&#110;&#x30;&#116;&#x5f;&#x72;&#51;&#97;&#108;&#64;&#x70;&#114;&#48;&#116;&#111;&#110;&#x2e;&#x6d;&#101;">n0t_r3al@pr0ton.me</a></p>
+<p>同一个地方，也是第一题，联系<a href="mailto:&#x6e;&#48;&#116;&#x5f;&#x72;&#x33;&#97;&#x6c;&#64;&#112;&#x72;&#48;&#x74;&#x6f;&#x6e;&#46;&#x6d;&#101;">n0t_r3al@pr0ton.me</a></p>
 <h3 id="12-内存镜像中还残留了受害者小张写在桌面上的一份文本文件内容。请根据镜像中的相关信息回答，该日记文件的完整文件名是什么？【按实际值填写】"><a href="#12-内存镜像中还残留了受害者小张写在桌面上的一份文本文件内容。请根据镜像中的相关信息回答，该日记文件的完整文件名是什么？【按实际值填写】" class="headerlink" title="12. 内存镜像中还残留了受害者小张写在桌面上的一份文本文件内容。请根据镜像中的相关信息回答，该日记文件的完整文件名是什么？【按实际值填写】"></a><font style="color:rgb(51, 51, 51);">12. </font>内存镜像中还残留了受害者小张写在桌面上的一份文本文件内容。请根据镜像中的相关信息回答，该日记文件的完整文件名是什么？【按实际值填写】</h3><!-- 这是一张图片，ocr 内容为： -->
 <p><img src="/2026%E7%8D%AC%E8%B1%B8%E6%9D%AF/1781499234399-5931bafe-2723-4b55-b8ce-b6fe98ed7ffd.png" srcset="/img/loading.gif" lazyload></p>
 <p>打开看看桌面是什么就好了，所以是摸鱼日记.txt</p>
@@ -1475,9 +1475,9 @@
       
         <a href="/tags/Misc/" class="print-no-link">#Misc</a>
       
-        <a href="/tags/Mobile/" class="print-no-link">#Mobile</a>
-      
         <a href="/tags/Reverse/" class="print-no-link">#Reverse</a>
+      
+        <a href="/tags/Mobile/" class="print-no-link">#Mobile</a>
       
     </div>
   
@@ -1534,12 +1534,18 @@
                   <article class="post-prev col-6">
                     
                     
+                      <a href="/2066/06/17/%E5%85%B3%E4%BA%8E/" title="关于">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">关于</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
                   </article>
                   <article class="post-next col-6">
                     
                     
-                      <a href="/2026/06/17/%E5%85%B3%E4%BA%8E/" title="关于">
-                        <span class="hidden-mobile">关于</span>
+                      <a href="/2026/06/15/PHAR/" title="矛计划-PHAR靶机设计思路">
+                        <span class="hidden-mobile">矛计划-PHAR靶机设计思路</span>
                         <span class="visible-mobile">下一篇</span>
                         <i class="iconfont icon-arrowright"></i>
                       </a>
