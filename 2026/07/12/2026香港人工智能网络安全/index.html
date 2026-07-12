@@ -1,0 +1,1155 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fufu.png">
+  <link rel="icon" href="/img/fufu.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Meiyouqian">
+  <meta name="keywords" content="CTF,电子取证,Web安全,Pwn,Reverse,Writeup,Hexo">
+  
+    <meta name="description" content="Miscellaneousdatabase题目描述：  某公司的RAID 5业务服务器备份只保留下部分数据。请检查残留证据，尽可能还原有用内容，并找出隐藏的 flag。    题目说的很明确了这个服务器采用的是RAID 5，而且是只保留下部分数据，看起来是一道RAID 5恢复的题目 应该是先恢复RAID 5阵列，再进入文件系统找flag 那在找之前我们自然是先要搞明白什么是RAID 5阵列 R">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Al x Cybersecurity Challenge香港人工智能网络安全挑战赛wp(Miscellaneous全)">
+<meta property="og:url" content="https://mei-you-qian.github.io/2026/07/12/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/index.html">
+<meta property="og:site_name" content="玫幽倩的小博客">
+<meta property="og:description" content="Miscellaneousdatabase题目描述：  某公司的RAID 5业务服务器备份只保留下部分数据。请检查残留证据，尽可能还原有用内容，并找出隐藏的 flag。    题目说的很明确了这个服务器采用的是RAID 5，而且是只保留下部分数据，看起来是一道RAID 5恢复的题目 应该是先恢复RAID 5阵列，再进入文件系统找flag 那在找之前我们自然是先要搞明白什么是RAID 5阵列 R">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783840481384-46f32b1a-a19f-4881-97b5-eb7c78aded92.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783840736513-d2c7ca99-3865-4317-9719-1b59ee13198c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783840791856-4a004b70-2814-4744-93df-f98f4b81afc7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783841002650-e40a3a94-001d-47b0-bff7-5752d245c805.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783841118815-cac2dbf4-f977-41fa-bf21-364616329186.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783841306246-001d8c5b-7699-4d19-823a-0be3fcb5fd14.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783841904948-fb1afdd1-4488-4146-8308-0c0cb9efecac.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783860038114-8151660f-d511-4d8b-8673-6c1d80c12a84.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783860295131-65bc6c2b-85d3-4dd6-bb95-4c6efe4f98be.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783860401161-ece6d987-fe49-4954-890c-5918e9032b64.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783860464005-9b83dbf9-7082-437d-8beb-4a35f693f627.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783860561597-05c91b73-d733-449a-90d4-721f01730075.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783860933239-8b1dd6ba-52e0-492e-9e2f-95fe1540d4ac.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783861650604-a1ce6f0e-8ddf-4d40-a551-97606f448d12.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783861729833-86557957-e699-4dbb-9198-9d7b922c88e2.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783861822216-c5338588-3701-4e12-a2f3-6346b19b4140.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862059720-e58eb174-be11-403e-9e21-fb7ecaa8db8c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862138463-2876490b-de86-4e21-a6ee-ddee0850657a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862187766-1f7932a7-6378-4cad-90cd-e41d69262bd6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862254655-da1af6be-e612-46f1-8660-23d66a093df4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862308185-d6a1ed90-6f22-4481-8009-59c24e2a0376.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862111677-44062bbd-bff7-4ccf-9396-af57536c0041.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862417606-360a4571-9104-45cb-a61c-0cd96240d0f5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862619579-fefcad03-70f4-488f-b00e-7ec7f0d0349a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862723096-7fe2cf96-66ec-49ee-9d74-ddcc2ece8061.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862741350-aab24f02-a5ec-4506-9a6d-5a952720a3a6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862846623-7da3ef23-cacd-4705-be53-be9b03353b6d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862932898-a7b692f3-14c4-402d-acae-11d6f8c8ce45.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783863068608-49e5f3e9-b1a1-4fb5-b007-ff7c638da8bc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783863131506-f6d673c1-5439-4780-a670-30a606c19ead.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783863268198-045f077e-ed57-4e2c-96cf-ae4b3b36d047.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783863319234-e08a9f95-b8cb-4036-bb18-8c8b4c5d9dc5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783863479964-cc9d5511-9d96-4c2e-9b4f-8d461523acf7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783863829144-66decf2f-4121-4e53-b163-d93ef269178f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783863884871-c0815f66-bfb0-4c3e-b5ee-a2fc60697077.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783864022397-7972829a-ae70-4585-838e-c0024b954bc8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783865590002-1b93a535-1887-4a81-8f4d-ed174cf80a35.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783844711925-2a41f007-6a34-403d-b989-2bb505114da6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783844797717-06f4082a-0cc1-4a2e-ab4d-c42294620904.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783845251223-c61196c3-79c1-474a-b4d1-e48d8885e7e9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783845424108-63ce6b7e-2baf-4ab8-b87f-90a9f1619726.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783845630845-abbcf3b5-78e4-4922-872c-3ce107bf15bc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783859283028-77ba836d-b12c-48bc-aed8-7dab2d9eaa45.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783859330137-370a3401-5298-4f8a-a9cd-05ea9747d36e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783859512057-05c5f4fe-4441-438a-91f4-c399afdcc31f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783859737523-b8c75d0b-0fc0-431f-9146-ee35b14df315.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783859754453-151a913e-4819-4868-b216-0caa19ca9645.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783859765308-93f289fe-ea47-4518-9ec3-b3cd1eea7782.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783859778845-7c6832e0-7568-4906-8d5e-ae7a4ff1388d.png">
+<meta property="article:published_time" content="2026-07-11T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-07-12T14:15:55.760Z">
+<meta property="article:author" content="Meiyouqian">
+<meta property="article:tag" content="CTF">
+<meta property="article:tag" content="Misc">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mei-you-qian.github.io/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783840481384-46f32b1a-a19f-4881-97b5-eb7c78aded92.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>Al x Cybersecurity Challenge香港人工智能网络安全挑战赛wp(Miscellaneous全) - 玫幽倩的小博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css">
+<link rel="stylesheet" href="/css/scrollAnimation.css">
+<link rel="stylesheet" href="/css/mk.css">
+<link rel="stylesheet" href="/css/selection.css">
+<link rel="stylesheet" href="/css/glassBg.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mei-you-qian.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.0"></head>
+
+
+<body><!-- hexo injector body_begin start --><div id="web_bg"></div><!-- hexo injector body_begin end -->
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>玫幽倩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/beijing.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="Al x Cybersecurity Challenge香港人工智能网络安全挑战赛wp(Miscellaneous全)"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-07-12 00:00" pubdate>
+          2026年7月12日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          4.3k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          36 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">Al x Cybersecurity Challenge香港人工智能网络安全挑战赛wp(Miscellaneous全)</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783840481384-46f32b1a-a19f-4881-97b5-eb7c78aded92.png" srcset="/img/loading.gif" lazyload></p>
+<h2 id="Miscellaneous"><a href="#Miscellaneous" class="headerlink" title="Miscellaneous"></a>Miscellaneous</h2><h3 id="database"><a href="#database" class="headerlink" title="database"></a>database</h3><p>题目描述：</p>
+<blockquote>
+<p>某公司的RAID 5业务服务器备份只保留下部分数据。请检查残留证据，尽可能还原有用内容，并找出隐藏的 flag。  </p>
+</blockquote>
+<p>题目说的很明确了这个服务器采用的是RAID 5，而且是只保留下部分数据，看起来是一道RAID 5恢复的题目</p>
+<p>应该是先恢复RAID 5阵列，再进入文件系统找flag</p>
+<p>那在找之前我们自然是先要搞明白什么是RAID 5阵列</p>
+<p>RAID，<font style="color:rgb(25, 27, 31);">Redundant Array of Independent Disks，即独立磁盘冗余阵列，我们一般称之为磁盘阵列</font></p>
+<p><font style="color:rgb(25, 27, 31);">其实本质上就是用多个独立的磁盘组成在一起形成一个大的磁盘系统，从而实现比单块磁盘更好的存储性能和更高的可靠性</font></p>
+<p><font style="color:rgb(25, 27, 31);">而RAID5正是其中一种排列方式，实际上，这是目前用的最多的一种磁盘阵列排列方式，因为其兼顾了存储性能、数据安全和存储成本</font></p>
+<p><font style="color:rgb(25, 27, 31);">其排布大致如下</font></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783840736513-d2c7ca99-3865-4317-9719-1b59ee13198c.png" srcset="/img/loading.gif" lazyload></p>
+<p>RAID 5至少需要3块硬盘</p>
+<p>数据会被分成若干数据块，分别写入不同硬盘；同时，系统会计算一份用于恢复数据的<strong>校验信息 Parity</strong>，并将校验信息分散存储在各块硬盘中。</p>
+<p>例如有 3 块硬盘：</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783840791856-4a004b70-2814-4744-93df-f98f4b81afc7.png" srcset="/img/loading.gif" lazyload></p>
+<p>校验块不会固定放在某一块硬盘上，而是轮流分布，这样可以避免某一块专门负责校验的硬盘成为性能瓶颈  </p>
+<p>那如何恢复数据呢，RAID 5一般采用的是XOR技术</p>
+<p>例如 A XOR B &#x3D; P  存进去的</p>
+<p>那么如果A的数据坏了，只要 P XOR B &#x3D; A  就能把A恢复出来</p>
+<p>所以只要同时坏的不超过1块，RAID 5通常仍然可以继续读取数据</p>
+<p>好来看题来</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783841002650-e40a3a94-001d-47b0-bff7-5752d245c805.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783841118815-cac2dbf4-f977-41fa-bf21-364616329186.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到题目给了两块镜像</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783841306246-001d8c5b-7699-4d19-823a-0be3fcb5fd14.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">file disk1.img<br>file disk2.img<br></code></pre></td></tr></table></figure>
+
+<p>检查文件类型可以直接发现是三块盘搭的RAID 5，但是只给了两块，尝试降级恢复</p>
+<p>看看具体的RAID元数据，我们一般在Linux直接用mdadm来处理RAID </p>
+<p>先把这两个镜像变成loop设备，因为RAID的成员盘一般不能直接挂载，我们先建立loop设备，其实就是把.img文件给模拟成一块磁盘， 给它分配一个<code>/dev/loopX</code>设备  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">sudo losetup -fP disk1.img <br>sudo losetup -fP disk2.img<br></code></pre></td></tr></table></figure>
+
+<p>查看 loop 设备对应关系：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">losetup -a<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783841904948-fb1afdd1-4488-4146-8308-0c0cb9efecac.png" srcset="/img/loading.gif" lazyload></p>
+<p>建立好loop设备后就可以用mdadm来看元数据了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">sudo mdadm --examine /dev/loop0 <br>sudo mdadm --examine /dev/loop1<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783860038114-8151660f-d511-4d8b-8673-6c1d80c12a84.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到关键信息，这两块分别是role 0和role 1，即第一块成员盘和第二块成员盘</p>
+<p>我们缺失了role 2，第三块成员盘</p>
+<p>注意这一步是必须的，因为我们得知道这俩分别是哪一块成员盘，才能按条带规则来重组RAID</p>
+<p>由于缺失了一块盘，所以我们需要降级模式来组装RAID</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">sudo mdadm --assemble --readonly --run /dev/md0 /dev/loop0 /dev/loop1<br></code></pre></td></tr></table></figure>
+
+<p>各参数大概是下边这些意思</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><code class="hljs plain">--assemble 组装已有 RAID 阵列 <br>--readonly 只读方式组装，避免搞坏了<br>--run 即使阵列不完整，也尝试启动 <br>/dev/md0 生成的 RAID 设备名 <br>/dev/loop0 第一个 RAID 成员 <br>/dev/loop1 第二个 RAID 成员<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783860295131-65bc6c2b-85d3-4dd6-bb95-4c6efe4f98be.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">cat /proc/mdstat<br></code></pre></td></tr></table></figure>
+
+<p>即可看见RAID的状态，这边的[UU_]中U表示正常存在的成员盘，_表示缺失的成员盘</p>
+<p>通过 RAID 规则把成员盘重新组合起来后，我们终于得到了完整的 ext4 文件系统  </p>
+<p>开始挂载就好了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">sudo mkdir -p /mnt/raid_recover<br>sudo mount -o ro /dev/md0 /mnt/raid_recover<br></code></pre></td></tr></table></figure>
+
+<p>创建一下挂载目录然后直接只读挂载</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783860401161-ece6d987-fe49-4954-890c-5918e9032b64.png" srcset="/img/loading.gif" lazyload></p>
+<p>cd过去，发现成功恢复，我们已经进入了原文件系统</p>
+<p>之后就是找东西环节了，题目说是数据，我们可以搜一下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">sudo find /mnt/raid_recover -type f | grep -iE &#x27;db|sqlite|database&#x27;<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783860464005-9b83dbf9-7082-437d-8beb-4a35f693f627.png" srcset="/img/loading.gif" lazyload></p>
+<p>这个 &#x2F;var&#x2F;lib&#x2F;companydb&#x2F;important.db的数据库明显很可疑</p>
+<p>打开看看</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">sqlite3 /mnt/raid_recover/var/lib/companydb/important.db<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783860561597-05c91b73-d733-449a-90d4-721f01730075.png" srcset="/img/loading.gif" lazyload></p>
+<p>.tables看看表名，就发现个此地无银三百两的表</p>
+<p>我们直接全部拉出来看看</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">SELECT * FROM flag_not_here;<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783860933239-8b1dd6ba-52e0-492e-9e2f-95fe1540d4ac.png" srcset="/img/loading.gif" lazyload></p>
+<p>给了四个flag，不过仔细看看就能发现只有最后一个是对的</p>
+<p>所以本题答案为flag{raid5_recovery_1s_1mportant}</p>
+<h3 id="ntfs-dump"><a href="#ntfs-dump" class="headerlink" title="ntfs_dump"></a>ntfs_dump</h3><p>题目描述：</p>
+<blockquote>
+<p>某员工将数据隐藏到bin文件中，请尽可能还原数据，并找出隐藏的flag，flag格式为FLAG{xxx}。</p>
+</blockquote>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783861650604-a1ce6f0e-8ddf-4d40-a551-97606f448d12.png" srcset="/img/loading.gif" lazyload>’</p>
+<p>和题目描述一模一样啊，只给了一个bin文件，说是把数据隐藏进去了，让我们还原</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783861729833-86557957-e699-4dbb-9198-9d7b922c88e2.png" srcset="/img/loading.gif" lazyload></p>
+<p>先file看看文件格式，发现被识别为了NTFS的启动扇区，看起来像是个NTFS文件系统镜像</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783861822216-c5338588-3701-4e12-a2f3-6346b19b4140.png" srcset="/img/loading.gif" lazyload></p>
+<p>但是扔到Xways报错了，似乎不是一个正常的NTFS镜像</p>
+<p>不过BPB似乎没有损坏，我们还是能看到一些基础参数</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862059720-e58eb174-be11-403e-9e21-fb7ecaa8db8c.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862138463-2876490b-de86-4e21-a6ee-ddee0850657a.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到这边每扇区字节数是00 02，小端序存储，所以应该是0x0200，即512字节</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862187766-1f7932a7-6378-4cad-90cd-e41d69262bd6.png" srcset="/img/loading.gif" lazyload></p>
+<p>每簇是8个扇区，所以是每簇8*512&#x3D;4096字节</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862254655-da1af6be-e612-46f1-8660-23d66a093df4.png" srcset="/img/loading.gif" lazyload></p>
+<p>扇区总数是0x4000，即16384（小端序</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862308185-d6a1ed90-6f22-4481-8009-59c24e2a0376.png" srcset="/img/loading.gif" lazyload></p>
+<p>$MFT起始簇号为4（小端序</p>
+<p>不过其实Xways的技术报告可以直接分析出就是了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862111677-44062bbd-bff7-4ccf-9396-af57536c0041.png" srcset="/img/loading.gif" lazyload></p>
+<p>$MFT 偏移 &#x3D; $MFT 起始簇号 × 簇大小  </p>
+<p>所以$MFT 偏移应该是16384，即0x4000</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862417606-360a4571-9104-45cb-a61c-0cd96240d0f5.png" srcset="/img/loading.gif" lazyload></p>
+<p>正常情况下准备按应该能看到FILE，但是现在这里塞了一大堆的伪造文件头，这会导致binwalk一类的工具无法检测</p>
+<p>显然，我们必须手动搜索些有用的才行，那一般这种数据恢复的题目都会放到压缩包里作为载体，所以我们可以优先对于ZIP的几个主要结构十六进制进行搜索，主要是下边这三个</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">PK\x03\x04 Local File Header，本地文件头 <br>PK\x01\x02 Central Directory，中央目录 <br>PK\x05\x06 End of Central Directory，中央目录结束记录<br></code></pre></td></tr></table></figure>
+
+<p>当然，其中中央目录当然是最主要的，里边会记录很多东西</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pathlib import Path<br><br>data = Path(&quot;ntfs_dump.bin&quot;).read_bytes()<br><br>for sig in [<br>    b&quot;PK\x03\x04&quot;,<br>    b&quot;PK\x01\x02&quot;,<br>    b&quot;PK\x05\x06&quot;,<br>    b&quot;text.txt&quot;,<br>]:<br>    pos = []<br>    start = 0<br><br>    while True:<br>        i = data.find(sig, start)<br>        if i == -1:<br>            break<br>        pos.append(i)<br>        start = i + 1<br><br>    print(sig, len(pos), [hex(x) for x in pos[:10]])<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862619579-fefcad03-70f4-488f-b00e-7ec7f0d0349a.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现了虽然 <code>PK\x03\x04</code> 有很多个，但是 <code>PK\x01\x02</code> 和 <code>PK\x05\x06</code> 都只出现了一次</p>
+<p>这说明有一个0x5b735附近的zip很有可能是真的</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862723096-7fe2cf96-66ec-49ee-9d74-ddcc2ece8061.png" srcset="/img/loading.gif" lazyload></p>
+<p>探查一下基本信息</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pathlib import Path<br>import struct<br><br>data = Path(&quot;ntfs_dump.bin&quot;).read_bytes()<br><br>cd_off = 0x5b735<br>fields = struct.unpack_from(&quot;&lt;4s6H3I5H2I&quot;, data, cd_off)<br><br>(<br>    sig,<br>    ver_made,<br>    ver_need,<br>    flag,<br>    method,<br>    mtime,<br>    mdate,<br>    crc,<br>    csize,<br>    usize,<br>    name_len,<br>    extra_len,<br>    comment_len,<br>    disk,<br>    int_attr,<br>    ext_attr,<br>    local_header_off,<br>) = fields<br><br>name = data[cd_off + 46 : cd_off + 46 + name_len]<br><br>print(&quot;filename:&quot;, name)<br>print(&quot;crc:&quot;, hex(crc))<br>print(&quot;compressed size:&quot;, csize)<br>print(&quot;uncompressed size:&quot;, usize)<br>print(&quot;method:&quot;, method)<br>print(&quot;local header offset:&quot;, hex(local_header_off))<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862741350-aab24f02-a5ec-4506-9a6d-5a952720a3a6.png" srcset="/img/loading.gif" lazyload></p>
+<p>根据各种偏移解析一下中央目录，得到了一些信息</p>
+<p>重点可以看到压缩方法是0，即stored，不压缩，直接存的</p>
+<p>所以压缩数据长度和原始数据长度相同  </p>
+<p>搜索一下text.txt</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862846623-7da3ef23-cacd-4705-be53-be9b03353b6d.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现有两个地方都有</p>
+<p>我们知道text.txt是8字节，所以它后面的数据起点应该是0x5910ae + 8 &#x3D; 0x5910b6</p>
+<p>也就是说，第一段疑似文件内容从这里开始：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">0x5910b6<br></code></pre></td></tr></table></figure>
+
+<p>继续往后看，会发现数据到某个位置突然变成大量假文件头模式</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783862932898-a7b692f3-14c4-402d-acae-11d6f8c8ce45.png" srcset="/img/loading.gif" lazyload></p>
+<p>假文件头开始位置是0x591911</p>
+<p>所以第一段真实数据范围是0x5910b6 ~ 0x591911</p>
+<p>计算长度0x591911 - 0x5910b6 &#x3D; 0x85b &#x3D; 2139</p>
+<p>但是中央目录告诉我们，<code>text.txt</code> 应该有 4240 字节。</p>
+<p>还差2101字节，即0x835字节呢</p>
+<p>不在这边，会不会是和中央目录连在一起呢？</p>
+<p>我们回去继续观察 ZIP 中央目录</p>
+<p>中央目录从0x5b735开始，往前取 <code>2101</code> 字节看看，就是0x5af00 ~ 0x5b735这个范围</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783863068608-49e5f3e9-b1a1-4fb5-b007-ff7c638da8bc.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们只要验证这两段拼起来的 CRC32 是否等于中央目录里的<code>0x2bcce130</code>即可确认正确与否其实</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pathlib import Path<br>import zlib<br><br>data = Path(&quot;ntfs_dump.bin&quot;).read_bytes()<br><br>part1 = data[0x5910b6:0x591911]<br>part2 = data[0x5af00:0x5b735]<br>payload = part1 + part2<br><br>print(&quot;part1 length:     &quot;, len(part1))<br>print(&quot;part2 length:     &quot;, len(part2))<br>print(&quot;total length:     &quot;, len(payload))<br>print(&quot;crc32:            &quot;, hex(zlib.crc32(payload) &amp; 0xffffffff))<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783863131506-f6d673c1-5439-4780-a670-30a606c19ead.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现合起来还真的crc32一样，确认了就是这个</p>
+<p>我们开始尝试自己创建一个zip，缺一个文件头，我们尝试按中央目录重建本地文件头  </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pathlib import Path<br>import struct<br>import zlib<br>import zipfile<br><br>dump = Path(&quot;ntfs_dump.bin&quot;).read_bytes()<br><br># ------------------------------------------------------------<br># 1. ZIP 中央目录和 EOCD 的位置<br># ------------------------------------------------------------<br>cd_off = 0x5b735<br>eocd_off = 0x5b76b<br><br># ------------------------------------------------------------<br># 2. 解析中央目录<br># ------------------------------------------------------------<br>fields = struct.unpack_from(&quot;&lt;4s6H3I5H2I&quot;, dump, cd_off)<br>(<br>    sig,<br>    ver_made,<br>    ver_need,<br>    flag,<br>    method,<br>    mtime,<br>    mdate,<br>    crc,<br>    csize,<br>    usize,<br>    name_len,<br>    extra_len,<br>    comment_len,<br>    disk,<br>    int_attr,<br>    ext_attr,<br>    local_header_off,<br>) = fields<br><br>filename = dump[cd_off + 46 : cd_off + 46 + name_len]<br><br>print(&quot;[+] filename:           &quot;, filename.decode())<br>print(&quot;[+] crc:                &quot;, hex(crc))<br>print(&quot;[+] compressed size:    &quot;, csize)<br>print(&quot;[+] uncompressed size:  &quot;, usize)<br>print(&quot;[+] method:             &quot;, method)<br><br># ------------------------------------------------------------<br># 3. 恢复 text.txt 的两段真实数据<br># ------------------------------------------------------------<br>part1 = dump[0x5910b6:0x591911]<br>part2 = dump[0x5af00:0x5b735]<br>payload = part1 + part2<br><br>assert len(payload) == csize<br>assert (zlib.crc32(payload) &amp; 0xFFFFFFFF) == crc<br><br>print(&quot;[+] payload recovered&quot;)<br>print(&quot;[+] payload length:     &quot;, len(payload))<br>print(&quot;[+] payload crc32:      &quot;, hex(zlib.crc32(payload) &amp; 0xFFFFFFFF))<br><br># ------------------------------------------------------------<br># 4. 构造 Local File Header<br># ------------------------------------------------------------<br>local_header = (<br>    struct.pack(<br>        &quot;&lt;4s5H3I2H&quot;,<br>        b&quot;PK\x03\x04&quot;,<br>        ver_need,<br>        flag,<br>        method,<br>        mtime,<br>        mdate,<br>        crc,<br>        csize,<br>        usize,<br>        name_len,<br>        0,<br>    )<br>    + filename<br>)<br><br># ------------------------------------------------------------<br># 5. 拷贝原始中央目录和 EOCD<br># ------------------------------------------------------------<br>central_directory = dump[cd_off : cd_off + 0x36]<br>eocd = dump[eocd_off : eocd_off + 22]<br><br>recovered_zip = local_header + payload + central_directory + eocd<br>Path(&quot;recovered.zip&quot;).write_bytes(recovered_zip)<br><br>print(&quot;[+] recovered.zip written&quot;)<br><br># ------------------------------------------------------------<br># 6. 测试 ZIP 是否可以正常读取<br># ------------------------------------------------------------<br>with zipfile.ZipFile(&quot;recovered.zip&quot;, &quot;r&quot;) as z:<br>    print(&quot;[+] zip files:&quot;, z.namelist())<br>    text = z.read(&quot;text.txt&quot;)<br>    Path(&quot;text.txt&quot;).write_bytes(text)<br>    print(&quot;[+] text.txt extracted:&quot;, len(text), &quot;bytes&quot;)<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783863268198-045f077e-ed57-4e2c-96cf-ae4b3b36d047.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到了恢复的压缩包和text.txt，但是发现不是明文，还需要提取才行</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783863319234-e08a9f95-b8cb-4036-bb18-8c8b4c5d9dc5.png" srcset="/img/loading.gif" lazyload></p>
+<p>注意到这个数据的大小是4240字节，4240 &#x3D; 16 * 265  </p>
+<p>猜测可能有固定步长隐写，可能是每 16 字节藏 1 字节真实数据，但是步长和偏移不知道，我们可以爆破看看</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs plain">from pathlib import Path<br>import re<br><br>data = Path(&quot;text.txt&quot;).read_bytes()<br><br>for step in range(2, 65):<br>    for offset in range(step):<br>        stream = data[offset::step]<br>        m = re.search(rb&quot;FLAG\&#123;[^&#125;]+\&#125;&quot;, stream)<br>        if m:<br>            print(&quot;[+] found&quot;)<br>            print(&quot;step   =&quot;, step)<br>            print(&quot;offset =&quot;, offset)<br>            print(&quot;flag   =&quot;, m.group().decode())<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783863479964-cc9d5511-9d96-4c2e-9b4f-8d461523acf7.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现确实是每 16 字节藏 1 字节真实数据  </p>
+<p>得到了本题的flag</p>
+<p>FLAG{DE6DDD7A-5D57-415A-99D7-6C0CE3F688BC}</p>
+<h3 id="Riddler"><a href="#Riddler" class="headerlink" title="Riddler"></a>Riddler</h3><p>题目描述：</p>
+<blockquote>
+<p> A misplaced note is full of strange phrases and misleading remarks. The real message is hidden among relationships that look accidental at first glance. Can you separate the signal from the noise?  </p>
+<p> 一份放错地方的笔记中充满了奇怪的短语和误导性的描述。真正的信息藏在乍看偶然的关系之中，你能从噪声里找出线索吗？  </p>
+</blockquote>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783863829144-66decf2f-4121-4e53-b163-d93ef269178f.png" srcset="/img/loading.gif" lazyload></p>
+<p>给的附件很直接啊，一个有flag的压缩包和一个秘密的txt，这txt应该就是题目里那个充满了奇怪的短语和误导性描述的笔记了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783863884871-c0815f66-bfb0-4c3e-b5ee-a2fc60697077.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783864022397-7972829a-ae70-4585-838e-c0024b954bc8.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开可以看到，的确和题目说的一样，充满了噪声，而线索正藏在这里边</p>
+<p>不难定位到关键是中间那部分</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><code class="hljs plain">بعدكـ is to رباعيه, ? is to love-buzz<br>الْحي is to toyota, ? is to الغيـرة<br>feriass is to dham, ? is to much<br>ميسيnn is to دعواتكمn, ? is to were<br>يصيير is to newt, ? is to ta<br>لأمانة is to roan, ? is to viral<br>elain is to omán, ? is to dy<br></code></pre></td></tr></table></figure>
+
+<p>一眼看过去的话像是什么类比题A is to B, ? is to C，当然我们也可以写作 </p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">A : B = ? : C  <br></code></pre></td></tr></table></figure>
+
+<p>笔记里已经帮我们排除了很多可能了，不是频率分析，不是进制转化，更不是翻译隐藏的，是需要我们找到其中的关系，忽略那些重复的意思，找到这些词的关系</p>
+<p>这题需要注意题目和文件里给的那些关键词</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><code class="hljs plain">unfinished language experiment<br>strange scripts<br>not direct translation<br>file appears too short<br></code></pre></td></tr></table></figure>
+
+<p>这些词指向了词向量，尤其是专门强调了文件太短，too short，专门说了这也是解密的一部分，其实也是一种提示，提示我们是短维度的模型</p>
+<p>所以这题的考点其实是词向量类比， word embedding analogy  </p>
+<p>词向量是什么呢，可以理解为是某些语义关系可以通过向量加减体现出来</p>
+<p>有点难以理解吧，我们可以举个例子先，比如king - man + woman ≈ queen </p>
+<p>为什么词可以变成向量？</p>
+<p>因为一个词的含义可以由其上下文决定，比如king和queen经常在一个上下文，computer就离这俩比较远</p>
+<p>这就必须引入GloVe这个词向量模型的概念了  </p>
+<p>它的作用就是把一个词变成一串数字，也就是一个向量，注意这些数字不是乱来的，而是这个模型通过大量文本训练出来的  </p>
+<p>那本题中的格式是A : B &#x3D; ? : C</p>
+<p>我们可以理解为，如果关系是从 <code>A</code> 到 <code>B</code>，那么同样的关系也应该从 <code>?</code> 到 <code>C</code></p>
+<p>也就是说? &#x3D; B - A + C</p>
+<p>所以每一行都要计算这个式子才行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">vector(?) = vector(B) - vector(A) + vector(C)<br></code></pre></td></tr></table></figure>
+
+<p>最后我们还要在词向量模型中找最接近这个向量的词</p>
+<p>那题目已经提示了，这一个词向量模型应该是一个短维度的模型</p>
+<p>这个可能比较难想吧，或许也需要尝试，多亏了我们队伍的Jerry刚刚做过类似的题目，一试就出来了是 glove-twitter-25  模型，即Twitter语料上的 25 维 GloVe 词向量模型</p>
+<p>最后直接写代码就好了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br></pre></td><td class="code"><pre><code class="hljs plain">import gensim.downloader as api<br><br>model = api.load(&quot;glove-twitter-25&quot;)<br><br>rows = [<br>    (&quot;بعدكـ&quot;, &quot;رباعيه&quot;, &quot;love-buzz&quot;),<br>    (&quot;الْحي&quot;, &quot;toyota&quot;, &quot;الغيـرة&quot;),<br>    (&quot;feriass&quot;, &quot;dham&quot;, &quot;much&quot;),<br>    (&quot;ميسيnn&quot;, &quot;دعواتكمn&quot;, &quot;were&quot;),<br>    (&quot;يصيير&quot;, &quot;newt&quot;, &quot;ta&quot;),<br>    (&quot;لأمانة&quot;, &quot;roan&quot;, &quot;viral&quot;),<br>    (&quot;elain&quot;, &quot;omán&quot;, &quot;dy&quot;),<br>]<br><br>result = []<br><br>for a, b, c in rows:<br>    word, score = model.most_similar(<br>        positive=[b, c],<br>        negative=[a],<br>        topn=1<br>    )[0]<br><br>    print(f&quot;&#123;b&#125; - &#123;a&#125; + &#123;c&#125; = &#123;word&#125;  score=&#123;score&#125;&quot;)<br>    result.append(word)<br><br>password = &quot;&quot;.join(result)<br>print(&quot;password =&quot;, password)<br></code></pre></td></tr></table></figure>
+
+<p>这边要进行词向量的运算自然少不了Gensim库，这主要是拿来处理词向量、加载词向量模型的，在这边我们就可以让其自动下载并加载我们要用的这个短维的词向量模型</p>
+<p>得到结果：</p>
+<table>
+<thead>
+<tr>
+<th>行</th>
+<th>运算</th>
+<th>最近词</th>
+</tr>
+</thead>
+<tbody><tr>
+<td>1</td>
+<td>رباعيه - بعدكـ + love-buzz</td>
+<td>ctf</td>
+</tr>
+<tr>
+<td>2</td>
+<td>toyota - الْحي + الغيـرة</td>
+<td>maybe</td>
+</tr>
+<tr>
+<td>3</td>
+<td>dham - feriass + much</td>
+<td>you</td>
+</tr>
+<tr>
+<td>4</td>
+<td>دعواتكمn - ميسيnn + were</td>
+<td>are</td>
+</tr>
+<tr>
+<td>5</td>
+<td>newt - يصيير + ta</td>
+<td>ai</td>
+</tr>
+<tr>
+<td>6</td>
+<td>roan - لأمانة + viral</td>
+<td>master</td>
+</tr>
+<tr>
+<td>7</td>
+<td>omán - elain + dy</td>
+<td>ado</td>
+</tr>
+</tbody></table>
+<p>拼接就能得到密码了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">ctfmaybeyouareaimasterado<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783865590002-1b93a535-1887-4a81-8f4d-ed174cf80a35.png" srcset="/img/loading.gif" lazyload></p>
+<p>最后直接拿密码打开压缩包即可</p>
+<p>得到flag</p>
+<p>flag{39fc0ee0f9da4fa397631f0dcba31555}</p>
+<h3 id="Mysterious-Code"><a href="#Mysterious-Code" class="headerlink" title="Mysterious Code"></a>Mysterious Code</h3><p>题目描述：</p>
+<blockquote>
+<p> 一次 IDS 告警留下了BASE58的可疑流量。请分析这些痕迹，还原隐藏内容并找出其中的秘密。  </p>
+</blockquote>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783844711925-2a41f007-6a34-403d-b989-2bb505114da6.png" srcset="/img/loading.gif" lazyload></p>
+<p>只给了一份流量包，题目给的描述明显是先分析流量，然后可能涉及BASE58编码，最后要我们还原隐藏内容才行</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783844797717-06f4082a-0cc1-4a2e-ab4d-c42294620904.png" srcset="/img/loading.gif" lazyload></p>
+<p>wireshark打开一看发现是大量的DNS流量</p>
+<p>而且DNS查询的域名格式非常类似</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plain">0-GRSXGZ2UK5YGQSSSORMTCVDHLJWXKNCQ.hackg.fun <br>1-NBTHIQTHKZTXKRL2IZRUE4DVHFLDSRDT.hackg.fun <br>2-OVATQZDRPB2VKNDEKM3E6TSEIZSWUWKX.hackg.fun <br>... <br>EOF-f1b662512c1fcbfc.hackg.fun<br></code></pre></td></tr></table></figure>
+
+<p>通过观察不难发现这些域名的格式都是统一的”序号-数据.hackg.fun”的格式</p>
+<p>可以看到最后还有EOF</p>
+<p>这说明DNS查询很可能被用来传输隐藏数据，攻击者利用域名字段携带文本来传输</p>
+<p>由于单个域名长度有限所以拆成了很多片，前边的序号就是排序的</p>
+<p>所以我们要按序号提取这些分片的内容才行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br></pre></td><td class="code"><pre><code class="hljs plain">from scapy.all import rdpcap, DNSQR<br>from collections import defaultdict, Counter<br>from pathlib import Path<br>import re<br><br>pcap = Path(&quot;Mysterious_Code.pcapng&quot;)<br>pkts = rdpcap(str(pcap))<br>pat = re.compile(rb&quot;^(\d+)-([A-Za-z0-9]+)\.hackg\.fun\.?$&quot;, re.I)<br><br>chunks = defaultdict(list)<br><br>for pkt in pkts:<br>    if pkt.haslayer(DNSQR):<br>        q = pkt[DNSQR].qname<br>        m = pat.match(q)<br>        if m:<br>            idx = int(m.group(1))<br>            data = m.group(2).decode()<br>            chunks[idx].append(data)<br><br>print(&quot;chunk count:&quot;, len(chunks))<br>print(&quot;index range:&quot;, min(chunks), max(chunks))<br><br>s = &quot;&quot;<br>for i in sorted(chunks):<br>    s += Counter(chunks[i]).most_common(1)[0][0]<br><br>print(&quot;concat length:&quot;, len(s))<br>print(&quot;alphabet:&quot;, &quot;&quot;.join(sorted(set(s))))<br>print(&quot;result:&quot;, s)<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783845251223-c61196c3-79c1-474a-b4d1-e48d8885e7e9.png" srcset="/img/loading.gif" lazyload></p>
+<p>输出了很多内容，我们在输出内容的同时也整理了alphabet</p>
+<p>得到字符表为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">23456ABCDEFGHIJKLMNOPQRSTUVWXYZ<br></code></pre></td></tr></table></figure>
+
+<p>这很容易让人联想到Base32编码，其字符表如下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">ABCDEFGHIJKLMNOPQRSTUVWXYZ234567<br></code></pre></td></tr></table></figure>
+
+<p>虽然没有出现7，但仍然符合Base32的字符范围，所以我们尝试解码</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783845424108-63ce6b7e-2baf-4ab8-b87f-90a9f1619726.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以用cyberchef进行解码，成功解码出可读内容</p>
+<p>继续对解码后的这串内容进行研究，提取字符表</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783845630845-abbcf3b5-78e4-4922-872c-3ce107bf15bc.png" srcset="/img/loading.gif" lazyload></p>
+<p>其实也可以用Frequency Distribution进行研究</p>
+<p>得到新的字符表为</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">123456789ABCDEFGHIJKMNOPQRSTUVWXYZabcdefghjklmnpqrstuvwxyz <br></code></pre></td></tr></table></figure>
+
+<p> 正好58个，不免让人想到题目提示的Base58编码</p>
+<p>但是这和默认的Base58字符表不同</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz<br></code></pre></td></tr></table></figure>
+
+<p>实际上，我们默认的Base58编码一般指的都是Bitcoin Base58字母表，因为这个编码本身就是比特币的创造者中本聪设计的，专门用于生成人类友好的标识符和地址的</p>
+<p>这Base58和Base64最大的区别就是刻意排除了容易引起混淆的字符</p>
+<p>如数字0和大写O，还有大写的I和小写的l，还有+和&#x2F;这六个</p>
+<p>但是这个其实是没有唯一标准的，本题就是利用了这个设计初衷，修改了Base58的字母表，从我们统计的内容即可发现少了 0 L i o  </p>
+<p>在再这些字符表的基础上尝试一下大小写和数字的排布，不难发现本题的字母表应该是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">123456789abcdefghjklmnpqrstuvwxyzABCDEFGHIJKMNOPQRSTUVWXYZ<br></code></pre></td></tr></table></figure>
+
+<p>即“数字 + 小写字母 + 大写字母”  </p>
+<p>把这个字符表放到cyberchef即可</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783859283028-77ba836d-b12c-48bc-aed8-7dab2d9eaa45.png" srcset="/img/loading.gif" lazyload></p>
+<p>看文件头就可以确认正确了，我们解出了隐藏内容，一个压缩包</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783859330137-370a3401-5298-4f8a-a9cd-05ea9747d36e.png" srcset="/img/loading.gif" lazyload></p>
+<p>里边是一个Store存储、ZipCrypto加密方法的png图片，明显是明文爆破的题目</p>
+<p>由于PNG文件有用固定的文件头，开头一般固定为文件头89504e470d0a1a0a，之后大概率紧跟IHDR块，也就是可以确定前16字节89504e470d0a1a0a0000000d49484452  </p>
+<p>作为明文爆破的明文绰绰有余了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783859512057-05c5f4fe-4441-438a-91f4-c399afdcc31f.png" srcset="/img/loading.gif" lazyload></p>
+<p>创一个1.bin的文件，之后直接bkcrack明文爆破即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">bkcrack -C download.zip -c secret.png -p 1.bin -o 0 -j 8<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783859737523-b8c75d0b-0fc0-431f-9146-ee35b14df315.png" srcset="/img/loading.gif" lazyload></p>
+<p>成功得到keys，直接生成无密码的zip即可</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">bkcrack -C download.zip -k d1c9002e fddfca1e 86c3fee5 -D decrypted.zip<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783859754453-151a913e-4819-4868-b216-0caa19ca9645.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783859765308-93f289fe-ea47-4518-9ec3-b3cd1eea7782.png" srcset="/img/loading.gif" lazyload></p>
+<p>成功得到解密后的图片</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/1783859778845-7c6832e0-7568-4906-8d5e-ae7a4ff1388d.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开来就是本题的flag了</p>
+<p>flag{Crack_is_to_ezzzzzzzz}  </p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/CTF/" class="category-chain-item">CTF</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Misc/" class="print-no-link">#Misc</a>
+      
+        <a href="/tags/CTF/" class="print-no-link">#CTF</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>Al x Cybersecurity Challenge香港人工智能网络安全挑战赛wp(Miscellaneous全)</div>
+      <div>https://mei-you-qian.github.io/2026/07/12/2026香港人工智能网络安全/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Meiyouqian</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年7月12日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2066/06/17/%E5%85%B3%E4%BA%8E/" title="关于">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">关于</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/06/18/2026%E7%8D%AC%E8%B1%B8%E6%9D%AF/" title="2026獬豸杯wp（全）">
+                        <span class="hidden-mobile">2026獬豸杯wp（全）</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"cloud1-9g1zftrh46f4164f","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/scrollAnimation.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<!-- hexo injector body_end start --><script src="/js/backgroundize.js"></script><!-- hexo injector body_end end --></body>
+</html>
