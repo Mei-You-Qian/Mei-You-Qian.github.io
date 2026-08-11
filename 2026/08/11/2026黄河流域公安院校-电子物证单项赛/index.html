@@ -1,0 +1,1867 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/fufu.png">
+  <link rel="icon" href="/img/fufu.png">
+  
+
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Meiyouqian">
+  <meta name="keywords" content="CTF,电子取证,Web安全,Pwn,Reverse,Writeup,Hexo">
+  
+    <meta name="description" content="案件介绍12026年3月，受害人张某在某短视频平台看到一则“兼职刷单、日赚千元”的广告，下载了一款名为“拓鑫任务”的刷单返利APP。电诈分子以“小额返利获取信任、大额任务连环诈骗”的方式，骗取张某共计人民币15万元。案发后，公安机关对张某手机进行电子数据勘验，提取了涉案APP安装包、聊天记录、转账截图及服务器域名等关键证据，研判追踪后锁定该诈骗团伙藏匿于境外某地。经国际警务协作，当地警方对该窝点实">
+<meta property="og:type" content="article">
+<meta property="og:title" content="2026黄河流域公安院校-电子物证单项赛wp">
+<meta property="og:url" content="https://mei-you-qian.github.io/2026/08/11/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/index.html">
+<meta property="og:site_name" content="玫幽倩的小博客">
+<meta property="og:description" content="案件介绍12026年3月，受害人张某在某短视频平台看到一则“兼职刷单、日赚千元”的广告，下载了一款名为“拓鑫任务”的刷单返利APP。电诈分子以“小额返利获取信任、大额任务连环诈骗”的方式，骗取张某共计人民币15万元。案发后，公安机关对张某手机进行电子数据勘验，提取了涉案APP安装包、聊天记录、转账截图及服务器域名等关键证据，研判追踪后锁定该诈骗团伙藏匿于境外某地。经国际警务协作，当地警方对该窝点实">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786281266349-3589ecde-98ae-4f20-a3c6-31fe938db3b4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786281630123-c90ce6ab-4245-4750-b563-ebe1fa8fbc30.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786282174157-fa20d897-90fb-4665-b3cc-ed4c0a046d0b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786282316448-a064b5b6-3096-44b0-9238-0fcdddd47cf5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786282367009-c2b72e2a-5df8-4c2c-a341-74a7931535f1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786282515795-19ca2652-4352-4fc8-913f-d04e5e8c4c06.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786282947320-c13d6ae3-614d-4699-8ad7-09adba1f58ab.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283026003-8ff77c1f-8679-4783-90d8-d3813d8ab51f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283049434-72f50778-a962-4f63-bba5-fe4a9dca9ac1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283086055-426ee20c-dc6e-42b5-bad9-b258b273874a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283195428-ffbec0cd-0a12-4fae-9a6f-da5633ae675b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283475556-09e87a37-5576-42b1-8a85-123f4ba4cc30.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283540675-6a25dbc1-a5b2-4a2d-84bf-981521a831d3.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283554596-4b0ca2e2-b2dc-47d6-b324-3460ef481043.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283573464-e6e51677-20e6-4b71-ac70-01bee350dcca.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283669242-f2d6054f-6aed-485d-8616-037efb049e3a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283770482-a14005b4-bf4d-475d-9fc1-92ca3394568d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283810639-cd77d33d-2c46-475e-a1d1-aa22b3dcc7dd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284100808-93adb62d-ca07-44d1-92b4-bc4a800d7e8a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284353664-75f326ae-fe7a-486b-a231-3e7100360c87.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284396582-65b8a74b-ed34-4d58-853a-4a1a5062ce48.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284415278-275a1b81-3312-4aba-bca1-44878356a342.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284469349-b805b9f6-992b-4a68-aed7-91a56c3cb959.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284510044-da2162df-959c-4a49-82a1-636ed1b0340e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284565435-17dc715d-00b8-4ac4-9183-7162458ee4b9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284815577-80169eda-374d-42e1-a385-425409099eac.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284933796-89ff3f7c-6cd3-4647-a38e-7befd755b428.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284999752-50740bcb-6881-4eae-ac9a-d39871027d1a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786285205744-7eeebd98-d266-4a5c-90e4-84f6bf1abef6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786285285823-6a9dbe7d-404e-4cfd-8e71-41fc7c6dd060.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786285696355-b109a340-73d1-4518-94ca-ab8cb7cb037c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786285623715-45bc7734-af05-4434-b7ef-980b1f0c27d5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786285723769-fe76f6b7-833a-4fea-880b-9596f0ad88bc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786286030783-bb779e5a-79bb-4f8b-b0a9-804928a6a56c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786286379416-305cf3a0-943b-4a6c-9fed-d945b2e5737e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786286356439-cb81b058-dbaf-4acf-ac1f-bdb3d077ebc1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786286399014-58f6716e-e2ec-4805-b2ec-cd7de7b65d91.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786286831536-e44c4c3b-d036-4ed4-bac4-157332fbc013.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786286636809-cb8ad027-6fc2-45cd-88ac-53a76e72b65a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786286891809-da2e70c2-7162-46ce-99c8-c22af572c4a6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786286929732-b5297d9d-0c4d-46cc-ae95-0a08567b77e4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786286977683-4c063aeb-f55a-442f-828a-31ab35755201.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786326209760-10361e63-6991-4930-8fa1-2f0799e674aa.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786287494365-34d6d463-9268-4874-804d-a8473d9c6aa8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786287530079-c693c707-b2f4-42bd-a1ce-938289d8eb2a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786287574868-0525c74a-5e82-4563-a6fd-1b3cadee764e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786287776599-f6f445b4-7d77-4440-ad6d-920f29a637f0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786324893765-08e5d58b-bc3e-4c0c-8ded-d487c7cae3a0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786325550262-e28cb658-0cdc-4ee4-a0e6-f887e9a87e36.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786325061496-a314eaa6-0c48-4958-aaf4-aba2a648b29d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786325043496-be6f3255-7072-4b53-ab9e-26be3602d758.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786325161175-8b848169-dc7a-480b-874c-5b5f27b27228.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786325199070-0a4b12e8-b18a-4725-be1e-7149aac89f9f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786325592178-c3447e2b-d2b0-4286-843e-e601b380f7fc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786325779291-3942ae6c-d2f1-475d-910b-96923aca8222.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786325706191-0be78c15-ec40-4237-85a4-3722d3bea5a0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786325731180-fd8b5f23-0ff9-4326-a134-dbc4785da1e4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786326174913-5ddb02e3-c2ef-412a-ae71-b64e25c0fe69.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327277327-b6dadfc2-26c0-4998-bc78-b8db1d73e637.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786326375304-dc53538d-e553-4e69-9467-7e9ecd8e1b43.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786326564594-b7a825e9-6619-4f70-a1a9-21d2106d9222.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786326679960-778d823f-d550-47b3-9e51-379d8c7c41a1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786326917488-ef64004f-cfef-4337-b3b5-bcc86123f59f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327206165-2335ba26-64bb-4e42-9873-34705316cdd1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327311943-a08f1a24-df1c-4ab3-ba1a-37338849d999.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327341590-c0452d9b-66a3-4226-905f-9ae08db29891.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327359088-3bb6ffc3-d554-44b3-b890-1aee36094f25.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327423860-72745dc1-75f5-415b-b95f-86cb343f72a3.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327490557-3b96fd9f-b274-4b58-86a4-1a277cab67a9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327772662-a9e15de0-8e19-471b-a487-b3c6901cf775.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327758834-be26e9d9-9e36-444a-b024-795c4a8bdaf6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327749323-cb99e25d-cae4-44b2-97a5-d305e4450ee1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327932248-e67f306b-08db-49e6-a1c2-e3b0e01a0c3b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327969940-7578997d-b660-4162-a938-43f607a7f5db.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786328201847-3b611fb7-229a-4230-902c-5430ddbcef4c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786328290726-706873a8-e0c0-4a70-8550-73b1b8228a2d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786328342760-05d10f71-5808-4054-ac85-8a2ba89f6716.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786328380519-23fb0c32-9d40-4068-baf4-d6ce1bcc146c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786328409889-8919d599-4a61-4189-826c-8181643ee0cb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786328435696-f68b79f3-b0ec-4cb1-8d57-514e84303a5f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786328493240-5d1c53e8-c2de-4665-bbc6-7cd1657708d9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786329374849-26c1c269-e193-43fb-9d97-88a801ff85a4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786329481800-0b022186-160c-4ec2-8021-3d85bf12aec4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786329537110-99cf32ee-42ea-4a1a-bb53-4ea6c8b0c177.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786328672941-7950d609-e499-451d-8998-ae0dddfa8983.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786329076572-5af82691-7dce-4ef8-9516-a634fe05f6bd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786347322860-8fa7dcde-050e-4885-9dcc-3505c15a46c9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786353747451-a199238e-4f7e-42f0-b75b-db2dc5f91da2.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786353905298-d4867960-3939-4b04-9af3-91a092c02e66.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786353928369-2f384c17-691a-4dcc-bc59-cb4b9208ac0c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786354057485-a860fa61-5d33-4043-92f0-64255900a573.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786354075734-7d1cb2bb-39ee-4cec-8304-29ffe3fd1093.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786354142069-28aa8460-3fc3-4654-9f96-cbbc76f6f0c0.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361007781-3798cac0-a929-4acf-a0e1-2040b21c51ac.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361024626-a599137f-3a05-464f-92db-7b4be09dc350.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361100564-0db79cda-f0e7-41b5-9105-4729b3319522.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361388140-1bb98fa8-93aa-4146-8ba4-9aa89d35b52f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361515989-5b8b45ab-c74b-4c3b-ac60-3b94d750b3d7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361586513-d03165e7-9a1f-43ef-9675-1a37257802b4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361660531-641d2355-22d0-4b9c-8954-559e457976cb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361778508-5de0d5f2-dd90-4bf4-92c0-5c750fa49925.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361827882-51017dcc-0813-404a-bd62-5d25a4ffaa54.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361892093-5fa520d0-1a81-40e0-86e5-874b46b71049.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361973471-f72c4e3b-dc32-49f5-af59-e01873539cd9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786362521690-d1a574ba-1370-428a-97fd-f1125492e49b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786362985828-b57ab0b4-b2a2-40b5-b869-329fdf41ea8b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786364852526-26c0e711-8491-4532-bc68-a16e831a0738.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786347440253-59530426-9fb9-4418-9189-1f14ca7b52e2.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786349059264-54bef785-d953-441e-8faf-8fdcc470a8d9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786349036904-2e60a277-8056-42a6-96e5-0bc048e7bd86.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786348722052-de485eb7-7790-45bb-a114-aca6cd69370a.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786348861838-c6ae5a6d-aa67-4a92-bb65-466e4f89c957.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786349788567-1c606c4f-d018-4ae3-88e0-6be5ca2e7818.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786349838900-de00c54a-c15d-4e70-b2dc-194f630fce0f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786349986336-93d2c9d8-8686-481d-9508-ea166603109b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786350035988-641dd857-5c71-4569-afd3-62cba577d330.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786366270344-4cba4062-22ff-4791-88bf-037eda0d1f0d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786366337289-75381989-7500-4222-94e0-99cfd993d87f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786366398300-bdf178c8-de61-42d8-b28b-663c9f591419.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786366494281-0646206a-cf9e-404a-a816-299df0e065bf.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786366619718-3e5364e1-7eb3-4ea0-9724-940d22883e1b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786366664467-5c454adb-4ec7-48ff-8d37-5120006b0b50.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786366736696-067c5998-116e-4460-b315-c3b999cad8c7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786366816727-37fd587c-edd6-4082-bf04-8ba4a8889578.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367111968-54ba4a96-b7eb-4a77-a877-9b4e89634059.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367195809-5306be6a-21c0-4e16-b28a-d5315ae8918c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367422354-90a64af0-4a38-44cb-9017-4e0d2ede2486.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367446136-0c22f7e6-781e-4636-8231-0c8b5e6e1d7e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367572225-a8e5edf4-e714-4aca-ade8-37f3ab1f9995.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367586423-8163ee55-8835-4eeb-8176-a782ef90384b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367626960-c1558f91-3b65-413c-862c-159914108083.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367706543-9bb48410-03b3-43a4-b59b-5bab580488f9.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367721005-aab5b869-dc04-4dbf-aa5b-8efc0fc72882.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367755192-60c844e7-face-43af-9da4-ffa5f7f13b6b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367784629-65b13333-dd00-4a1d-b265-a545518f7a1d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367850942-2c94c377-f83e-473f-a746-306d66d149e6.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367869600-18f2fbfb-2950-4015-af08-5b129f499dee.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367975494-d39265ca-4381-42e0-9df6-0a100b614163.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786368007488-8dfb6466-c35d-4c1e-8840-f4708a5f3a07.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786368064697-3e80f89a-3db0-4748-a34d-882fe8633f9e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786368122249-1538293c-2d3c-40a3-8c2a-5e78538899f8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786368248595-00a5cbef-d326-491e-9e85-dda9e57f8aeb.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786368280950-7c0fe1ef-020e-4db4-a269-2a338848a646.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786368316996-4da67f4f-2a9c-4a7b-874a-6aad0c5b262b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786368391942-7be46201-5c9b-472a-8472-f35ad551ca10.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786368146369-b4ceb29e-a0c1-4796-805d-94076a48bd11.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786368483159-e56fa4dc-23e1-4208-ac4e-da72a0690e9c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786369519787-838757aa-f006-4d3a-a9b1-be51dd5a4672.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786369757539-4cc1aa3a-229f-4ab9-b651-fe81a7497c85.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786369833166-d1edc2e9-142f-480f-85de-e0744c7a1a82.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786369669191-f3c1991f-9b02-40b6-83ee-ba976160c51d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786370226380-07d3e8db-b73a-4d5f-97e8-88b867a525bf.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786370277724-40109e91-fb71-42e8-bea9-5935ead41eb3.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786409404311-2aa003a3-2a50-4dad-8ed7-b267924514fd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786409601601-263a386f-612b-45e9-aa03-cc859325162f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786410401337-cb298935-6a51-403d-9838-fad6a39cabda.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786410388856-b0f69f32-8283-4bd0-83dd-22a9cffba5e1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786410528352-2c4ea220-c8bb-4804-865d-6601704cd09e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786410659360-6d906d70-ac5e-4aad-95c0-d894fdd888b1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786411545205-c4b8d9a6-0935-4995-906d-06ff459602b5.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786411588497-6792adad-06c3-4dfa-99aa-c837b3b4f6cc.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786411650391-e2141070-67c4-408c-a8b7-765aafef158c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786411700897-ed3455ab-5dcf-4ea6-9ac5-1b63383065a7.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786411736497-65d44e3a-df88-4e54-9954-f4a43d16f8aa.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786411842831-9c17e86e-c012-47e1-b3ac-0a54c79d340b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786411936578-95a0226e-e5db-4193-b7ab-aa6a35db792f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786428758788-ba021b59-ef48-45ac-828b-8bda46c81fa3.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786428795823-035fa565-4d17-4999-aca4-0fffb4732ff8.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786428976256-f4c16d65-f358-46fd-87c9-2dd6010e1ab1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786429057999-2fbfa990-c438-4b9e-841a-f8d0a7abe86f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786429280470-7ad115d4-7b08-455a-bf37-f2e40f5aae68.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786429912233-231f7748-dfea-4619-8832-5921b43e81ab.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786430932281-687c526f-17e5-45ac-b710-85702fae3876.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786432817671-30bf6f20-29a5-4cf0-9212-6949c4502b38.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786432827164-c32b573a-5d18-4f73-b79a-fae9f2307ed4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786432970579-674ce3d1-8910-4587-a84c-324443a7b71e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786432992143-fa88e7a9-39b3-4db9-8271-e7f5987f3395.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433061436-b8202c45-9c3f-4d01-8f88-8fa82c605e7d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433164277-2c5afb0a-f776-4c0d-b19f-29e70afb2112.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433256973-c7515960-c440-4d72-8d09-0d2b2fa71e30.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433366664-db48f3a1-cee7-4fdf-8591-57b9623cf4e4.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433397994-2f41f111-9435-4979-a561-484d48b4064f.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433484384-a1bb3e6c-eddf-40cf-a004-7a0ec214c490.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433682634-c0d0dae8-975d-4e6b-9fab-2ab93e33e23c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433702192-2eca6a86-ac11-442a-86bc-c11fb455898d.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433887085-2d56b0bb-68be-4e5d-be66-3ebde47d019c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433917666-3a08eb6d-9f28-4bb8-af23-c2f14ce580af.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786434014708-5dc6ba8b-dc2f-40c9-8633-7c03587698da.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786434232348-ec25455a-0480-4e38-83b9-a8e986fcbbce.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786434296369-66cc8a79-c11f-4a95-b3a7-5e838de49643.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786434368093-71ac71d4-98a2-4eb8-ac2d-65abb50db0dd.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786434317976-be488252-b1e0-46c1-9e82-851389675900.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786434458704-d7073d2b-3d10-4bc2-91d0-f735f1da5686.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786434685229-90d9e9d7-de13-4d10-82f4-cb82f88e01a2.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786434588475-b2c0ca08-e246-4041-b488-10eda7893810.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786434622200-ecaf989f-a3bf-448d-9db6-b9b7eaeb1c42.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786435007724-f962aa04-e3b3-44f2-acdb-ce4aea40be5c.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786435024103-703bda6f-ef36-4dfa-8999-6113f63a4217.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786435288722-bede117f-b00c-4562-98cb-b5f705dc52d1.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786435341025-967f6b6c-0368-4937-8670-b45d119cb395.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786435365068-c6ca4c5f-1380-461c-b2f8-afcb36fed1fa.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786435453251-2789950a-9f32-434a-b1f5-897da4041442.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786435493432-1a52ba8b-866e-440f-859d-504fb565b31b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786435593481-bfbced75-ca6a-410c-b775-71a2274c80c3.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786435665887-2c00c614-3739-4767-b457-970f726f1e9b.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786436008556-2b7c4e40-5290-4848-b3dc-a437a2ef8407.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786436056495-db4315d1-fa84-4f19-8c09-33ae66fd9f7e.png">
+<meta property="og:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786436242391-44b783a6-09b2-4f59-813e-9e5967492dda.png">
+<meta property="article:published_time" content="2026-08-10T16:00:00.000Z">
+<meta property="article:modified_time" content="2026-08-11T08:43:55.494Z">
+<meta property="article:author" content="Meiyouqian">
+<meta property="article:tag" content="Misc">
+<meta property="article:tag" content="Mobile">
+<meta property="article:tag" content="Reverse">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://mei-you-qian.github.io/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786281266349-3589ecde-98ae-4f20-a3c6-31fe938db3b4.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>2026黄河流域公安院校-电子物证单项赛wp - 玫幽倩的小博客</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1749284_5i9bdhy70f8.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/c/font_1736178_k526ubmyhba.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="https://cdn.bootcdn.net/ajax/libs/lxgw-wenkai-screen-webfont/1.7.0/style.min.css">
+<link rel="stylesheet" href="/css/scrollAnimation.css">
+<link rel="stylesheet" href="/css/mk.css">
+<link rel="stylesheet" href="/css/selection.css">
+<link rel="stylesheet" href="/css/glassBg.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"mei-you-qian.github.io","root":"/","version":"1.9.8","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":""},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false},"umami":{"src":null,"website_id":null,"domains":null,"start_time":"2024-01-01T00:00:00.000Z","token":null,"api_server":null}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 8.1.0"></head>
+
+
+<body><!-- hexo injector body_begin start --><div id="web_bg"></div><!-- hexo injector body_begin end -->
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong>玫幽倩</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/links/" target="_self">
+                <i class="iconfont icon-link-fill"></i>
+                <span>友链</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/beijing.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.3)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="2026黄河流域公安院校-电子物证单项赛wp"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-08-11 00:00" pubdate>
+          2026年8月11日 凌晨
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          8.6k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          72 分钟
+        
+      </span>
+    
+
+    
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">2026黄河流域公安院校-电子物证单项赛wp</h1>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="案件介绍"><a href="#案件介绍" class="headerlink" title="案件介绍"></a>案件介绍</h2><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">2026年3月，受害人张某在某短视频平台看到一则“兼职刷单、日赚千元”的广告，下载了一款名为“拓鑫任务”的刷单返利APP。电诈分子以“小额返利获取信任、大额任务连环诈骗”的方式，骗取张某共计人民币15万元。案发后，公安机关对张某手机进行电子数据勘验，提取了涉案APP安装包、聊天记录、转账截图及服务器域名等关键证据，研判追踪后锁定该诈骗团伙藏匿于境外某地。经国际警务协作，当地警方对该窝点实施收网行动，抓获多名涉案人员并启动遣返程序。根据双边执法合作协议，我方需派出专家组前往该窝点开展现场勘查、电子证据固定及取证工作。请根据获取的电子物证还原案件发展经过。<br></code></pre></td></tr></table></figure>
+
+
+
+<h2 id="一、手机取证"><a href="#一、手机取证" class="headerlink" title="一、手机取证"></a>一、手机取证</h2><h3 id="1、受害人曾搜索过“兼职APP推荐”，使用的搜索软件是什么？（答案格式：Google）"><a href="#1、受害人曾搜索过“兼职APP推荐”，使用的搜索软件是什么？（答案格式：Google）" class="headerlink" title="1、受害人曾搜索过“兼职APP推荐”，使用的搜索软件是什么？（答案格式：Google）"></a>1、受害人曾搜索过“兼职APP推荐”，使用的搜索软件是什么？（答案格式：Google）</h3><p>题目说的还是很明确的，搜索的内容和软件都很明确</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786281266349-3589ecde-98ae-4f20-a3c6-31fe938db3b4.png" srcset="/img/loading.gif" lazyload></p>
+<p>不过火眼好像没有检测到什么搜索软件</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786281630123-c90ce6ab-4245-4750-b563-ebe1fa8fbc30.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们可以直接索引搜索，发现还是搜不到的情况下再来直接全局</p>
+<p>毕竟题目给的很准确，就说了是“兼职APP推荐”</p>
+<p>所以发现是deepseek，但是火眼没有分析出内容，我们去看deepseek的数据库</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786282174157-fa20d897-90fb-4665-b3cc-ed4c0a046d0b.png" srcset="/img/loading.gif" lazyload></p>
+<p>确实是DeepSeek，所以本题答案即为DeepSeek</p>
+<h3 id="2、受害人是哪一天注册的“拓薪任务”APP？（答案格式：2026-02-02）"><a href="#2、受害人是哪一天注册的“拓薪任务”APP？（答案格式：2026-02-02）" class="headerlink" title="2、受害人是哪一天注册的“拓薪任务”APP？（答案格式：2026-02-02）"></a>2、受害人是哪一天注册的“拓薪任务”APP？（答案格式：2026-02-02）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786282316448-a064b5b6-3096-44b0-9238-0fcdddd47cf5.png" srcset="/img/loading.gif" lazyload></p>
+<p>怀疑是题干打错了，只有拓鑫任务</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786282367009-c2b72e2a-5df8-4c2c-a341-74a7931535f1.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接搜索拓鑫任务，发现网易邮箱里有很多相关的邮箱</p>
+<p>点开来发现有注册日期2026-03-01</p>
+<h3 id="3、根据日历中记录的内容，受害人分别在刷单APP上投入了以下哪些金额（多选题）"><a href="#3、根据日历中记录的内容，受害人分别在刷单APP上投入了以下哪些金额（多选题）" class="headerlink" title="3、根据日历中记录的内容，受害人分别在刷单APP上投入了以下哪些金额（多选题）"></a>3、根据日历中记录的内容，受害人分别在刷单APP上投入了以下哪些金额（多选题）</h3><p>A. 100元</p>
+<p>B. 500元</p>
+<p>C. 3000元</p>
+<p>D. 5万</p>
+<p>E. 10万</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786282515795-19ca2652-4352-4fc8-913f-d04e5e8c4c06.png" srcset="/img/loading.gif" lazyload></p>
+<p>本来想来好好研究一下这个APP，但是发现没有相关数据包</p>
+<p>只能在别的地方来找了，邮件里似乎没有说投入的刷单金额</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786282947320-c13d6ae3-614d-4699-8ad7-09adba1f58ab.png" srcset="/img/loading.gif" lazyload></p>
+<p>继续在别的地方检索，发现了在与你的聊天记录里有记录，这边是100元的记录</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283026003-8ff77c1f-8679-4783-90d8-d3813d8ab51f.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边是500的记录</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283049434-72f50778-a962-4f63-bba5-fe4a9dca9ac1.png" srcset="/img/loading.gif" lazyload></p>
+<p>这是3000的记录</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283086055-426ee20c-dc6e-42b5-bad9-b258b273874a.png" srcset="/img/loading.gif" lazyload></p>
+<p>最后是5w</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283195428-ffbec0cd-0a12-4fae-9a6f-da5633ae675b.png" srcset="/img/loading.gif" lazyload></p>
+<p>5w之后是累计10w，没有一次10w过，之后就发现提现不了了，直接炸了，所以这就是最后一次了，E选项没有出现过</p>
+<p>所以本题选ABCD</p>
+<h3 id="4、截止2026-03-12，受害人共投入了多少资金？（答案格式：25万）"><a href="#4、截止2026-03-12，受害人共投入了多少资金？（答案格式：25万）" class="headerlink" title="4、截止2026-03-12，受害人共投入了多少资金？（答案格式：25万）"></a>4、截止2026-03-12，受害人共投入了多少资金？（答案格式：25万）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283475556-09e87a37-5576-42b1-8a85-123f4ba4cc30.png" srcset="/img/loading.gif" lazyload></p>
+<p>其实不用数啊，就是15万</p>
+<p>15万之后就再也提不出来了</p>
+<p>虽然这个检材可能是假的，但是看着还是很揪心，唉</p>
+<p>答案是15万</p>
+<h3 id="5、以下哪些账号或昵称是该受害人的？（多选题）"><a href="#5、以下哪些账号或昵称是该受害人的？（多选题）" class="headerlink" title="5、以下哪些账号或昵称是该受害人的？（多选题）"></a>5、以下哪些账号或昵称是该受害人的？（多选题）</h3><p>A. 张大帅</p>
+<p>B. 哈哈小飞侠</p>
+<p>C. 海阔天空</p>
+<p>D. <a href="mailto:&#x7a;&#100;&#97;&#115;&#x68;&#117;&#97;&#105;&#48;&#x37;&#48;&#57;&#64;&#x31;&#x36;&#x33;&#x2e;&#x63;&#x6f;&#109;">zdashuai0709@163.com</a></p>
+<p>E. Zhangmouren</p>
+<p>一个个看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283540675-6a25dbc1-a5b2-4a2d-84bf-981521a831d3.png" srcset="/img/loading.gif" lazyload></p>
+<p>首先张大帅肯定是，是与你里边的</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283554596-4b0ca2e2-b2dc-47d6-b324-3460ef481043.png" srcset="/img/loading.gif" lazyload></p>
+<p>其实哈哈小飞侠也是 ，是Soul的</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283573464-e6e51677-20e6-4b71-ac70-01bee350dcca.png" srcset="/img/loading.gif" lazyload></p>
+<p><a href="mailto:&#122;&#x64;&#97;&#x73;&#x68;&#117;&#97;&#105;&#48;&#55;&#x30;&#x39;&#x40;&#x31;&#x36;&#x33;&#46;&#99;&#x6f;&#x6d;">zdashuai0709@163.com</a>也是，是网易邮箱大师的</p>
+<p>所以选ABD，至于C和E</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283669242-f2d6054f-6aed-485d-8616-037efb049e3a.png" srcset="/img/loading.gif" lazyload></p>
+<p>C是群组别人的昵称</p>
+<p>E没搜到</p>
+<p>所以本题选ABD</p>
+<h3 id="6、受害人意识到被骗后，收集了一些证据并且打包成了压缩文件进行备份，压缩包中的文件名称为？（答案格式：含后缀名，如123-txt）"><a href="#6、受害人意识到被骗后，收集了一些证据并且打包成了压缩文件进行备份，压缩包中的文件名称为？（答案格式：含后缀名，如123-txt）" class="headerlink" title="6、受害人意识到被骗后，收集了一些证据并且打包成了压缩文件进行备份，压缩包中的文件名称为？（答案格式：含后缀名，如123.txt）"></a>6、受害人意识到被骗后，收集了一些证据并且打包成了压缩文件进行备份，压缩包中的文件名称为？（答案格式：含后缀名，如123.txt）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283770482-a14005b4-bf4d-475d-9fc1-92ca3394568d.png" srcset="/img/loading.gif" lazyload></p>
+<p>说是压缩包，所以当然去压缩文件里边找了</p>
+<p>发现有证据备份.zip</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786283810639-cd77d33d-2c46-475e-a1d1-aa22b3dcc7dd.png" srcset="/img/loading.gif" lazyload></p>
+<p>虽然三个文件大小不太一样，但是打开来都是诈骗账户信息.txt</p>
+<h3 id="7、受害人搜索过以下哪些地方？（多选题）"><a href="#7、受害人搜索过以下哪些地方？（多选题）" class="headerlink" title="7、受害人搜索过以下哪些地方？（多选题）"></a>7、受害人搜索过以下哪些地方？（多选题）</h3><p>A. 新街口</p>
+<p>B. 夫子庙</p>
+<p>C. 紫金山</p>
+<p>D. 南京禄口机场</p>
+<p>E. 南京红山动物园</p>
+<p>在问地方，我们直接去看地图</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284100808-93adb62d-ca07-44d1-92b4-bc4a800d7e8a.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接看百度地图的搜索地点，发现是ABD</p>
+<h3 id="8、受害人2026年7月3日中午最可能在哪个城市？（答案格式：南京市）"><a href="#8、受害人2026年7月3日中午最可能在哪个城市？（答案格式：南京市）" class="headerlink" title="8、受害人2026年7月3日中午最可能在哪个城市？（答案格式：南京市）"></a>8、受害人2026年7月3日中午最可能在哪个城市？（答案格式：南京市）</h3><p>在地图软件没有出现7月3日，继续找别的线索</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284353664-75f326ae-fe7a-486b-a231-3e7100360c87.png" srcset="/img/loading.gif" lazyload></p>
+<p>查找时间线发现了7月3日有两张照片</p>
+<p>但是直接看图片社工有点麻烦，我们看看有没有别的照片</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284396582-65b8a74b-ed34-4d58-853a-4a1a5062ce48.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现同目录下还有一张飞机信息</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284415278-275a1b81-3312-4aba-bca1-44878356a342.png" srcset="/img/loading.gif" lazyload></p>
+<p>对方7月3日中午有从海口市飞南京市的飞机票，所以很有可能7月3日在海口市</p>
+<h3 id="9、分析受害人手机中安装的家庭智能硬件管理平台数据库，其中有一个智能空调遥控器的型号是什么？（答案格式：abc-a12-b04）"><a href="#9、分析受害人手机中安装的家庭智能硬件管理平台数据库，其中有一个智能空调遥控器的型号是什么？（答案格式：abc-a12-b04）" class="headerlink" title="9、分析受害人手机中安装的家庭智能硬件管理平台数据库，其中有一个智能空调遥控器的型号是什么？（答案格式：abc.a12.b04）"></a>9、分析受害人手机中安装的家庭智能硬件管理平台数据库，其中有一个智能空调遥控器的型号是什么？（答案格式：abc.a12.b04）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284469349-b805b9f6-992b-4a68-aed7-91a56c3cb959.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现手机中存在一个米家，题目说的家庭智能硬件管理平台可能就是这个</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284510044-da2162df-959c-4a49-82a1-636ed1b0340e.png" srcset="/img/loading.gif" lazyload></p>
+<p>来根据包名看看数据库</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284565435-17dc715d-00b8-4ac4-9183-7162458ee4b9.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接去data&#x2F;com.xiaomi.smarthome&#x2F;databases找，发现了空调的model</p>
+<p>所以本题答案为qjiang.acpartner.ac02</p>
+<h3 id="10、张某曾在“与你”app中下载过一个文件，其中隐藏了一个支付地址，请找到并回答地址是什么？（答案格式：https-pay-xx-com-xx-xx）"><a href="#10、张某曾在“与你”app中下载过一个文件，其中隐藏了一个支付地址，请找到并回答地址是什么？（答案格式：https-pay-xx-com-xx-xx）" class="headerlink" title="10、张某曾在“与你”app中下载过一个文件，其中隐藏了一个支付地址，请找到并回答地址是什么？（答案格式：https://pay.xx.com/xx/xx）"></a>10、张某曾在“与你”app中下载过一个文件，其中隐藏了一个支付地址，请找到并回答地址是什么？（答案格式：<a target="_blank" rel="noopener" href="https://pay.xx.com/xx/xx%EF%BC%89">https://pay.xx.com/xx/xx）</a></h3><p>已经确认是与你app了，我们来与你app的数据包这边看看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284815577-80169eda-374d-42e1-a385-425409099eac.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284933796-89ff3f7c-6cd3-4647-a38e-7befd755b428.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现files下边存了一个重要.jpg</p>
+<p>就快把我不正常写脸上了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786284999752-50740bcb-6881-4eae-ac9a-d39871027d1a.png" srcset="/img/loading.gif" lazyload></p>
+<p>说是有一个网址隐藏在里边，直接搜http发现就找到了</p>
+<p>所以答案是<a target="_blank" rel="noopener" href="https://pay-demo.virtualpay.com/pay/orderNo=ORD260710594721">https://pay-demo.virtualpay.com/pay/orderNo=ORD260710594721</a></p>
+<h2 id="二、计算机取证"><a href="#二、计算机取证" class="headerlink" title="二、计算机取证"></a>二、计算机取证</h2><h3 id="1、该计算机的系统盘原始磁盘MD5值是多少？（单选题）"><a href="#1、该计算机的系统盘原始磁盘MD5值是多少？（单选题）" class="headerlink" title="1、该计算机的系统盘原始磁盘MD5值是多少？（单选题）"></a>1、该计算机的系统盘原始磁盘MD5值是多少？（单选题）</h3><p>A. 12a5b44edfa80c904b5e16affa383d88e4aa0caa</p>
+<p>B. 1442499db55b8c6f901dafe65a6fd70a</p>
+<p>C. 27f9c083205673ef3906fb188e39b3fe</p>
+<p>D. ac363ab3a41bb321da79ba8220e41b8e</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786285205744-7eeebd98-d266-4a5c-90e4-84f6bf1abef6.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接多检材导入，发现了检材一又是系统保留又是C盘的，很明显是系统盘</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786285285823-6a9dbe7d-404e-4cfd-8e71-41fc7c6dd060.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接计算哈希</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786285696355-b109a340-73d1-4518-94ca-ab8cb7cb037c.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以本题选B</p>
+<h3 id="2、该计算机的安装时间（UTC-8）是什么时候？（单选题）"><a href="#2、该计算机的安装时间（UTC-8）是什么时候？（单选题）" class="headerlink" title="2、该计算机的安装时间（UTC +8）是什么时候？（单选题）"></a>2、该计算机的安装时间（UTC +8）是什么时候？（单选题）</h3><p>A. 2026-02-14 06:24:25</p>
+<p>B. 2026-02-14 14:24:25</p>
+<p>C. 2026-06-29 06:24:25</p>
+<p>D. 2026-06-29 14:24:25</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786285623715-45bc7734-af05-4434-b7ef-980b1f0c27d5.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接就写了，这边注意时区，虽然这题没换，选B</p>
+<h3 id="3、用户“Rhine”最近一次登录成功的时间是什么？（单选题）"><a href="#3、用户“Rhine”最近一次登录成功的时间是什么？（单选题）" class="headerlink" title="3、用户“Rhine”最近一次登录成功的时间是什么？（单选题）"></a>3、用户“Rhine”最近一次登录成功的时间是什么？（单选题）</h3><p>A. 2026-02-24 14:44:18</p>
+<p>B. 2026-02-14 15:11:35</p>
+<p>C. 2026-06-29 16:16:29</p>
+<p>D. 2026-07-07 16:16:29</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786285723769-fe76f6b7-833a-4fea-880b-9596f0ad88bc.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边直接就写了最后登录时间，所以直接选C</p>
+<h3 id="4、用户“Rhine”的密码NTLM哈希是多少？（答案格式：英文小写）"><a href="#4、用户“Rhine”的密码NTLM哈希是多少？（答案格式：英文小写）" class="headerlink" title="4、用户“Rhine”的密码NTLM哈希是多少？（答案格式：英文小写）"></a>4、用户“Rhine”的密码NTLM哈希是多少？（答案格式：英文小写）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786286030783-bb779e5a-79bb-4f8b-b0a9-804928a6a56c.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边用户列表下边直接写了NT HASH的值</p>
+<p>所以答案是44f9ea6a7743a8ea6f1956384c39887b</p>
+<p>其实也可以手算</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786286379416-305cf3a0-943b-4a6c-9fed-d945b2e5737e.png" srcset="/img/loading.gif" lazyload></p>
+<p>因为我们知道密码，可以直接算NTLM哈希</p>
+<p>本质上就是这样子计算的</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">MD4(UTF-16LE(&quot;123qweasd&quot;))<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786286356439-cb81b058-dbaf-4acf-ac1f-bdb3d077ebc1.png" srcset="/img/loading.gif" lazyload></p>
+<h3 id="5、接上题，请破解用户“Rhine”的密码NTLM哈希（提示：9位密码，前三位为123，后六位为小写英文），明文密码是多少？（答案格式：以实际为准，如123abcdef）"><a href="#5、接上题，请破解用户“Rhine”的密码NTLM哈希（提示：9位密码，前三位为123，后六位为小写英文），明文密码是多少？（答案格式：以实际为准，如123abcdef）" class="headerlink" title="5、接上题，请破解用户“Rhine”的密码NTLM哈希（提示：9位密码，前三位为123，后六位为小写英文），明文密码是多少？（答案格式：以实际为准，如123abcdef）"></a>5、接上题，请破解用户“Rhine”的密码NTLM哈希（提示：9位密码，前三位为123，后六位为小写英文），明文密码是多少？（答案格式：以实际为准，如123abcdef）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786286399014-58f6716e-e2ec-4805-b2ec-cd7de7b65d91.png" srcset="/img/loading.gif" lazyload></p>
+<p>火眼直接自动给破解出来了（</p>
+<p>或者就hashcat去爆破，题目给的也很具体了，9位密码，前三位为123，后六位为小写英文</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">hashcat -a 3 -m 1000 44f9ea6a7743a8ea6f1956384c39887b 123?l?l?l?l?l?l<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786286831536-e44c4c3b-d036-4ed4-bac4-157332fbc013.png" srcset="/img/loading.gif" lazyload></p>
+<p>就是123qweasd</p>
+<h3 id="6、该计算机的DHCP-IP地址是多少？（答案格式：192-168-1-1）"><a href="#6、该计算机的DHCP-IP地址是多少？（答案格式：192-168-1-1）" class="headerlink" title="6、该计算机的DHCP IP地址是多少？（答案格式：192.168.1.1）"></a>6、该计算机的DHCP IP地址是多少？（答案格式：192.168.1.1）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786286636809-cb8ad027-6fc2-45cd-88ac-53a76e72b65a.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接看网络连接</p>
+<p>发现了DHCP地址为194.7.30.136</p>
+<h3 id="7、该计算机中微信客户端的安装时间是什么？（单选题）"><a href="#7、该计算机中微信客户端的安装时间是什么？（单选题）" class="headerlink" title="7、该计算机中微信客户端的安装时间是什么？（单选题）"></a>7、该计算机中微信客户端的安装时间是什么？（单选题）</h3><p>A. 2026-02-14 21:28:08</p>
+<p>B. 2026-03-14 21:28:08</p>
+<p>C. 2026-04-14 21:28:08</p>
+<p>D. 2026-05-14 21:28:08</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786286891809-da2e70c2-7162-46ce-99c8-c22af572c4a6.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接看微信的安装时间即可看见是A</p>
+<h3 id="8、该计算机中登录的微信账号是什么？（答案格式：wxid-123456abc）"><a href="#8、该计算机中登录的微信账号是什么？（答案格式：wxid-123456abc）" class="headerlink" title="8、该计算机中登录的微信账号是什么？（答案格式：wxid_123456abc）"></a>8、该计算机中登录的微信账号是什么？（答案格式：wxid_123456abc）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786286929732-b5297d9d-0c4d-46cc-ae95-0a08567b77e4.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接看微信的账户信息即可</p>
+<p>微信账号是wxid_2869cyfdzpon12</p>
+<h3 id="9、该计算机中安装使用的安卓模拟器手机型号是什么？（答案格式：TJ-123ABC）"><a href="#9、该计算机中安装使用的安卓模拟器手机型号是什么？（答案格式：TJ-123ABC）" class="headerlink" title="9、该计算机中安装使用的安卓模拟器手机型号是什么？（答案格式：TJ-123ABC）"></a>9、该计算机中安装使用的安卓模拟器手机型号是什么？（答案格式：TJ-123ABC）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786286977683-4c063aeb-f55a-442f-828a-31ab35755201.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接看安装软件就能明确是夜神模拟器</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786326209760-10361e63-6991-4930-8fa1-2f0799e674aa.png" srcset="/img/loading.gif" lazyload></p>
+<p>在嵌套证据识别里边直接显示了夜神的手机型号</p>
+<p>所以本题答案为SM-G9810</p>
+<h3 id="10、该计算机中保存的嫌疑人张三伪造的身份证号是多少？（答案格式：12345678910）"><a href="#10、该计算机中保存的嫌疑人张三伪造的身份证号是多少？（答案格式：12345678910）" class="headerlink" title="10、该计算机中保存的嫌疑人张三伪造的身份证号是多少？（答案格式：12345678910）"></a>10、该计算机中保存的嫌疑人张三伪造的身份证号是多少？（答案格式：12345678910）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786287494365-34d6d463-9268-4874-804d-a8473d9c6aa8.png" srcset="/img/loading.gif" lazyload></p>
+<p>拿到检材其实下意识可以先从大到小倒叙看看有没有什么大图片</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786287530079-c693c707-b2f4-42bd-a1ce-938289d8eb2a.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边可以直接看见是110105199001010001</p>
+<p>当然也可以仿真看一下</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786287574868-0525c74a-5e82-4563-a6fd-1b3cadee764e.png" srcset="/img/loading.gif" lazyload></p>
+<p>注意仿真的时候默认勾选的第一个镜像是系统盘，我们先放1</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786287776599-f6f445b4-7d77-4440-ad6d-920f29a637f0.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接创建即可，注意这边要调高一下内存和处理器，不然容易打开卡死</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786324893765-08e5d58b-bc3e-4c0c-8ded-d487c7cae3a0.png" srcset="/img/loading.gif" lazyload></p>
+<p>如果仿真的话很快就能看见了，就在图片里，很明显</p>
+<p>所以本题答案为110105199001010001</p>
+<h3 id="11、嫌疑人真正的身份证号是多少（答案格式：123456789012345678）"><a href="#11、嫌疑人真正的身份证号是多少（答案格式：123456789012345678）" class="headerlink" title="11、嫌疑人真正的身份证号是多少（答案格式：123456789012345678）"></a>11、嫌疑人真正的身份证号是多少（答案格式：123456789012345678）</h3><p>继续在照片找了一圈没有找到线索</p>
+<p>这个时候去看了看别的文件夹</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786325550262-e28cb658-0cdc-4ee4-a0e6-f887e9a87e36.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现有个eDiary的笔记软件需要我们填写正确身份证</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786325061496-a314eaa6-0c48-4958-aaf4-aba2a648b29d.png" srcset="/img/loading.gif" lazyload></p>
+<p>而在这个文件夹下还有个密语</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786325043496-be6f3255-7072-4b53-ab9e-26be3602d758.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开发现大小不太对，怀疑是零宽</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786325161175-8b848169-dc7a-480b-874c-5b5f27b27228.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边还专门好心放了个解零宽网站</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786325199070-0a4b12e8-b18a-4725-be1e-7149aac89f9f.png" srcset="/img/loading.gif" lazyload></p>
+<p>扔进去就看见了隐藏的内容，即真实身份证号是321202200101016134</p>
+<h3 id="12、嫌疑人在2026年2月15日要去4s店提什么车？（答案格式：奔驰）"><a href="#12、嫌疑人在2026年2月15日要去4s店提什么车？（答案格式：奔驰）" class="headerlink" title="12、嫌疑人在2026年2月15日要去4s店提什么车？（答案格式：奔驰）"></a>12、嫌疑人在2026年2月15日要去4s店提什么车？（答案格式：奔驰）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786325592178-c3447e2b-d2b0-4286-843e-e601b380f7fc.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接恢复密码即可得到原来的密码flag1{my_dream_car}</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786325779291-3942ae6c-d2f1-475d-910b-96923aca8222.png" srcset="/img/loading.gif" lazyload></p>
+<p>拿这个直接去解卡那个secret.elf即可</p>
+<p>得到日记内容写了2.14的明天，也就是2.15要去提的是五菱，不是奥迪啊，奥迪没钱买</p>
+<p>所以答案是五菱</p>
+<h3 id="13、计算机中存在一个cdk生成器，支持生成以下哪几个平台的cdk？（多选题）"><a href="#13、计算机中存在一个cdk生成器，支持生成以下哪几个平台的cdk？（多选题）" class="headerlink" title="13、计算机中存在一个cdk生成器，支持生成以下哪几个平台的cdk？（多选题）"></a>13、计算机中存在一个cdk生成器，支持生成以下哪几个平台的cdk？（多选题）</h3><p>A. STEAM</p>
+<p>B. EPIC</p>
+<p>C. ORIGIN</p>
+<p>D. UPLAY</p>
+<p>E. CUSTOM</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786325706191-0be78c15-ec40-4237-85a4-3722d3bea5a0.png" srcset="/img/loading.gif" lazyload></p>
+<p>很容易就能找到这个cdk生成器</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786325731180-fd8b5f23-0ff9-4326-a134-dbc4785da1e4.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现了里边支持的正好是ABCDE</p>
+<p>所以本题答案为ABCDE</p>
+<h3 id="14、计算机中存在一个加密容器，该容器文件的SM3哈希值是多少？（答案格式：以实际为准，英文小写）"><a href="#14、计算机中存在一个加密容器，该容器文件的SM3哈希值是多少？（答案格式：以实际为准，英文小写）" class="headerlink" title="14、计算机中存在一个加密容器，该容器文件的SM3哈希值是多少？（答案格式：以实际为准，英文小写）"></a>14、计算机中存在一个加密容器，该容器文件的SM3哈希值是多少？（答案格式：以实际为准，英文小写）</h3><p>思路很清晰，先去找加密容器</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786326174913-5ddb02e3-c2ef-412a-ae71-b64e25c0fe69.png" srcset="/img/loading.gif" lazyload></p>
+<p>其实可以直接进行特征分析，可能有点慢不过肯定能出来</p>
+<p>而这边我们也可以直接文件全显然后看看大小有没有特别整数的</p>
+<p>找着找着发现直接有一个文件类型是加密容器的</p>
+<p>基本确认就是这个了</p>
+<p>我们也可以先做下边那题再交本题，都能打开了肯定是加密容器，再去算SM3</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327277327-b6dadfc2-26c0-4998-bc78-b8db1d73e637.png" srcset="/img/loading.gif" lazyload></p>
+<p>d6fcd05a60ce61e7fd3202a24006beb781b1b30ec4b2826225d6d19d508fd3b0</p>
+<h3 id="15、接上题，该加密容器的密码是什么？（答案格式，以实际为准）"><a href="#15、接上题，该加密容器的密码是什么？（答案格式，以实际为准）" class="headerlink" title="15、接上题，该加密容器的密码是什么？（答案格式，以实际为准）"></a>15、接上题，该加密容器的密码是什么？（答案格式，以实际为准）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786326375304-dc53538d-e553-4e69-9467-7e9ecd8e1b43.png" srcset="/img/loading.gif" lazyload></p>
+<p>在便签里就写到过这个加密容器的密码在cdk生成器里</p>
+<p>我们去看看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786326564594-b7a825e9-6619-4f70-a1a9-21d2106d9222.png" srcset="/img/loading.gif" lazyload></p>
+<p>总不能对着这个exe文件硬看吧</p>
+<p>猜测可能要逆向分析或是解包</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786326679960-778d823f-d550-47b3-9e51-379d8c7c41a1.png" srcset="/img/loading.gif" lazyload></p>
+<p>只看字符串没有发现内容，但是发现了很有可能是PyInstaller打包的痕迹</p>
+<p>所以我们可以先使用Pyinstxtractor解包</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">python3 pyinstxtractor.py cdk_generator.exe<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786326917488-ef64004f-cfef-4337-b3b5-bcc86123f59f.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边还列出了一些可能的入口点，我们可以打开看看</p>
+<p>cdk_generator.pyc明显最可疑啊，同名先看，尝试反编译</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br></pre></td><td class="code"><pre><code class="hljs plain">import marshal<br>import types<br>import dis<br>import struct<br><br>def show(code, depth=0):<br>    pad = &quot; &quot; * depth<br>    print(f&quot;&#123;pad&#125;[代码块] &#123;code.co_name&#125;&quot;)<br>    print(f&quot;&#123;pad&#125;[起始行] &#123;code.co_firstlineno&#125;&quot;)<br>    print(f&quot;&#123;pad&#125;[调用名称] &#123;code.co_names&#125;&quot;)<br>    print(f&quot;&#123;pad&#125;[常量] &#123;[c for c in code.co_consts if not isinstance(c, types.CodeType)]&#125;\n&quot;)<br><br>    for const in code.co_consts:<br>        if isinstance(const, types.CodeType):<br>            show(const, depth + 1)<br><br>with open(&quot;cdk_generator.pyc&quot;, &quot;rb&quot;) as f:<br>    data = f.read()<br><br># Python 3.7+: pyc header = 16 bytes<br># Python 3.3–3.6: 12 bytes<br># 保险起见：自动跳过 header<br>offset = 0<br>magic = data[:4]<br>offset += 4<br><br>if magic &gt;= b&#x27;\x33\x0d\x0d\x0a&#x27;:  # Python 3.7+<br>    offset += 12<br>else:<br>    offset += 8<br><br>root = marshal.loads(data[offset:])<br>show(root)<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327206165-2335ba26-64bb-4e42-9873-34705316cdd1.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现直接就在注释里写了password:easy_pyc</p>
+<p>所以容器密码应该是easy_pyc，打开来看看行不行就好了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327311943-a08f1a24-df1c-4ab3-ba1a-37338849d999.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现成功挂载了，所以这是正确的，也能证明14是对的</p>
+<p>所以本题答案为easy_pyc</p>
+<h3 id="16、接上题，其中包含以下哪几个“免费开户、查人”的Telegram频道？（多选题）"><a href="#16、接上题，其中包含以下哪几个“免费开户、查人”的Telegram频道？（多选题）" class="headerlink" title="16、接上题，其中包含以下哪几个“免费开户、查人”的Telegram频道？（多选题）"></a>16、接上题，其中包含以下哪几个“免费开户、查人”的Telegram频道？（多选题）</h3><p>A. 巨人社工库</p>
+<p>B. 好旺社工库</p>
+<p>C. Xray社工库</p>
+<p>D. 情报局社工库</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327341590-c0452d9b-66a3-4226-905f-9ae08db29891.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开来就俩文件，明显是后者</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327359088-3bb6ffc3-d554-44b3-b890-1aee36094f25.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现ABCD都在里边，所以本题选ABCD</p>
+<h3 id="17、加密容器中存在一个PowerShell脚本，脚本中定义的-XOR-解密密钥是？（答案格式：十进制，如18）"><a href="#17、加密容器中存在一个PowerShell脚本，脚本中定义的-XOR-解密密钥是？（答案格式：十进制，如18）" class="headerlink" title="17、加密容器中存在一个PowerShell脚本，脚本中定义的 XOR 解密密钥是？（答案格式：十进制，如18）"></a>17、加密容器中存在一个PowerShell脚本，脚本中定义的 XOR 解密密钥是？（答案格式：十进制，如18）</h3><p>除掉那个txt只剩那个zip了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327423860-72745dc1-75f5-415b-b95f-86cb343f72a3.png" srcset="/img/loading.gif" lazyload></p>
+<p>很显眼的一个Powershell脚本，我们用notepad打开看看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327490557-3b96fd9f-b274-4b58-86a4-1a277cab67a9.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接搜索XOR就好了，就能找到这边在和0x51异或</p>
+<p>所以异或的密钥是0x51</p>
+<p>异或的加密密钥和解密密钥是同一个，也不用纠结啥</p>
+<p>要写十进制，所以是81</p>
+<h3 id="18、以下哪个文件会被脚本从-Steam-目录中删除？（单选题）"><a href="#18、以下哪个文件会被脚本从-Steam-目录中删除？（单选题）" class="headerlink" title="18、以下哪个文件会被脚本从 Steam 目录中删除？（单选题）"></a>18、以下哪个文件会被脚本从 Steam 目录中删除？（单选题）</h3><p>A. hid.dll</p>
+<p>B. steam.cfg</p>
+<p>C. zlib1.dll</p>
+<p>D. appdata.vdf</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327772662-a9e15de0-8e19-471b-a487-b3c6901cf775.png" srcset="/img/loading.gif" lazyload></p>
+<p>一个个看可以发现A和C是脚本注入的文件</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327758834-be26e9d9-9e36-444a-b024-795c4a8bdaf6.png" srcset="/img/loading.gif" lazyload></p>
+<p>D也是写入的东西</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327749323-cb99e25d-cae4-44b2-97a5-d305e4450ee1.png" srcset="/img/loading.gif" lazyload></p>
+<p>只有B是删除的</p>
+<p>所以本题选B</p>
+<h3 id="19、BitLocker加密分区的48位恢复密钥是什么？（答案格式：按实际填写）"><a href="#19、BitLocker加密分区的48位恢复密钥是什么？（答案格式：按实际填写）" class="headerlink" title="19、BitLocker加密分区的48位恢复密钥是什么？（答案格式：按实际填写）"></a>19、BitLocker加密分区的48位恢复密钥是什么？（答案格式：按实际填写）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327932248-e67f306b-08db-49e6-a1c2-e3b0e01a0c3b.png" srcset="/img/loading.gif" lazyload></p>
+<p>藏在本机照片里有一个明显是加密数据库的东西</p>
+<p>但是没有密码</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786327969940-7578997d-b660-4162-a938-43f607a7f5db.png" srcset="/img/loading.gif" lazyload></p>
+<p>想到之前在笔记里反复提到了说嫌疑人对A6L执念很深，所以很有可能是在这里边存在图片隐写</p>
+<p>当然一共也才四张，一个个来也区别不大，先扔到随波逐流</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786328201847-3b611fb7-229a-4230-902c-5430ddbcef4c.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现宽高被改过，改回真实高度之后即可得到密码AlpsRhine</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786328290726-706873a8-e0c0-4a70-8550-73b1b8228a2d.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开就有bitlocker的密码了</p>
+<p>密码是N0 W@y 1s vvay</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786328342760-05d10f71-5808-4054-ac85-8a2ba89f6716.png" srcset="/img/loading.gif" lazyload></p>
+<p>尝试打开成功，所以这个就是密码</p>
+<p>我们再提取一下恢复密钥即可</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786328380519-23fb0c32-9d40-4068-baf4-d6ce1bcc146c.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786328409889-8919d599-4a61-4189-826c-8181643ee0cb.png" srcset="/img/loading.gif" lazyload></p>
+<p>在管理BitLocker里边直接备份恢复密钥即可</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786328435696-f68b79f3-b0ec-4cb1-8d57-514e84303a5f.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到恢复密钥174526-427251-448943-433774-027698-350119-649715-502139</p>
+<h3 id="20、BitLocker加密分区中存在一个sql文件，请解密BitLocker加密分区，分析sql文件中的数据库名为？（答案格式：按实际填写）"><a href="#20、BitLocker加密分区中存在一个sql文件，请解密BitLocker加密分区，分析sql文件中的数据库名为？（答案格式：按实际填写）" class="headerlink" title="20、BitLocker加密分区中存在一个sql文件，请解密BitLocker加密分区，分析sql文件中的数据库名为？（答案格式：按实际填写）"></a>20、BitLocker加密分区中存在一个sql文件，请解密BitLocker加密分区，分析sql文件中的数据库名为？（答案格式：按实际填写）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786328493240-5d1c53e8-c2de-4665-bbc6-7cd1657708d9.png" srcset="/img/loading.gif" lazyload></p>
+<p>sql发现加密了，第一个想法肯定是外边那一大堆拼的啊，谁知道这玩意竟然只是个伪加密。</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786329374849-26c1c269-e193-43fb-9d97-88a801ff85a4.png" srcset="/img/loading.gif" lazyload></p>
+<p>改成0或者偶数都可以，总之只是伪加密</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786329481800-0b022186-160c-4ec2-8021-3d85bf12aec4.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到数据库名字为steamcdk</p>
+<p>*到这边计算机取证就结束了</p>
+<p>下边是同文件夹的很多彩蛋</p>
+<p>比如这个改字体颜色的文档隐写</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786329537110-99cf32ee-42ea-4a1a-bb53-4ea6c8b0c177.png" srcset="/img/loading.gif" lazyload></p>
+<p>下边还有一个拼图的</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786328672941-7950d609-e499-451d-8998-ae0dddfa8983.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边给的很好，每一个的名字都是tile_行_列.png</p>
+<p>范围都是0-15，也就说是256张50*50的拼起来</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br></pre></td><td class="code"><pre><code class="hljs plain">from zipfile import ZipFile<br>from pathlib import Path<br>from PIL import Image<br><br>p = Path(&#x27;./&#x27;)<br>out = Image.new(&#x27;RGB&#x27;, (800, 800))<br><br>for f in p.glob(&#x27;tile_*.png&#x27;):<br>    _, i, j = f.stem.split(&#x27;_&#x27;)<br>    out.paste(Image.open(f), (int(i)*50, int(j)*50))<br><br>out.save(&#x27;solved.png&#x27;)<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786329076572-5af82691-7dce-4ef8-9516-a634fe05f6bd.png" srcset="/img/loading.gif" lazyload></p>
+<p>一堆神秘flag，想到数证杯决赛了。</p>
+<h2 id="三、程序逆向分析"><a href="#三、程序逆向分析" class="headerlink" title="三、程序逆向分析"></a>三、程序逆向分析</h2><h3 id="1、该刷单APP的包名是什么？（答案格式：com-example-app）"><a href="#1、该刷单APP的包名是什么？（答案格式：com-example-app）" class="headerlink" title="1、该刷单APP的包名是什么？（答案格式：com.example.app）"></a>1、该刷单APP的包名是什么？（答案格式：com.example.app）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786347322860-8fa7dcde-050e-4885-9dcc-3505c15a46c9.png" srcset="/img/loading.gif" lazyload></p>
+<p>程序逆向分析给了俩压缩包，明显一个apk一个exe，问我们app所以我们就先看这个apk</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786353747451-a199238e-4f7e-42f0-b75b-db2dc5f91da2.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接放到雷电APP智能分析即可</p>
+<p>得到包名com.tuoxin.task</p>
+<h3 id="2、该刷单APP从设备通讯录中窃取数据后，将数据写入哪个本地-JSON-文件？（答案格式：含扩展名，如abc-123-json）"><a href="#2、该刷单APP从设备通讯录中窃取数据后，将数据写入哪个本地-JSON-文件？（答案格式：含扩展名，如abc-123-json）" class="headerlink" title="2、该刷单APP从设备通讯录中窃取数据后，将数据写入哪个本地 JSON 文件？（答案格式：含扩展名，如abc_123.json）"></a>2、该刷单APP从设备通讯录中窃取数据后，将数据写入哪个本地 JSON 文件？（答案格式：含扩展名，如abc_123.json）</h3><p>说了是json文件，我们jadx打开来搜一下有没有什么跟”.json”有关的逻辑</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786353905298-d4867960-3939-4b04-9af3-91a092c02e66.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现和写入以及.json相关的只有这一条</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786353928369-2f384c17-691a-4dcc-bc59-cb4b9208ac0c.png" srcset="/img/loading.gif" lazyload></p>
+<p>看了一下发现和题意一致</p>
+<p>都是读取通讯录，提取信息，格式化数据后加密保存到这个contacts_bak.json文件中</p>
+<p>符合题意，所以本题答案为contacts_bak.json</p>
+<h3 id="3、分析该刷单APP的-assets-cfg-bin文件，以下说法正确的是？（多选题）"><a href="#3、分析该刷单APP的-assets-cfg-bin文件，以下说法正确的是？（多选题）" class="headerlink" title="3、分析该刷单APP的 assets&#x2F;cfg.bin文件，以下说法正确的是？（多选题）"></a>3、分析该刷单APP的 assets&#x2F;cfg.bin文件，以下说法正确的是？（多选题）</h3><p>A. cfg.bin 经过Base32编码</p>
+<p>B. cfg.bin 经过 Base64 编码</p>
+<p>C. cfg.bin 使用 AES-256-CBC 加密</p>
+<p>D. cfg.bin 使用 AES-512-CBC 加密</p>
+<p>E. cfg.bin 的 IV 来源于该文件自身偏移 8-23 字节</p>
+<p>F. cfg.bin 的 IV 来源于独立的 assets&#x2F;iv.bin</p>
+<p>那就先定位这个cfg.bin文件</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786354057485-a860fa61-5d33-4043-92f0-64255900a573.png" srcset="/img/loading.gif" lazyload></p>
+<p>只出现在这里</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786354075734-7d1cb2bb-39ee-4cec-8304-29ffe3fd1093.png" srcset="/img/loading.gif" lazyload></p>
+<p>一个个查看逻辑</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786354142069-28aa8460-3fc3-4654-9f96-cbbc76f6f0c0.png" srcset="/img/loading.gif" lazyload></p>
+<p>首先是代码明确写了cfg.bin是经过了Base64编码，所以A错误、B正确</p>
+<p>而CD的AES没有直接看见</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361007781-3798cac0-a929-4acf-a0e1-2040b21c51ac.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现这这边还导入了这个库</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361024626-a599137f-3a05-464f-92db-7b4be09dc350.png" srcset="/img/loading.gif" lazyload></p>
+<p>双击跳转过去发现是加载的txcore这个native库</p>
+<p>所以我们还要去看看native层</p>
+<p>改文件后缀名为zip，打开</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361100564-0db79cda-f0e7-41b5-9105-4729b3319522.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们可以很容易在lib文件夹下找到这个so文件</p>
+<p>接着就要IDA进行分析了，最好选9.0以上的，低版本的反编译不了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361388140-1bb98fa8-93aa-4146-8ba4-9aa89d35b52f.png" srcset="/img/loading.gif" lazyload></p>
+<p>肯定是看和加解密有关的函数</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361515989-5b8b45ab-c74b-4c3b-ac60-3b94d750b3d7.png" srcset="/img/loading.gif" lazyload></p>
+<p>过来看看，不难发现中间这一条即为加密的函数</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361586513-d03165e7-9a1f-43ef-9675-1a37257802b4.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到这边的核心调用</p>
+<p>这边的32和初始化定义的v10[2]其实都已经说明了密钥长32字节，强烈暗示是AES-256</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361660531-641d2355-22d0-4b9c-8954-559e457976cb.png" srcset="/img/loading.gif" lazyload></p>
+<p>那如果我们继续去看sub_14CC就会发现是一个标准的AES-256-CBC加密</p>
+<p>所以刚刚的调用其实是</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><code class="hljs plain">v5 = sub_14CC(<br>    a1,      // 加密数据<br>    a2,      // 加密数据长度<br>    v10,     // 密钥（32字节）<br>    32,      // 密钥长度<br>    &amp;v9,     // IV/Nonce（16字节）<br>    a3,      // 输出缓冲区<br>    &amp;v8      // 输出长度<br>);<br></code></pre></td></tr></table></figure>
+
+<p>所以本题CD里边选C</p>
+<p>最后是E和F</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361778508-5de0d5f2-dd90-4bf4-92c0-5c750fa49925.png" srcset="/img/loading.gif" lazyload></p>
+<p>既然已经明确了这个sub_14CC是标准的AES-256-CBC加密</p>
+<p>所以v9即为IV</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361827882-51017dcc-0813-404a-bd62-5d25a4ffaa54.png" srcset="/img/loading.gif" lazyload></p>
+<p>v9是固定的明文，因此和文件无关，不选E，去看也会发现不一样</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361892093-5fa520d0-1a81-40e0-86e5-874b46b71049.png" srcset="/img/loading.gif" lazyload></p>
+<p>对照后发现确实是来源于独立的asset&#x2F;iv.bin，与其内容一致</p>
+<p>所以本题EF选F</p>
+<p>综合选BCF</p>
+<h3 id="4、分析该刷单APP的-assets-cfg-bin文件，解密key是多少？（答案格式：按实际填写，如123abc）"><a href="#4、分析该刷单APP的-assets-cfg-bin文件，解密key是多少？（答案格式：按实际填写，如123abc）" class="headerlink" title="4、分析该刷单APP的 assets&#x2F;cfg.bin文件，解密key是多少？（答案格式：按实际填写，如123abc）"></a>4、分析该刷单APP的 assets&#x2F;cfg.bin文件，解密key是多少？（答案格式：按实际填写，如123abc）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786361973471-f72c4e3b-dc32-49f5-af59-e01873539cd9.png" srcset="/img/loading.gif" lazyload></p>
+<p>密钥我们分析过了是v10</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786362521690-d1a574ba-1370-428a-97fd-f1125492e49b.png" srcset="/img/loading.gif" lazyload></p>
+<p>注意最后应该是0x07和0x00</p>
+<p>所以合在一起，解密key就是47f32b6c3c50f7474f3a14787ef790f46d326e7a33a758d0c7e452cb120e0700</p>
+<h3 id="5、分析该刷单APP的assets-cfg-bin文件，其中记录的备份IP地址及端口是多少？（答案格式：192-168-1-1-8080）"><a href="#5、分析该刷单APP的assets-cfg-bin文件，其中记录的备份IP地址及端口是多少？（答案格式：192-168-1-1-8080）" class="headerlink" title="5、分析该刷单APP的assets&#x2F;cfg.bin文件，其中记录的备份IP地址及端口是多少？（答案格式：192.168.1.1:8080）"></a>5、分析该刷单APP的assets&#x2F;cfg.bin文件，其中记录的备份IP地址及端口是多少？（答案格式：192.168.1.1:8080）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786362985828-b57ab0b4-b2a2-40b5-b869-329fdf41ea8b.png" srcset="/img/loading.gif" lazyload></p>
+<p>最后我们就要开始解密这个cfg.bin了</p>
+<p>刚刚已经说的很清楚了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plain">读取 assets/cfg.bin<br>Base64 解码<br>跳过前 24 字节<br>取剩余部分作为 AES-CBC 密文<br>使用 native 中的 32 字节 key 和 16 字节 IV 解密<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786364852526-26c0e711-8491-4532-bc68-a16e831a0738.png" srcset="/img/loading.gif" lazyload></p>
+<p>成功解码即可得到最后的备份ip和端口</p>
+<p>121.43.187.92:8080</p>
+<h3 id="6、分析提取的HuangHe2026-exe，根据-DIE（Detect-It-Easy）识别结果，该-PE-文件使用的编译器及版本是？（单选题）"><a href="#6、分析提取的HuangHe2026-exe，根据-DIE（Detect-It-Easy）识别结果，该-PE-文件使用的编译器及版本是？（单选题）" class="headerlink" title="6、分析提取的HuangHe2026.exe，根据 DIE（Detect-It-Easy）识别结果，该 PE 文件使用的编译器及版本是？（单选题）"></a>6、分析提取的HuangHe2026.exe，根据 DIE（Detect-It-Easy）识别结果，该 PE 文件使用的编译器及版本是？（单选题）</h3><p>A. Microsoft Visual C++ 6.0</p>
+<p>B. Borland Delphi 6</p>
+<p>C. MinGW GCC 4.x</p>
+<p>D. Microsoft Visual Basic 6.0</p>
+<p>E. Borland C++ Builder 6</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786347440253-59530426-9fb9-4418-9189-1f14ca7b52e2.png" srcset="/img/loading.gif" lazyload></p>
+<p>说的也太直接了，那我们就听他的用DIE就好了，打开发现编译器是Borland Delphi 6</p>
+<p>选B</p>
+<h3 id="7、分析提取的HuangHe2026-exe，该-PE-文件包含多少个节区（Section）？（答案格式：1）"><a href="#7、分析提取的HuangHe2026-exe，该-PE-文件包含多少个节区（Section）？（答案格式：1）" class="headerlink" title="7、分析提取的HuangHe2026.exe，该 PE 文件包含多少个节区（Section）？（答案格式：1）"></a>7、分析提取的HuangHe2026.exe，该 PE 文件包含多少个节区（Section）？（答案格式：1）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786349059264-54bef785-d953-441e-8faf-8fdcc470a8d9.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接就能看见PE文件包含了8个节区</p>
+<h3 id="8、分析提取的HuangHe2026-exe，该-PE-文件入口点（Entry-Point）的虚拟地址（VA）是多少？（答案格式：0x123456）"><a href="#8、分析提取的HuangHe2026-exe，该-PE-文件入口点（Entry-Point）的虚拟地址（VA）是多少？（答案格式：0x123456）" class="headerlink" title="8、分析提取的HuangHe2026.exe，该 PE 文件入口点（Entry Point）的虚拟地址（VA）是多少？（答案格式：0x123456）"></a>8、分析提取的HuangHe2026.exe，该 PE 文件入口点（Entry Point）的虚拟地址（VA）是多少？（答案格式：0x123456）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786349036904-2e60a277-8056-42a6-96e5-0bc048e7bd86.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接就能看见了其实</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786348722052-de485eb7-7790-45bb-a114-aca6cd69370a.png" srcset="/img/loading.gif" lazyload></p>
+<p>当然也可以在PE文件内部看，发现了PE的入口点RVA是0x92040</p>
+<p>又因为ImageBase是0x400000</p>
+<p>所以虚拟地址VA是0x400000+0x92040 &#x3D; 0x492040</p>
+<h3 id="9、分析提取的HuangHe2026-exe，程序读取-写入的注册表值（Value-Name）名是？（答案格式：Abcde）"><a href="#9、分析提取的HuangHe2026-exe，程序读取-写入的注册表值（Value-Name）名是？（答案格式：Abcde）" class="headerlink" title="9、分析提取的HuangHe2026.exe，程序读取&#x2F;写入的注册表值（Value Name）名是？（答案格式：Abcde）"></a>9、分析提取的HuangHe2026.exe，程序读取&#x2F;写入的注册表值（Value Name）名是？（答案格式：Abcde）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786348861838-c6ae5a6d-aa67-4a92-bb65-466e4f89c957.png" srcset="/img/loading.gif" lazyload></p>
+<p>用IDA打开查看字符串，发现很多跟USB有关的字符串，程序很有可能在操作USB存储驱动和INF驱动</p>
+<p>我们选中SYSTEM\CurrentControlSet\Services\UsbStor交叉引用过去看看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786349788567-1c606c4f-d018-4ae3-88e0-6be5ca2e7818.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现属于这个sub_491714函数</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786349838900-de00c54a-c15d-4e70-b2dc-194f630fce0f.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现了核心逻辑是这边，这边在设置注册表操作的根键</p>
+<p>0x80000002是Windows的预定义句柄常量HKEY_LOCAL_MACHINE</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786349986336-93d2c9d8-8686-481d-9508-ea166603109b.png" srcset="/img/loading.gif" lazyload></p>
+<p>联系后边这边主要是打开了注册表路径 HKEY_LOCAL_MACHINE\SYSTEM\CurrentControlSet\Services\UsbStor  </p>
+<p>再读取了值看看读到的值是否等于4</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786350035988-641dd857-5c71-4569-afd3-62cba577d330.png" srcset="/img/loading.gif" lazyload></p>
+<p>读取的是Start的值，所以本题答案为Start</p>
+<h3 id="10、分析提取的HuangHe2026-exe，该应用的主要功能是什么？（单选题）"><a href="#10、分析提取的HuangHe2026-exe，该应用的主要功能是什么？（单选题）" class="headerlink" title="10、分析提取的HuangHe2026.exe，该应用的主要功能是什么？（单选题）"></a>10、分析提取的HuangHe2026.exe，该应用的主要功能是什么？（单选题）</h3><p>A. 对插入的 USB 存储设备进行全盘加密，未授权设备无法读取数据</p>
+<p>B. 完全卸载 Windows 系统中的所有 USB 主机控制器驱动程序，永久移除 USB 端口功能</p>
+<p>C. 监控 USB 设备插拔事件并记录日志到本地文件，供管理员审计使用</p>
+<p>D. 启用&#x2F;禁用 Windows 系统的 USB 大容量存储设备（U 盘&#x2F;移动硬盘等），通过修改注册表和重命名驱动 INF 文件实现</p>
+<p>E. 通过 USB HID 接口模拟键盘输入，实现自动化测试或攻击载荷投递</p>
+<p>这需要我们对这个程序的主要功能完全理解一遍</p>
+<p>我们知道这个是一个exe，所以可以想到去看看有没有什么Apply按钮逻辑</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786366270344-4cba4062-22ff-4791-88bf-037eda0d1f0d.png" srcset="/img/loading.gif" lazyload></p>
+<p>在函数栏可以搜到这两个函数</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786366337289-75381989-7500-4222-94e0-99cfd993d87f.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现主要功能在Button1，2没啥，进去看Button1，发现调用了sub_491844函数那边</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786366398300-bdf178c8-de61-42d8-b28b-663c9f591419.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们跟过来看看，发现了大量逻辑内容</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786366494281-0646206a-cf9e-404a-a816-299df0e065bf.png" srcset="/img/loading.gif" lazyload></p>
+<p>首先是这边在创建并打开注册表</p>
+<p>而且操作的是0x80000002 ，即HKEY_LOCAL_MACHINE  </p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786366619718-3e5364e1-7eb3-4ea0-9724-940d22883e1b.png" srcset="/img/loading.gif" lazyload></p>
+<p>紧接的这个可以基本确定了我们打开的是HKLM\SYSTEM\CurrentControlSet\Services\USBSTOR  </p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786366664467-5c454adb-4ec7-48ff-8d37-5120006b0b50.png" srcset="/img/loading.gif" lazyload></p>
+<p>再后边开始判断了，主要就是某个控件的状态回决定True还是False吧</p>
+<p>如果是True</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786366736696-067c5998-116e-4460-b315-c3b999cad8c7.png" srcset="/img/loading.gif" lazyload></p>
+<p>那么进入这个分支，其中最重要的就是最后一句了</p>
+<p>把注册表里的Start赋值为了3</p>
+<p>注意这边Windows服务的Start有这样子5个值</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><code class="hljs plain">0 = Boot<br>1 = System<br>2 = Automatic<br>3 = Manual / Demand Start<br>4 = Disabled<br></code></pre></td></tr></table></figure>
+
+<p>所以3也就是开启，即USBSTOR没被禁</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786366816727-37fd587c-edd6-4082-bf04-8ba4a8889578.png" srcset="/img/loading.gif" lazyload></p>
+<p>但如果是False，那么就是4，也就是禁用了USB</p>
+<p>而且可以看到，不管是True还是False都是调用了通过修改注册表和重命名驱动INF文件实现的，分别启用和禁用了USB大容量存储设备</p>
+<p>所以本题选D </p>
+<h2 id="四、服务器取证"><a href="#四、服务器取证" class="headerlink" title="四、服务器取证"></a>四、服务器取证</h2><h3 id="1、该服务器的操作系统名称和版本是什么？（单选题）"><a href="#1、该服务器的操作系统名称和版本是什么？（单选题）" class="headerlink" title="1、该服务器的操作系统名称和版本是什么？（单选题）"></a>1、该服务器的操作系统名称和版本是什么？（单选题）</h3><p>A. CentOS 7.9 x86_64</p>
+<p>B. Ubuntu 22.04 aarch64</p>
+<p>C. openEuler 24.03 x86_64</p>
+<p>D. Debian 12 x86_64</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367111968-54ba4a96-b7eb-4a77-a877-9b4e89634059.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接在火眼的系统信息看即可，选C</p>
+<h3 id="2、该服务器根分区-的-UUID-是什么？"><a href="#2、该服务器根分区-的-UUID-是什么？" class="headerlink" title="2、该服务器根分区 / 的 UUID 是什么？"></a>2、该服务器根分区 <code>/</code> 的 UUID 是什么？</h3><p>A. e8650b2c-938c-4063-bb04-d91bb6fc4ef2</p>
+<p>B. 7ca80e58-3dae-4109-8c6c-21c706950d52</p>
+<p>C. d7f7ecef-6f94-40fa-8532-85218c1358d8</p>
+<p>D. 6B09-FE8F</p>
+<p>这种肯定是仿真比较方便看，我们直接仿真</p>
+<p>平时仿真其实我习惯会增加内存和cpu核数，不过这边最好不要，因为后边有一题会有问题（虽然可能是题目的问题</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367195809-5306be6a-21c0-4e16-b28a-d5315ae8918c.png" srcset="/img/loading.gif" lazyload></p>
+<p>为了方便输入命令，我们在启动后可以优先连接ssh</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367422354-90a64af0-4a38-44cb-9017-4e0d2ede2486.png" srcset="/img/loading.gif" lazyload></p>
+<p>先登录</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367446136-0c22f7e6-781e-4636-8231-0c8b5e6e1d7e.png" srcset="/img/loading.gif" lazyload></p>
+<p>ssh开着，但是输入ifconfig发现没有ip</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367572225-a8e5edf4-e714-4aca-ade8-37f3ab1f9995.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367586423-8163ee55-8835-4eeb-8176-a782ef90384b.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">dhclient -v ens33<br></code></pre></td></tr></table></figure>
+
+<p>手动用DHCP分配一下ip</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367626960-c1558f91-3b65-413c-862c-159914108083.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到了ip，我们ssh连接</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367706543-9bb48410-03b3-43a4-b59b-5bab580488f9.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367721005-aab5b869-dc04-4dbf-aa5b-8efc0fc72882.png" srcset="/img/loading.gif" lazyload></p>
+<p>成功ssh连接上</p>
+<p>直接输入命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">lsblk -o UUID,MOUNTPOINT<br>blkid /dev/mapper/openeuler-root<br></code></pre></td></tr></table></figure>
+
+<p>二选一即可，都能看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367755192-60c844e7-face-43af-9da4-ffa5f7f13b6b.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以本题选B</p>
+<h3 id="3、该服务器根分区-的文件系统是什么？（答案格式：小写英文，如fat32）"><a href="#3、该服务器根分区-的文件系统是什么？（答案格式：小写英文，如fat32）" class="headerlink" title="3、该服务器根分区 / 的文件系统是什么？（答案格式：小写英文，如fat32）"></a>3、该服务器根分区 <code>/</code> 的文件系统是什么？（答案格式：小写英文，如fat32）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367784629-65b13333-dd00-4a1d-b265-a545518f7a1d.png" srcset="/img/loading.gif" lazyload></p>
+<p>在火眼详细信息往下划可以直接看见</p>
+<p>文件系统是ext4</p>
+<h3 id="4、关于该服务器配置的网卡描述正确的有哪些？（多选题）"><a href="#4、关于该服务器配置的网卡描述正确的有哪些？（多选题）" class="headerlink" title="4、关于该服务器配置的网卡描述正确的有哪些？（多选题）"></a>4、关于该服务器配置的网卡描述正确的有哪些？（多选题）</h3><p>A. 网卡名称为ens33</p>
+<p>B. IPv4默认网关为192.168.77.1</p>
+<p>C. IPv4地址为192.168.77.130</p>
+<p>D. UUID为707bf904-5157-4606-b7fe-aa403b6e0481</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367850942-2c94c377-f83e-473f-a746-306d66d149e6.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367869600-18f2fbfb-2950-4015-af08-5b129f499dee.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786367975494-d39265ca-4381-42e0-9df6-0a100b614163.png" srcset="/img/loading.gif" lazyload></p>
+<p>在火眼查看原来的网络配置就会发现网卡名称是ens160</p>
+<p>然后ipv4地址是192.168.77.130，UUID也是对的，但是默认网关应该是192.168.77.2，不是B</p>
+<p>所以应该是CD</p>
+<h3 id="5、宝塔面板的访问端口和登录安全入口是什么？（多选题）"><a href="#5、宝塔面板的访问端口和登录安全入口是什么？（多选题）" class="headerlink" title="5、宝塔面板的访问端口和登录安全入口是什么？（多选题）"></a>5、宝塔面板的访问端口和登录安全入口是什么？（多选题）</h3><p>A. 36912</p>
+<p>B. 38497</p>
+<p>C. &#x2F;7921b4a7</p>
+<p>D. &#x2F;7c09f4b5</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786368007488-8dfb6466-c35d-4c1e-8840-f4708a5f3a07.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接去宝塔面板的账号信息科即可</p>
+<p>直接就能看出是BD</p>
+<h3 id="6、宝塔面板的登录账号是什么？（答案格式：以实际为准，如123abc）"><a href="#6、宝塔面板的登录账号是什么？（答案格式：以实际为准，如123abc）" class="headerlink" title="6、宝塔面板的登录账号是什么？（答案格式：以实际为准，如123abc）"></a>6、宝塔面板的登录账号是什么？（答案格式：以实际为准，如123abc）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786368064697-3e80f89a-3db0-4748-a34d-882fe8633f9e.png" srcset="/img/loading.gif" lazyload></p>
+<p>登录账号就是用户名啊</p>
+<p>火眼也能直接看</p>
+<p>所以是eswr2ymq</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786368122249-1538293c-2d3c-40a3-8c2a-5e78538899f8.png" srcset="/img/loading.gif" lazyload></p>
+<p>在日志也能看见这个就是账号</p>
+<h3 id="7、宝塔面板配置的公网服务器IP是多少？（答案格式：192-168-1-1）"><a href="#7、宝塔面板配置的公网服务器IP是多少？（答案格式：192-168-1-1）" class="headerlink" title="7、宝塔面板配置的公网服务器IP是多少？（答案格式：192.168.1.1）"></a>7、宝塔面板配置的公网服务器IP是多少？（答案格式：192.168.1.1）</h3><p>直接在火眼似乎看不见，我们只能去网站里边看看了</p>
+<p>我们知道了账号是eswr2ymq，但不知道密码，所以我们需要bt 5来修改一下密码</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786368248595-00a5cbef-d326-491e-9e85-dda9e57f8aeb.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接修改即可</p>
+<p>之后就是登录网站了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786368280950-7c0fe1ef-020e-4db4-a269-2a338848a646.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以bt 14来看看详细信息</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786368316996-4da67f4f-2a9c-4a7b-874a-6aad0c5b262b.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接利用内网面板地址来登录即可</p>
+<p>用户名我们知道，密码刚刚设置</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786368391942-7be46201-5c9b-472a-8472-f35ad551ca10.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们可以在网站左上角直接看见外网ip</p>
+<p>也可以在设置-面板设置里边看见服务器的外网ip</p>
+<p>所以本题答案为180.111.28.195</p>
+<h3 id="8、涉案服务器在2026-07-06-15-32-47之前存在的提权漏洞编号是什么？（答案格式：CVE-2026-1234）"><a href="#8、涉案服务器在2026-07-06-15-32-47之前存在的提权漏洞编号是什么？（答案格式：CVE-2026-1234）" class="headerlink" title="8、涉案服务器在2026-07-06 15:32:47之前存在的提权漏洞编号是什么？（答案格式：CVE-2026-1234）"></a>8、涉案服务器在2026-07-06 15:32:47之前存在的提权漏洞编号是什么？（答案格式：CVE-2026-1234）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786368146369-b4ceb29e-a0c1-4796-805d-94076a48bd11.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到这边日志检测到了之前存在polkit漏洞</p>
+<p>所以编号是CVE-2021-4034</p>
+<h3 id="9、宝塔面板中配置的MySQL数据库root密码是什么？（答案格式：以实际为准，如123abc）"><a href="#9、宝塔面板中配置的MySQL数据库root密码是什么？（答案格式：以实际为准，如123abc）" class="headerlink" title="9、宝塔面板中配置的MySQL数据库root密码是什么？（答案格式：以实际为准，如123abc）"></a>9、宝塔面板中配置的MySQL数据库root密码是什么？（答案格式：以实际为准，如123abc）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786368483159-e56fa4dc-23e1-4208-ac4e-da72a0690e9c.png" srcset="/img/loading.gif" lazyload></p>
+<p>点到数据库直接点root密码</p>
+<p>即可看见数据库密码</p>
+<p>fb5a2ab4f542f486</p>
+<h3 id="10、分析该服务器中部署的MySQL数据库，其中共包含多少条邮件收发记录？（答案格式：2）"><a href="#10、分析该服务器中部署的MySQL数据库，其中共包含多少条邮件收发记录？（答案格式：2）" class="headerlink" title="10、分析该服务器中部署的MySQL数据库，其中共包含多少条邮件收发记录？（答案格式：2）"></a>10、分析该服务器中部署的MySQL数据库，其中共包含多少条邮件收发记录？（答案格式：2）</h3><p>上一题都拿到数据库root密码了</p>
+<p>直接登录看看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786369519787-838757aa-f006-4d3a-a9b1-be51dd5a4672.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开直接自动帮忙统计了有52行</p>
+<p>即52条收发记录</p>
+<h3 id="11、Redis-服务器的访问密码是什么？Redis-中共缓存了多少个-key？（答案格式：密码、数量，如password、3）"><a href="#11、Redis-服务器的访问密码是什么？Redis-中共缓存了多少个-key？（答案格式：密码、数量，如password、3）" class="headerlink" title="11、Redis 服务器的访问密码是什么？Redis 中共缓存了多少个 key？（答案格式：密码、数量，如password、3）"></a>11、Redis 服务器的访问密码是什么？Redis 中共缓存了多少个 key？（答案格式：密码、数量，如password、3）</h3><p>访问密码是什么，这就要看配置文件了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786369757539-4cc1aa3a-229f-4ab9-b651-fe81a7497c85.png" srcset="/img/loading.gif" lazyload></p>
+<p>来文件看看，可以看到redis文件夹下在redis.conf配置文件</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786369833166-d1edc2e9-142f-480f-85de-e0744c7a1a82.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接把密码写在最后了</p>
+<p>TuoxinRedis2026</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786369669191-f3c1991f-9b02-40b6-83ee-ba976160c51d.png" srcset="/img/loading.gif" lazyload></p>
+<p>至于共缓存了多少个 key，直接在数据库找就好了</p>
+<p>发现帮忙直接统计好了是66个</p>
+<p>所以这题答案是TuoxinRedis2026、66</p>
+<h3 id="12、服务器中部署的网站“拓鑫商城”使用了什么-Web-框架？（单选题）"><a href="#12、服务器中部署的网站“拓鑫商城”使用了什么-Web-框架？（单选题）" class="headerlink" title="12、服务器中部署的网站“拓鑫商城”使用了什么 Web 框架？（单选题）"></a>12、服务器中部署的网站“拓鑫商城”使用了什么 Web 框架？（单选题）</h3><p>A. Laravel</p>
+<p>B. Django</p>
+<p>C. ThinkPHP</p>
+<p>D. Spring Boot</p>
+<p>我们直接去查看网站的配置文件即可</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786370226380-07d3e8db-b73a-4d5f-97e8-88b867a525bf.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开www&#x2F;wwwroot&#x2F;tuoxin.com&#x2F;composer.json即可发现应该是C</p>
+<h3 id="13、该服务器中部署的网站“拓鑫商城”，上次手动备份的日期时间是什么？（单选题）"><a href="#13、该服务器中部署的网站“拓鑫商城”，上次手动备份的日期时间是什么？（单选题）" class="headerlink" title="13、该服务器中部署的网站“拓鑫商城”，上次手动备份的日期时间是什么？（单选题）"></a>13、该服务器中部署的网站“拓鑫商城”，上次手动备份的日期时间是什么？（单选题）</h3><p>A. 2026-03-06 14:30:15</p>
+<p>B. 2026-03-07 14:30:15</p>
+<p>C. 2026-07-06 14:30:15</p>
+<p>D. 2026-07-07 14:30:15</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786370277724-40109e91-fb71-42e8-bea9-5935ead41eb3.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接点一下备份就会跳出备份的详细信息了</p>
+<p>可以看见应该是D</p>
+<h3 id="14、关于“拓鑫商城”使用的数据库描述正确的是？（多选题）"><a href="#14、关于“拓鑫商城”使用的数据库描述正确的是？（多选题）" class="headerlink" title="14、关于“拓鑫商城”使用的数据库描述正确的是？（多选题）"></a>14、关于“拓鑫商城”使用的数据库描述正确的是？（多选题）</h3><p>A. 使用MySQL数据库</p>
+<p>B. 使用的MySQL数据库端口为3306</p>
+<p>C. 使用PostgreSQL数据库</p>
+<p>D. 使用的PostgreSQL数据库端口为5432</p>
+<p>问拓鑫商城相关内容</p>
+<p>肯定是去看拓鑫里边的数据库配置情况</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786409404311-2aa003a3-2a50-4dad-8ed7-b267924514fd.png" srcset="/img/loading.gif" lazyload></p>
+<p>在.env.bak即可看见数据库的配置情况</p>
+<p>发现是PostgreSQL数据库</p>
+<p>端口是5432</p>
+<p>所以本题答案是CD</p>
+<h3 id="15、“拓鑫商城”使用的数据库密码是多少？（答案格式：以实际为准，如123Abc）"><a href="#15、“拓鑫商城”使用的数据库密码是多少？（答案格式：以实际为准，如123Abc）" class="headerlink" title="15、“拓鑫商城”使用的数据库密码是多少？（答案格式：以实际为准，如123Abc）"></a>15、“拓鑫商城”使用的数据库密码是多少？（答案格式：以实际为准，如123Abc）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786409601601-263a386f-612b-45e9-aa03-cc859325162f.png" srcset="/img/loading.gif" lazyload></p>
+<p>同一个地方就能看见密码是</p>
+<p>Tuoxin@2026_DB</p>
+<p>当然也可以连一下验证看看</p>
+<h3 id="16、管理员赵天龙（admin）的密码明文是什么？（答案格式：以实际为准，如123Abc）"><a href="#16、管理员赵天龙（admin）的密码明文是什么？（答案格式：以实际为准，如123Abc）" class="headerlink" title="16、管理员赵天龙（admin）的密码明文是什么？（答案格式：以实际为准，如123Abc）"></a>16、管理员赵天龙（admin）的密码明文是什么？（答案格式：以实际为准，如123Abc）</h3><p>当然需要我们把数据库连上</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786410401337-cb298935-6a51-403d-9838-fad6a39cabda.png" srcset="/img/loading.gif" lazyload></p>
+<p>建立ssh隧道比较好，发现这边ssh隧道是正常的</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786410388856-b0f69f32-8283-4bd0-83dd-22a9cffba5e1.png" srcset="/img/loading.gif" lazyload></p>
+<p>但是到了连接数据库就报错了</p>
+<p>从报错可以看到我们其实是连到服务器了，但是服务器在处理请求的时候连接突然被服务器给主动断了</p>
+<p>开始排查一下问题</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><code class="hljs plain">ss -lntp | grep 5432<br>ps aux | grep postgres<br>/www/server/pgsql/bin/psql -h 127.0.0.1 -p 5432 -U tuoxin -d tuoxin_mall<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786410528352-2c4ea220-c8bb-4804-865d-6601704cd09e.png" srcset="/img/loading.gif" lazyload></p>
+<p>检测端口进程并测试后发现本地开启psql完全没有问题</p>
+<p>所以我们可以缩小到问题只是Navicat的SSH隧道这一层</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786410659360-6d906d70-ac5e-4aad-95c0-d894fdd888b1.png" srcset="/img/loading.gif" lazyload></p>
+<p>（那我不用SSH隧道不就好了）</p>
+<p>当然这样子也可以啦，不过我们还是深挖一下为什么ssh隧道不可以</p>
+<p>问题很明确是ssh到数据库这段路，我们怀疑的第一个就是是不是ssh不允许tcp转发</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">sshd -T | grep -Ei &#x27;allowtcpforwarding|disableforwarding|permitopen&#x27;<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786411545205-c4b8d9a6-0935-4995-906d-06ff459602b5.png" srcset="/img/loading.gif" lazyload></p>
+<p>啊就是这个问题，给关掉了</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><code class="hljs plain">grep -RniE &#x27;^[[:space:]]*AllowTcpForwarding|^[[:space:]]*DisableForwarding|^[[:space:]]*PermitOpen&#x27; \<br>/etc/ssh/sshd_config /etc/ssh/sshd_config.d/ 2&gt;/dev/null<br></code></pre></td></tr></table></figure>
+
+<p>看看是哪一个文件关掉的</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786411588497-6792adad-06c3-4dfa-99aa-c837b3b4f6cc.png" srcset="/img/loading.gif" lazyload></p>
+<p>在这边啊，我们去打开就好了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786411650391-e2141070-67c4-408c-a8b7-765aafef158c.png" srcset="/img/loading.gif" lazyload></p>
+<p>改成yes</p>
+<p>重新reload一下ssh</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">systemctl reload sshd<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786411700897-ed3455ab-5dcf-4ea6-9ac5-1b63383065a7.png" srcset="/img/loading.gif" lazyload></p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786411736497-65d44e3a-df88-4e54-9954-f4a43d16f8aa.png" srcset="/img/loading.gif" lazyload></p>
+<p>这下子用ssh隧道去访问也通了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786411842831-9c17e86e-c012-47e1-b3ac-0a54c79d340b.png" srcset="/img/loading.gif" lazyload></p>
+<p>去user表看看赵天龙这个人啊</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786411936578-95a0226e-e5db-4193-b7ab-aa6a35db792f.png" srcset="/img/loading.gif" lazyload></p>
+<p>不用找，就是第一个</p>
+<p>这边有密码的hash和legacy_passwd，至于如何利用还是要看密码加密存储的手法</p>
+<p>毕竟只给了hash，只有靠碰撞</p>
+<p>我们最后可以在app&#x2F;controller&#x2F;Auth.php找到密码的存储方式</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786428758788-ba021b59-ef48-45ac-828b-8bda46c81fa3.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到新用户注册是使用的PHP的password_hash函数在进行Bcrypt加密</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786428795823-035fa565-4d17-4999-aca4-0fffb4732ff8.png" srcset="/img/loading.gif" lazyload></p>
+<p>如果是旧用户，也有对密码进行加密后存到legacy_password的</p>
+<p>验证是先新后旧，所以我们其实可以两边都能解</p>
+<p>先看旧的</p>
+<p>这边说的很清楚了，在\app\lib\CryptoHelper有legacyDecrypt函数</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786428976256-f4c16d65-f358-46fd-87c9-2dd6010e1ab1.png" srcset="/img/loading.gif" lazyload></p>
+<p>先解Base64，然后再Reverse了一下，最后异或了Tuoxin@2026!Legacy即可</p>
+<p>那我们也这样子来一趟</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786429057999-2fbfa990-c438-4b9e-841a-f8d0a7abe86f.png" srcset="/img/loading.gif" lazyload></p>
+<p>得到密码Passw0rd</p>
+<p>或者去爆破Bcrypt</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">hashcat -a 0 -m 3200 &#x27;$2y$10$2bnI84AWNzL6HwSPWcT3Qeugd0bodY/UAVyBvBY6Fp.y.8ycou60W&#x27; rockyou.txt -w 3<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786429280470-7ad115d4-7b08-455a-bf37-f2e40f5aae68.png" srcset="/img/loading.gif" lazyload></p>
+<p>但是Bcrypt不好爆</p>
+<p>所以本题的密码为Passw0rd</p>
+<h3 id="17、“拓鑫商城”的刷单任务大厅中，当前显示正在进行中的刷单任务有多少个？（答案格式：1）"><a href="#17、“拓鑫商城”的刷单任务大厅中，当前显示正在进行中的刷单任务有多少个？（答案格式：1）" class="headerlink" title="17、“拓鑫商城”的刷单任务大厅中，当前显示正在进行中的刷单任务有多少个？（答案格式：1）"></a>17、“拓鑫商城”的刷单任务大厅中，当前显示正在进行中的刷单任务有多少个？（答案格式：1）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786429912233-231f7748-dfea-4619-8832-5921b43e81ab.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接在数据库查看tasks这个表</p>
+<p>可以看见open的是10条在进行的刷单任务</p>
+<p>答案是10</p>
+<p>打开网站看也一样</p>
+<h3 id="18、登录“拓鑫商城”的后台管理页面，受害人卫永峰在2025-12-29-2026-03-29购买了多少份智能合约产品“鲨鱼鳍结构化”（答案格式：1）"><a href="#18、登录“拓鑫商城”的后台管理页面，受害人卫永峰在2025-12-29-2026-03-29购买了多少份智能合约产品“鲨鱼鳍结构化”（答案格式：1）" class="headerlink" title="18、登录“拓鑫商城”的后台管理页面，受害人卫永峰在2025-12-29 ~ 2026-03-29购买了多少份智能合约产品“鲨鱼鳍结构化”（答案格式：1）"></a>18、登录“拓鑫商城”的后台管理页面，受害人卫永峰在2025-12-29 ~ 2026-03-29购买了多少份智能合约产品“鲨鱼鳍结构化”（答案格式：1）</h3><p>要登录后台了，我们仿真网站</p>
+<p>直接访问网站发现404，应该是反向代理有问题，我们查看网站配置文件</p>
+<p>&#x2F;www&#x2F;server&#x2F;nginx&#x2F;conf&#x2F;nginx.conf</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786430932281-687c526f-17e5-45ac-b710-85702fae3876.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到宝塔经典结构，但是这边写的其实有问题</p>
+<p>平时其实是没啥问题的，但是在这个地方不止一个文件在listen 80，而且在tuoxin.com.conf前还有文件在listen 80</p>
+<p>于是Nginx会把第一个出现的当作默认server，导致了这边一直404</p>
+<p>我们只要在tuoxin.com.conf强调一下listen 80 default_server;</p>
+<p>再把我们的ip加到server_name即可</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786432817671-30bf6f20-29a5-4cf0-9212-6949c4502b38.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">nginx -t &amp;&amp; systemctl restart nginx<br></code></pre></td></tr></table></figure>
+
+<p>重启一下nginx</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786432827164-c32b573a-5d18-4f73-b79a-fae9f2307ed4.png" srcset="/img/loading.gif" lazyload></p>
+<p>即可成功访问网站了</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786432970579-674ce3d1-8910-4587-a84c-324443a7b71e.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接登录admin，密码解过了是Passw0rd</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786432992143-fa88e7a9-39b3-4db9-8271-e7f5987f3395.png" srcset="/img/loading.gif" lazyload></p>
+<p>成功登录后台</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433061436-b8202c45-9c3f-4d01-8f88-8fa82c605e7d.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接去合约管理的认购记录即可看见购买了5份</p>
+<h3 id="19、接上题，“鲨鱼鳍结构化”的合约地址是多少？（答案格式：以实际为准，如0Xabc123XXXX）"><a href="#19、接上题，“鲨鱼鳍结构化”的合约地址是多少？（答案格式：以实际为准，如0Xabc123XXXX）" class="headerlink" title="19、接上题，“鲨鱼鳍结构化”的合约地址是多少？（答案格式：以实际为准，如0Xabc123XXXX）"></a>19、接上题，“鲨鱼鳍结构化”的合约地址是多少？（答案格式：以实际为准，如0Xabc123XXXX）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433164277-2c5afb0a-f776-4c0d-b19f-29e70afb2112.png" srcset="/img/loading.gif" lazyload></p>
+<p>在合约管理的合约产品没看见合约地址</p>
+<p>去数据库找一下</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433256973-c7515960-c440-4d72-8d09-0d2b2fa71e30.png" srcset="/img/loading.gif" lazyload></p>
+<p>在contract_products可以看到合约地址0xAC785C81EB039C101B4175BB5BB66F8CA08B6A3C</p>
+<h3 id="20、“拓鑫商城”数据库中的用户手机号使用加密算法加密，加密密钥是什么？（答案格式：以实际为准，如123-Abc）"><a href="#20、“拓鑫商城”数据库中的用户手机号使用加密算法加密，加密密钥是什么？（答案格式：以实际为准，如123-Abc）" class="headerlink" title="20、“拓鑫商城”数据库中的用户手机号使用加密算法加密，加密密钥是什么？（答案格式：以实际为准，如123_Abc）"></a>20、“拓鑫商城”数据库中的用户手机号使用加密算法加密，加密密钥是什么？（答案格式：以实际为准，如123_Abc）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433366664-db48f3a1-cee7-4fdf-8591-57b9623cf4e4.png" srcset="/img/loading.gif" lazyload></p>
+<p>确实加密了，就叫phone，我们看看phone怎么加密的</p>
+<p>先是依旧看一下Auth.php</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433397994-2f41f111-9435-4979-a561-484d48b4064f.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现调用的是&#x2F;app&#x2F;lib&#x2F;CryptoHelper.php的encryptPhone加密方法</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433484384-a1bb3e6c-eddf-40cf-a004-7a0ec214c490.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接就能看见密码是TJ_huanghe_2026</p>
+<h3 id="21、“拓鑫商城”管理后台中的“合约投资交流群”的群主用户名是什么？（答案格式：abc）"><a href="#21、“拓鑫商城”管理后台中的“合约投资交流群”的群主用户名是什么？（答案格式：abc）" class="headerlink" title="21、“拓鑫商城”管理后台中的“合约投资交流群”的群主用户名是什么？（答案格式：abc）"></a>21、“拓鑫商城”管理后台中的“合约投资交流群”的群主用户名是什么？（答案格式：abc）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433682634-c0d0dae8-975d-4e6b-9fab-2ab93e33e23c.png" srcset="/img/loading.gif" lazyload></p>
+<p>说了是管理后台，这边可以看见群聊</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433702192-2eca6a86-ac11-442a-86bc-c11fb455898d.png" srcset="/img/loading.gif" lazyload></p>
+<p>点进去就能看见群主是杨红</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433887085-2d56b0bb-68be-4e5d-be66-3ebde47d019c.png" srcset="/img/loading.gif" lazyload></p>
+<p>但是有俩杨红</p>
+<p>还是去数据库看</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786433917666-3a08eb6d-9f28-4bb8-af23-c2f14ce580af.png" srcset="/img/loading.gif" lazyload></p>
+<p>可以看到created_by 22</p>
+<p>所以是id 22的杨红，用户名是dengchao</p>
+<h3 id="22、“拓鑫商城”启动了以下哪些网站防护规则？（多选题）"><a href="#22、“拓鑫商城”启动了以下哪些网站防护规则？（多选题）" class="headerlink" title="22、“拓鑫商城”启动了以下哪些网站防护规则？（多选题）"></a>22、“拓鑫商城”启动了以下哪些网站防护规则？（多选题）</h3><p>A. SQL注入防御</p>
+<p>B. XSS防御</p>
+<p>C. 恶意文件上传防御</p>
+<p>D. 恶意爬虫防御</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786434014708-5dc6ba8b-dc2f-40c9-8633-7c03587698da.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接去宝塔的WAF看</p>
+<p>发现ABCD全开着，全选即可</p>
+<h3 id="23、服务器上正在运行（重启策略为：停止后马上重启）的-AI-推理Docker容器名称是什么？（答案格式：以实际为准，如abc-def）"><a href="#23、服务器上正在运行（重启策略为：停止后马上重启）的-AI-推理Docker容器名称是什么？（答案格式：以实际为准，如abc-def）" class="headerlink" title="23、服务器上正在运行（重启策略为：停止后马上重启）的 AI 推理Docker容器名称是什么？（答案格式：以实际为准，如abc-def）"></a>23、服务器上正在运行（重启策略为：停止后马上重启）的 AI 推理Docker容器名称是什么？（答案格式：以实际为准，如abc-def）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786434232348-ec25455a-0480-4e38-83b9-a8e986fcbbce.png" srcset="/img/loading.gif" lazyload></p>
+<p>打开Docker栏目看看</p>
+<p>明显是中间这一个</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786434296369-66cc8a79-c11f-4a95-b3a7-5e838de49643.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以名称为alpine-llama-cpp-server</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786434368093-71ac71d4-98a2-4eb8-ac2d-65abb50db0dd.png" srcset="/img/loading.gif" lazyload></p>
+<p>重启策略都符合</p>
+<h3 id="24、接上题，该AI-推理Docker容器中部署加载的大语言模型参数量是多少？（答案格式：35B）"><a href="#24、接上题，该AI-推理Docker容器中部署加载的大语言模型参数量是多少？（答案格式：35B）" class="headerlink" title="24、接上题，该AI 推理Docker容器中部署加载的大语言模型参数量是多少？（答案格式：35B）"></a>24、接上题，该AI 推理Docker容器中部署加载的大语言模型参数量是多少？（答案格式：35B）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786434317976-be488252-b1e0-46c1-9e82-851389675900.png" srcset="/img/loading.gif" lazyload></p>
+<p>这边直接能看见是0.8B的</p>
+<p>或者我们也可以访问一下，说了端口是6699</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786434458704-d7073d2b-3d10-4bc2-91d0-f735f1da5686.png" srcset="/img/loading.gif" lazyload></p>
+<p>访问6699端口即可看见确实是0.8B</p>
+<h3 id="25、接上题，上述部署加载的模型，设置的上下文长度是多少tokens？（答案格式：无标点符号，如123456）"><a href="#25、接上题，上述部署加载的模型，设置的上下文长度是多少tokens？（答案格式：无标点符号，如123456）" class="headerlink" title="25、接上题，上述部署加载的模型，设置的上下文长度是多少tokens？（答案格式：无标点符号，如123456）"></a>25、接上题，上述部署加载的模型，设置的上下文长度是多少tokens？（答案格式：无标点符号，如123456）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786434685229-90d9e9d7-de13-4d10-82f4-cb82f88e01a2.png" srcset="/img/loading.gif" lazyload>这边直接写了是117760tokens，答案也确实是117760tokens，但是这边其实考的有问题</p>
+<p>下边是范叔指出的问题</p>
+<p>因为在这边作者启动的时候并没有指认传递上下文长度的参数进去，即启动就没有传递–ctx-size参数来设置上下文长度</p>
+<p>所以llama.cpp就自动根据宿主机的内存大小来设置上下文了。</p>
+<p>我们的火眼默认仿真是4G内存，所以标准答案以及大多数人做的答案就都是117760</p>
+<p>但如果你开8g，llama.cpp会自动开满262k上下文导致你这边显示的是262k</p>
+<p>如果设置的内存是2G，又会导致上下文显示是117760的减半</p>
+<h3 id="26、服务器上已停止（重启策略为：不重启）的Docker容器，使用的镜像ID是多少？（答案格式：以实际为准，如123abc）"><a href="#26、服务器上已停止（重启策略为：不重启）的Docker容器，使用的镜像ID是多少？（答案格式：以实际为准，如123abc）" class="headerlink" title="26、服务器上已停止（重启策略为：不重启）的Docker容器，使用的镜像ID是多少？（答案格式：以实际为准，如123abc）"></a>26、服务器上已停止（重启策略为：不重启）的Docker容器，使用的镜像ID是多少？（答案格式：以实际为准，如123abc）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786434588475-b2c0ca08-e246-4041-b488-10eda7893810.png" srcset="/img/loading.gif" lazyload></p>
+<p>依旧是Docker这边写的，已停止的就一个，所以容器就是这个</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786434622200-ecaf989f-a3bf-448d-9db6-b9b7eaeb1c42.png" srcset="/img/loading.gif" lazyload></p>
+<p>我们再看他的镜像id</p>
+<p>可以看到应该是4a01b014fae7</p>
+<h3 id="27、接上题，启动该容器，访问相应服务地址，其中配置的大模型接口地址为？（答案格式：http-192-168-1-1-1234）"><a href="#27、接上题，启动该容器，访问相应服务地址，其中配置的大模型接口地址为？（答案格式：http-192-168-1-1-1234）" class="headerlink" title="27、接上题，启动该容器，访问相应服务地址，其中配置的大模型接口地址为？（答案格式：http://192.168.1.1:1234）"></a>27、接上题，启动该容器，访问相应服务地址，其中配置的大模型接口地址为？（答案格式：<a href="http://192.168.1.1:1234）">http://192.168.1.1:1234）</a></h3><p>题目说了启动该容器，那我们就启动一下</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786435007724-f962aa04-e3b3-44f2-acdb-ce4aea40be5c.png" srcset="/img/loading.gif" lazyload></p>
+<p>直接启动即可</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786435024103-703bda6f-ef36-4dfa-8999-6113f63a4217.png" srcset="/img/loading.gif" lazyload></p>
+<p>开在3000端口，访问一下</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><code class="hljs plain">docker inspect nextchat<br></code></pre></td></tr></table></figure>
+
+<p>看看这个容器的配置文件，找一下接口地址</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786435288722-bede117f-b00c-4562-98cb-b5f705dc52d1.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以答案是<a target="_blank" rel="noopener" href="http://172.17.0.1:6699/">http://172.17.0.1:6699</a></p>
+<h3 id="28、该服务器中部署的FileBrowser默认管理员密码是什么？（答案格式：以实际为准，如123Abc）"><a href="#28、该服务器中部署的FileBrowser默认管理员密码是什么？（答案格式：以实际为准，如123Abc）" class="headerlink" title="28、该服务器中部署的FileBrowser默认管理员密码是什么？（答案格式：以实际为准，如123Abc）"></a>28、该服务器中部署的FileBrowser默认管理员密码是什么？（答案格式：以实际为准，如123Abc）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786435341025-967f6b6c-0368-4937-8670-b45d119cb395.png" srcset="/img/loading.gif" lazyload></p>
+<p>FileBrowser的端口在8081</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786435365068-c6ca4c5f-1380-461c-b2f8-afcb36fed1fa.png" srcset="/img/loading.gif" lazyload></p>
+<p>找一下密码</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786435453251-2789950a-9f32-434a-b1f5-897da4041442.png" srcset="/img/loading.gif" lazyload></p>
+<p>发现这个容器的日志里边藏着呢，FCHZTo0mAYzxRxka，我们可以尝试下能否打开</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786435493432-1a52ba8b-866e-440f-859d-504fb565b31b.png" srcset="/img/loading.gif" lazyload></p>
+<p>成功了，所以密码就是FCHZTo0mAYzxRxka</p>
+<h3 id="29、分析嫌疑人存储在服务器中的“料子”，其中城市为南京的受害人有多少个？（答案格式：10）"><a href="#29、分析嫌疑人存储在服务器中的“料子”，其中城市为南京的受害人有多少个？（答案格式：10）" class="headerlink" title="29、分析嫌疑人存储在服务器中的“料子”，其中城市为南京的受害人有多少个？（答案格式：10）"></a>29、分析嫌疑人存储在服务器中的“料子”，其中城市为南京的受害人有多少个？（答案格式：10）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786435593481-bfbced75-ca6a-410c-b775-71a2274c80c3.png" srcset="/img/loading.gif" lazyload></p>
+<p>找到料子的表格文件，下载下来</p>
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786435665887-2c00c614-3739-4767-b457-970f726f1e9b.png" srcset="/img/loading.gif" lazyload></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><code class="hljs plain">import openpyxl<br><br>file_path = &#x27;我的料子.xlsx&#x27;<br>wb = openpyxl.load_workbook(file_path)<br><br>nj_count = 0<br>for sheet_name in wb.sheetnames:<br>    sheet = wb[sheet_name]<br>    for row in sheet.iter_rows(min_row=2, values_only=True):<br>        if row[2] == &#x27;南京&#x27;:<br>            nj_count += 1<br><br>print(f&#x27;南京人数: &#123;nj_count&#125;&#x27;) <br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786436008556-2b7c4e40-5290-4848-b3dc-a437a2ef8407.png" srcset="/img/loading.gif" lazyload></p>
+<p>所以是84个人  </p>
+<h3 id="30、分析嫌疑人存储在服务器中的所有月工资表，杨红的全部实发工资是多少？（答案格式：123456）"><a href="#30、分析嫌疑人存储在服务器中的所有月工资表，杨红的全部实发工资是多少？（答案格式：123456）" class="headerlink" title="30、分析嫌疑人存储在服务器中的所有月工资表，杨红的全部实发工资是多少？（答案格式：123456）"></a>30、分析嫌疑人存储在服务器中的所有月工资表，杨红的全部实发工资是多少？（答案格式：123456）</h3><!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786436056495-db4315d1-fa84-4f19-8c09-33ae66fd9f7e.png" srcset="/img/loading.gif" lazyload></p>
+<p>月工资表，全部下下来</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br></pre></td><td class="code"><pre><code class="hljs plain">import openpyxl<br>import zipfile<br>import os<br><br>zip_path = &#x27;月工资表.zip&#x27;<br>folder_path = &#x27;月工资表&#x27;<br><br>with zipfile.ZipFile(zip_path, &#x27;r&#x27;) as z:<br>    z.extractall(folder_path)<br><br>total = 0<br><br>for file_name in os.listdir(folder_path):<br>    if file_name.endswith(&#x27;.xlsx&#x27;):<br>        file_path = os.path.join(folder_path, file_name)<br>        wb = openpyxl.load_workbook(file_path)<br><br>        for sheet_name in wb.sheetnames:<br>            sheet = wb[sheet_name]<br><br>            for row in sheet.iter_rows(min_row=2, values_only=True):<br>                if row[0] == &#x27;杨红&#x27;:<br>                    total += row[3]<br><br>print(f&#x27;杨红全部实发工资: &#123;total&#125;&#x27;)<br></code></pre></td></tr></table></figure>
+
+<!-- 这是一张图片，ocr 内容为： -->
+<p><img src="/2026%E9%BB%84%E6%B2%B3%E6%B5%81%E5%9F%9F%E5%85%AC%E5%AE%89%E9%99%A2%E6%A0%A1-%E7%94%B5%E5%AD%90%E7%89%A9%E8%AF%81%E5%8D%95%E9%A1%B9%E8%B5%9B/1786436242391-44b783a6-09b2-4f59-813e-9e5967492dda.png" srcset="/img/loading.gif" lazyload></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%94%B5%E5%AD%90%E5%8F%96%E8%AF%81/" class="category-chain-item">电子取证</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/Misc/" class="print-no-link">#Misc</a>
+      
+        <a href="/tags/Mobile/" class="print-no-link">#Mobile</a>
+      
+        <a href="/tags/Reverse/" class="print-no-link">#Reverse</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>2026黄河流域公安院校-电子物证单项赛wp</div>
+      <div>https://mei-you-qian.github.io/2026/08/11/2026黄河流域公安院校-电子物证单项赛/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Meiyouqian</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年8月11日</div>
+        </div>
+      
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-cc-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                      <a href="/2066/06/17/%E5%85%B3%E4%BA%8E/" title="关于">
+                        <i class="iconfont icon-arrowleft"></i>
+                        <span class="hidden-mobile">关于</span>
+                        <span class="visible-mobile">上一篇</span>
+                      </a>
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/07/12/2026%E9%A6%99%E6%B8%AF%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD%E7%BD%91%E7%BB%9C%E5%AE%89%E5%85%A8/" title="Al x Cybersecurity Challenge香港人工智能网络安全挑战赛wp(Miscellaneous全)">
+                        <span class="hidden-mobile">Al x Cybersecurity Challenge香港人工智能网络安全挑战赛wp(Miscellaneous全)</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="twikoo"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#comments', function() {
+      Fluid.utils.createScript('https://lib.baomitu.com/twikoo/1.6.8/twikoo.all.min.js', function() {
+        var options = Object.assign(
+          {"envId":"cloud1-9g1zftrh46f4164f","region":"ap-shanghai","path":"window.location.pathname"},
+          {
+            el: '#twikoo',
+            path: 'window.location.pathname',
+            onCommentLoaded: function() {
+              Fluid.utils.listenDOMLoaded(function() {
+                var imgSelector = '#twikoo .tk-content img:not(.tk-owo-emotion)';
+                Fluid.plugins.imageCaption(imgSelector);
+                Fluid.plugins.fancyBox(imgSelector);
+              });
+            }
+          }
+        )
+        twikoo.init(options)
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a>
+    </div>
+  
+  
+    <div class="statistics">
+  
+  
+
+  
+    
+      <span id="busuanzi_container_site_pv" style="display: none">
+        总访问量 
+        <span id="busuanzi_value_site_pv"></span>
+         次
+      </span>
+    
+    
+      <span id="busuanzi_container_site_uv" style="display: none">
+        总访客数 
+        <span id="busuanzi_value_site_uv"></span>
+         人
+      </span>
+    
+    
+
+  
+
+</div>
+
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/5.0.0/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="/js/scrollAnimation.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+<!-- hexo injector body_end start --><script src="/js/backgroundize.js"></script><!-- hexo injector body_end end --></body>
+</html>
